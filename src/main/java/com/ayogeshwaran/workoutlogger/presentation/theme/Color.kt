@@ -1,0 +1,56 @@
+package com.ayogeshwaran.workoutlogger.presentation.theme
+
+import androidx.compose.ui.graphics.Color
+
+// Seed palette — fitness-oriented teal/green + amber accent
+
+// Light theme colors
+val PrimaryLight = Color(0xFF2E7D6F)
+val OnPrimaryLight = Color(0xFFFFFFFF)
+val PrimaryContainerLight = Color(0xFFB2DFDB)
+val OnPrimaryContainerLight = Color(0xFF00201C)
+val SecondaryLight = Color(0xFFFFA726)
+val OnSecondaryLight = Color(0xFFFFFFFF)
+val SecondaryContainerLight = Color(0xFFFFE0B2)
+val OnSecondaryContainerLight = Color(0xFF2B1700)
+val TertiaryLight = Color(0xFF4A6267)
+val OnTertiaryLight = Color(0xFFFFFFFF)
+val TertiaryContainerLight = Color(0xFFCDE7EC)
+val OnTertiaryContainerLight = Color(0xFF051F23)
+val ErrorLight = Color(0xFFD32F2F)
+val OnErrorLight = Color(0xFFFFFFFF)
+val ErrorContainerLight = Color(0xFFFFDAD6)
+val OnErrorContainerLight = Color(0xFF410002)
+val BackgroundLight = Color(0xFFFAFAFA)
+val OnBackgroundLight = Color(0xFF1C1C1E)
+val SurfaceLight = Color(0xFFFFFFFF)
+val OnSurfaceLight = Color(0xFF1C1C1E)
+val SurfaceVariantLight = Color(0xFFDBE5E2)
+val OnSurfaceVariantLight = Color(0xFF3F4946)
+val OutlineLight = Color(0xFF6F7976)
+
+// Dark theme colors
+val PrimaryDark = Color(0xFF80CBC4)
+val OnPrimaryDark = Color(0xFF00332C)
+val PrimaryContainerDark = Color(0xFF00513D)
+val OnPrimaryContainerDark = Color(0xFFB2DFDB)
+val SecondaryDark = Color(0xFFFFD54F)
+val OnSecondaryDark = Color(0xFF3E2C00)
+val SecondaryContainerDark = Color(0xFF5C4200)
+val OnSecondaryContainerDark = Color(0xFFFFE0B2)
+val TertiaryDark = Color(0xFFB1CBD0)
+val OnTertiaryDark = Color(0xFF1C3439)
+val TertiaryContainerDark = Color(0xFF334B4F)
+val OnTertiaryContainerDark = Color(0xFFCDE7EC)
+val ErrorDark = Color(0xFFEF9A9A)
+val OnErrorDark = Color(0xFF601410)
+val ErrorContainerDark = Color(0xFF8C1D18)
+val OnErrorContainerDark = Color(0xFFFFDAD6)
+val BackgroundDark = Color(0xFF1C1C1E)
+val OnBackgroundDark = Color(0xFFE6E1E5)
+val SurfaceDark = Color(0xFF1C1C1E)
+val OnSurfaceDark = Color(0xFFE6E1E5)
+val SurfaceVariantDark = Color(0xFF3F4946)
+val OnSurfaceVariantDark = Color(0xFFBFC9C6)
+val OutlineDark = Color(0xFF899390)
+
