@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -34,7 +35,7 @@ sealed class HistoryEvent {
 @OptIn(ExperimentalCoroutinesApi::class)
 class HistoryViewModel(
     private val getWorkoutsForDateUseCase: GetWorkoutsForDateUseCase,
-    private val getDatesWithWorkoutsUseCase: GetDatesWithWorkoutsUseCase,
+    getDatesWithWorkoutsUseCase: GetDatesWithWorkoutsUseCase,
     private val deleteWorkoutUseCase: DeleteWorkoutUseCase,
     private val addWorkoutUseCase: AddWorkoutUseCase
 ) : ViewModel() {
@@ -46,9 +47,7 @@ class HistoryViewModel(
     val events = _events.asSharedFlow()
 
     val datesWithWorkouts: StateFlow<Set<Long>> = getDatesWithWorkoutsUseCase()
-        .flatMapLatest { dates ->
-            kotlinx.coroutines.flow.flowOf(dates.toSet())
-        }
+        .map { it.toSet() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptySet())
 
     val workoutsForSelectedDate: StateFlow<List<WorkoutEntry>> = _uiState
@@ -64,10 +63,6 @@ class HistoryViewModel(
         cal.set(year, month, dayOfMonth, 0, 0, 0)
         cal.set(Calendar.MILLISECOND, 0)
         _uiState.value = _uiState.value.copy(selectedDate = cal.timeInMillis)
-    }
-
-    fun onMonthChanged(year: Int, month: Int) {
-        _uiState.value = _uiState.value.copy(displayedYear = year, displayedMonth = month)
     }
 
     fun previousMonth() {
