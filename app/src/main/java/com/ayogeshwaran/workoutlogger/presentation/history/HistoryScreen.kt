@@ -34,13 +34,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
+import com.ayogeshwaran.workoutlogger.presentation.components.EditNotesDialog
 import com.ayogeshwaran.workoutlogger.presentation.components.SwipeToDeleteWorkoutCard
 import com.ayogeshwaran.workoutlogger.presentation.home.todayMidnight
 import java.text.SimpleDateFormat
@@ -57,6 +61,7 @@ fun HistoryScreen(
     val datesWithWorkouts by viewModel.datesWithWorkouts.collectAsStateWithLifecycle()
     val workouts by viewModel.workoutsForSelectedDate.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    var editingWorkout by remember { mutableStateOf<WorkoutEntry?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
@@ -137,13 +142,24 @@ fun HistoryScreen(
                 ) { workout ->
                     SwipeToDeleteWorkoutCard(
                         workout = workout,
-                        onDelete = { viewModel.deleteWorkout(workout) }
+                        onDelete = { viewModel.deleteWorkout(workout) },
+                        onEditNotes = { editingWorkout = it }
                     )
                 }
             }
 
             item { Spacer(modifier = Modifier.height(16.dp)) }
         }
+    }
+
+    editingWorkout?.let { workout ->
+        EditNotesDialog(
+            workout = workout,
+            onDismiss = { },
+            onConfirm = { newNote ->
+                viewModel.updateWorkoutNote(workout, newNote)
+            }
+        )
     }
 }
 

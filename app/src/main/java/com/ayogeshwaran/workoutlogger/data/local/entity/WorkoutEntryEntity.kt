@@ -11,6 +11,7 @@ data class WorkoutEntryEntity(
     val workoutType: String,
     val date: Long,
     val timestamp: Long,
-    val createdAt: Long
+    val createdAt: Long,
+    val notes: String = ""
 )
 

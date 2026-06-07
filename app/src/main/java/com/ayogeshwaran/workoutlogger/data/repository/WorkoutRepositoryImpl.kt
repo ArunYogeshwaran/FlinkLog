@@ -43,7 +43,8 @@ class WorkoutRepositoryImpl(
             workoutType = workoutType,
             date = date,
             timestamp = timestamp,
-            createdAt = createdAt
+            createdAt = createdAt,
+            notes = notes
         )
     }
 
@@ -54,7 +55,8 @@ class WorkoutRepositoryImpl(
             workoutType = workoutType,
             date = date,
             timestamp = timestamp,
-            createdAt = createdAt
+            createdAt = createdAt,
+            notes = notes
         )
     }
 }

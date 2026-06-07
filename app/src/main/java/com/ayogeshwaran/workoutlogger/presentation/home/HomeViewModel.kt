@@ -26,13 +26,14 @@ data class HomeUiState(
     val selectedDate: Long = todayMidnight(),
     val selectedHour: Int = Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
     val selectedMinute: Int = Calendar.getInstance().get(Calendar.MINUTE),
-    val selectedWorkoutType: WorkoutType? = null,
+    val selectedWorkoutTypes: Set<WorkoutType> = emptySet(),
+    val workoutNotes: String = "",
     val showDatePicker: Boolean = false,
     val showTimePicker: Boolean = false
 )
 
 sealed class HomeEvent {
-    data class WorkoutLogged(val entry: WorkoutEntry) : HomeEvent()
+    data class WorkoutsLogged(val entries: List<WorkoutEntry>) : HomeEvent()
     data class WorkoutDeleted(val entry: WorkoutEntry) : HomeEvent()
 }
 
@@ -83,8 +84,18 @@ class HomeViewModel(
         _uiState.value = _uiState.value.copy(selectedHour = hour, selectedMinute = minute, showTimePicker = false)
     }
 
-    fun onWorkoutTypeSelected(type: WorkoutType?) {
-        _uiState.value = _uiState.value.copy(selectedWorkoutType = type)
+    fun onWorkoutTypeToggled(type: WorkoutType) {
+        val current = _uiState.value.selectedWorkoutTypes
+        val updated = if (current.contains(type)) {
+            current - type
+        } else {
+            current + type
+        }
+        _uiState.value = _uiState.value.copy(selectedWorkoutTypes = updated)
+    }
+
+    fun onWorkoutNotesChanged(notes: String) {
+        _uiState.value = _uiState.value.copy(workoutNotes = notes)
     }
 
     fun onShowDatePicker(show: Boolean) {
@@ -97,7 +108,8 @@ class HomeViewModel(
 
     fun logWorkout() {
         val state = _uiState.value
-        val workoutType = state.selectedWorkoutType ?: return
+        val workoutTypes = state.selectedWorkoutTypes
+        if (workoutTypes.isEmpty()) return
 
         val cal = Calendar.getInstance()
         cal.timeInMillis = state.selectedDate
@@ -106,20 +118,32 @@ class HomeViewModel(
         cal.set(Calendar.SECOND, 0)
         cal.set(Calendar.MILLISECOND, 0)
 
-        val entry = WorkoutEntry(
-            workoutCategory = workoutType.category,
-            workoutType = workoutType.name,
-            date = state.selectedDate,
-            timestamp = cal.timeInMillis,
-            createdAt = System.currentTimeMillis()
-        )
-
-        viewModelScope.launch {
-            addWorkoutUseCase(entry)
-            _events.emit(HomeEvent.WorkoutLogged(entry))
+        val entries = workoutTypes.map { workoutType ->
+            WorkoutEntry(
+                workoutCategory = workoutType.category,
+                workoutType = workoutType.name,
+                date = state.selectedDate,
+                timestamp = cal.timeInMillis,
+                createdAt = System.currentTimeMillis(),
+                notes = state.workoutNotes
+            )
         }
 
-        _uiState.value = _uiState.value.copy(selectedWorkoutType = null)
+        viewModelScope.launch {
+            entries.forEach { addWorkoutUseCase(it) }
+            _events.emit(HomeEvent.WorkoutsLogged(entries))
+        }
+
+        _uiState.value = _uiState.value.copy(
+            selectedWorkoutTypes = emptySet(),
+            workoutNotes = ""
+        )
+    }
+
+    fun updateWorkoutNote(entry: WorkoutEntry, newNote: String) {
+        viewModelScope.launch {
+            addWorkoutUseCase(entry.copy(notes = newNote))
+        }
     }
 
     fun deleteWorkout(entry: WorkoutEntry) {

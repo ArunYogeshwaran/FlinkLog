@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -50,7 +51,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutType
+import com.ayogeshwaran.workoutlogger.presentation.components.EditNotesDialog
 import com.ayogeshwaran.workoutlogger.presentation.components.SwipeToDeleteWorkoutCard
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -70,18 +73,21 @@ fun HomeScreen(
     val context = LocalContext.current
     val prefs = remember { context.getSharedPreferences("onboarding", Context.MODE_PRIVATE) }
     var showSwipeHint by remember { mutableStateOf(!prefs.getBoolean("swipe_hint_dismissed", false)) }
+    var editingWorkout by remember { mutableStateOf<WorkoutEntry?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
-                is HomeEvent.WorkoutLogged -> {
+                is HomeEvent.WorkoutsLogged -> {
+                    val count = event.entries.size
+                    val msg = if (count == 1) "Workout logged!" else "$count workouts logged!"
                     snackbarHostState.showSnackbar(
-                        message = "Workout logged!",
+                        message = msg,
                         actionLabel = "Undo",
                         duration = SnackbarDuration.Short
                     ).let { result ->
                         if (result == SnackbarResult.ActionPerformed) {
-                            viewModel.deleteWorkout(event.entry)
+                            event.entries.forEach { viewModel.deleteWorkout(it) }
                         }
                     }
                 }
@@ -150,11 +156,9 @@ fun HomeScreen(
                     viewModel.cardioTypes.forEach { type ->
                         WorkoutChip(
                             workoutType = type,
-                            isSelected = uiState.selectedWorkoutType == type,
+                            isSelected = uiState.selectedWorkoutTypes.contains(type),
                             onSelected = {
-                                viewModel.onWorkoutTypeSelected(
-                                    if (uiState.selectedWorkoutType == type) null else type
-                                )
+                                viewModel.onWorkoutTypeToggled(type)
                             }
                         )
                     }
@@ -177,14 +181,39 @@ fun HomeScreen(
                     viewModel.gymTypes.forEach { type ->
                         WorkoutChip(
                             workoutType = type,
-                            isSelected = uiState.selectedWorkoutType == type,
+                            isSelected = uiState.selectedWorkoutTypes.contains(type),
                             onSelected = {
-                                viewModel.onWorkoutTypeSelected(
-                                    if (uiState.selectedWorkoutType == type) null else type
-                                )
+                                viewModel.onWorkoutTypeToggled(type)
                             }
                         )
                     }
+                }
+            }
+
+            // Notes field (visible only when one or more workout types are selected)
+            if (uiState.selectedWorkoutTypes.isNotEmpty()) {
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    androidx.compose.material3.OutlinedTextField(
+                        value = uiState.workoutNotes,
+                        onValueChange = { viewModel.onWorkoutNotesChanged(it) },
+                        label = { Text("Workout Details / Notes") },
+                        placeholder = { Text("e.g., did 3 sets of chest workout") },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = false,
+                        maxLines = 3,
+                        trailingIcon = {
+                            if (uiState.workoutNotes.isNotEmpty()) {
+                                IconButton(onClick = { viewModel.onWorkoutNotesChanged("") }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Clear,
+                                        contentDescription = "Clear notes"
+                                    )
+                                }
+                            }
+                        },
+                        shape = MaterialTheme.shapes.medium
+                    )
                 }
             }
 
@@ -193,7 +222,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = { viewModel.logWorkout() },
-                    enabled = uiState.selectedWorkoutType != null,
+                    enabled = uiState.selectedWorkoutTypes.isNotEmpty(),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Log Workout")
@@ -246,7 +275,8 @@ fun HomeScreen(
                 ) { workout ->
                     SwipeToDeleteWorkoutCard(
                         workout = workout,
-                        onDelete = { viewModel.deleteWorkout(workout) }
+                        onDelete = { viewModel.deleteWorkout(workout) },
+                        onEditNotes = { editingWorkout = it }
                     )
                 }
             }
@@ -293,6 +323,16 @@ fun HomeScreen(
         ) {
             TimePicker(state = timePickerState)
         }
+    }
+
+    editingWorkout?.let { workout ->
+        EditNotesDialog(
+            workout = workout,
+            onDismiss = { },
+            onConfirm = { newNote ->
+                viewModel.updateWorkoutNote(workout, newNote)
+            }
+        )
     }
 }
 

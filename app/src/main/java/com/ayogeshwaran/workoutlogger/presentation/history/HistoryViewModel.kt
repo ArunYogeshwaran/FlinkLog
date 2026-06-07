@@ -100,6 +100,12 @@ class HistoryViewModel(
         }
     }
 
+    fun updateWorkoutNote(entry: WorkoutEntry, newNote: String) {
+        viewModelScope.launch {
+            addWorkoutUseCase(entry.copy(notes = newNote))
+        }
+    }
+
     class Factory(
         private val getWorkoutsForDateUseCase: GetWorkoutsForDateUseCase,
         private val getDatesWithWorkoutsUseCase: GetDatesWithWorkoutsUseCase,

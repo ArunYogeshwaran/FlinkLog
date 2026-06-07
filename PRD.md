@@ -172,10 +172,11 @@ When a backend is introduced in the future:
 | `date` | `Long` | Epoch milliseconds normalized to midnight — used for grouping and querying by calendar day |
 | `timestamp` | `Long` | Epoch milliseconds for the exact date + time the user selected |
 | `createdAt` | `Long` | Epoch milliseconds when the record was actually inserted into the database |
+| `notes` | `String` | Free-form details/notes (e.g., `"did three sets of chest workout"`) |
 
 ### 7.2 Domain Model — `WorkoutEntry`
 
-Mirrors the entity fields but is a **plain Kotlin data class** with no Room annotations and no Android dependencies. Mapping between entity and domain model happens exclusively inside `WorkoutRepositoryImpl`.
+Mirrors the entity fields but is a **plain Kotlin data class** with no Room annotations and no Android dependencies. Mapping between entity and domain model happens exclusively inside `WorkoutRepositoryImpl`. Includes `notes` as an optional `String` field.
 
 A companion enum-like sealed class or string constants define the two categories:
 - `WorkoutCategory.CARDIO` — Running, Cycling, Swimming, Walking, HIIT, Yoga, Stretching
@@ -249,15 +250,24 @@ This is the default screen the user sees when they open the app. It is designed 
 - Single selection — tapping one chip selects it and deselects the previous (across both categories).
 - The selected chip uses Material 3's selected `FilterChip` style (filled tonal with checkmark).
 
-#### Log Workout Button
+#### Workout Notes / Details
 
+- A Material 3 `OutlinedTextField` labeled **"Workout Details / Notes"** appears below the workout category chips when one or more workout types are selected.
+- Users can select multiple workout chips simultaneously.
+- Users can type custom details (e.g., *"did three sets of chest workout"*).
+- Tapping **"Log Workout"** creates separate workout entries for each selected type, with the same date/time and notes.
+- Includes a trailing clear icon button to easily clear the text.
+- Text is automatically cleared after logging.
+- Logged workouts can be edited post-logging by clicking on the note text or the edit (pencil) icon on their respective cards, which pops up an "Edit Notes / Details" dialog.
+
+#### Log Workout Button
 - A prominent Material 3 `Button` (filled) labeled **"Log Workout"**.
-- Enabled only when a workout type is selected.
+- Enabled only when one or more workout types are selected.
 - On tap:
-  - Saves the selected workout type + chosen date/time to Room.
-  - Clears the chip selection.
-  - Shows a Material 3 `Snackbar`: **"Workout logged!"** with an **"Undo"** action.
-  - The new entry immediately appears in the list below (Room Flow triggers recomposition).
+  - Saves the selected workout types + chosen date/time + notes to Room.
+  - Clears the chip selection and notes text.
+  - Shows a Material 3 `Snackbar`: **"Workout logged!"** (or count if multiple) with an **"Undo"** action.
+  - The new entries immediately appear in the list below (Room Flow triggers recomposition).
 
 #### Today's Workout List
 
@@ -547,7 +557,7 @@ The following are explicitly **not** part of the v1 release:
 - ❌ User accounts or authentication
 - ❌ Cloud sync or backend integration (architecture supports it; not built yet)
 - ❌ Custom / user-created workout types (presets only)
-- ❌ Workout details — duration, sets, reps, distance, notes
+- ❌ Workout details — structured duration, sets, reps, distance (free-form notes are supported)
 - ❌ Push notifications or daily reminders
 - ❌ Data export / import (CSV, JSON)
 - ❌ Home screen widget
@@ -613,4 +623,5 @@ The v1.1 release is considered complete when:
 |---------|------|---------|
 | **1.0** | February 28, 2026 | Initial release — Home screen with workout logging, History screen with calendar view, swipe-to-delete with undo, Material 3 theming with dynamic color, Room database for offline persistence. |
 | **1.1** | March 31, 2026 | Added About screen (developer info, send feedback via email, rate on Play Store, open source licenses). Moved About to secondary navigation (info icon on Home screen, not in bottom nav). Added swipe-to-delete onboarding tooltip for first-time users. Removed all hardcoded values — package ID read from `context.packageName`, developer info from `strings.xml`. Added privacy policy. Enabled resource shrinking and ProGuard line-number preservation for production builds. Configured backup rules for Room database. |
+| **1.2** | June 7, 2026 | Added free-form notes/details option when logging a workout. Added support for multi-workout selection during logging, and post-logging edit note functionality. Maintained database version at 1 with destructive schema recreation. |
 
