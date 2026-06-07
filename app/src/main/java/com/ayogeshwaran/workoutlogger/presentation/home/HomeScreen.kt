@@ -75,6 +75,12 @@ fun HomeScreen(
     var showSwipeHint by remember { mutableStateOf(!prefs.getBoolean("swipe_hint_dismissed", false)) }
     var editingWorkout by remember { mutableStateOf<WorkoutEntry?>(null) }
 
+    val sortedSelectedTypes = remember(uiState.selectedWorkoutTypes) {
+        uiState.selectedWorkoutTypes.sortedWith(
+            compareBy<WorkoutType> { it.category.ordinal }.thenBy { it.name }
+        )
+    }
+
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
@@ -190,21 +196,34 @@ fun HomeScreen(
                 }
             }
 
-            // Notes field (visible only when one or more workout types are selected)
-            if (uiState.selectedWorkoutTypes.isNotEmpty()) {
+            // Notes fields (visible only when one or more workout types are selected)
+            if (sortedSelectedTypes.isNotEmpty()) {
                 item {
                     Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Workout Notes",
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                items(
+                    items = sortedSelectedTypes,
+                    key = { "note_${it.category.name}_${it.name}" }
+                ) { workoutType ->
+                    val noteValue = uiState.workoutNotesMap[workoutType] ?: ""
+                    Spacer(modifier = Modifier.height(4.dp))
                     androidx.compose.material3.OutlinedTextField(
-                        value = uiState.workoutNotes,
-                        onValueChange = { viewModel.onWorkoutNotesChanged(it) },
-                        label = { Text("Workout Details / Notes") },
-                        placeholder = { Text("e.g., did 3 sets of chest workout") },
+                        value = noteValue,
+                        onValueChange = { viewModel.onWorkoutNotesChanged(workoutType, it) },
+                        label = { Text("Notes for ${workoutType.emoji} ${workoutType.name}") },
+                        placeholder = { Text("e.g., details, weight, sets") },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = false,
                         maxLines = 3,
                         trailingIcon = {
-                            if (uiState.workoutNotes.isNotEmpty()) {
-                                IconButton(onClick = { viewModel.onWorkoutNotesChanged("") }) {
+                            if (noteValue.isNotEmpty()) {
+                                IconButton(onClick = { viewModel.onWorkoutNotesChanged(workoutType, "") }) {
                                     Icon(
                                         imageVector = Icons.Default.Clear,
                                         contentDescription = "Clear notes"
@@ -328,7 +347,7 @@ fun HomeScreen(
     editingWorkout?.let { workout ->
         EditNotesDialog(
             workout = workout,
-            onDismiss = { },
+            onDismiss = { editingWorkout = null },
             onConfirm = { newNote ->
                 viewModel.updateWorkoutNote(workout, newNote)
             }

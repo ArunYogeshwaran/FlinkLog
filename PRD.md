@@ -252,12 +252,12 @@ This is the default screen the user sees when they open the app. It is designed 
 
 #### Workout Notes / Details
 
-- A Material 3 `OutlinedTextField` labeled **"Workout Details / Notes"** appears below the workout category chips when one or more workout types are selected.
+- Independent, contextually labeled Material 3 `OutlinedTextField` inputs appear in a stable-sorted sequence under a "Workout Notes" header when one or more workout types are selected.
 - Users can select multiple workout chips simultaneously.
-- Users can type custom details (e.g., *"did three sets of chest workout"*).
-- Tapping **"Log Workout"** creates separate workout entries for each selected type, with the same date/time and notes.
-- Includes a trailing clear icon button to easily clear the text.
-- Text is automatically cleared after logging.
+- Users can type custom, distinct notes for each selected exercise (e.g. pace for running, weight/sets for chest).
+- Tapping **"Log Workout"** creates separate workout entries for each selected type, with the same date/time and their respective notes.
+- Each text field includes a trailing clear icon button to easily clear its text.
+- All notes inputs are automatically cleared after logging.
 - Logged workouts can be edited post-logging by clicking on the note text or the edit (pencil) icon on their respective cards, which pops up an "Edit Notes / Details" dialog.
 
 #### Log Workout Button

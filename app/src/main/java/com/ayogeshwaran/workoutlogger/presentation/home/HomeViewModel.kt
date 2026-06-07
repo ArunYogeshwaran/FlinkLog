@@ -27,7 +27,7 @@ data class HomeUiState(
     val selectedHour: Int = Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
     val selectedMinute: Int = Calendar.getInstance().get(Calendar.MINUTE),
     val selectedWorkoutTypes: Set<WorkoutType> = emptySet(),
-    val workoutNotes: String = "",
+    val workoutNotesMap: Map<WorkoutType, String> = emptyMap(),
     val showDatePicker: Boolean = false,
     val showTimePicker: Boolean = false
 )
@@ -86,16 +86,32 @@ class HomeViewModel(
 
     fun onWorkoutTypeToggled(type: WorkoutType) {
         val current = _uiState.value.selectedWorkoutTypes
-        val updated = if (current.contains(type)) {
+        val isSelected = current.contains(type)
+        val updated = if (isSelected) {
             current - type
         } else {
             current + type
         }
-        _uiState.value = _uiState.value.copy(selectedWorkoutTypes = updated)
+
+        val updatedMap = _uiState.value.workoutNotesMap.toMutableMap()
+        if (isSelected) {
+            updatedMap.remove(type)
+        }
+
+        _uiState.value = _uiState.value.copy(
+            selectedWorkoutTypes = updated,
+            workoutNotesMap = updatedMap
+        )
     }
 
-    fun onWorkoutNotesChanged(notes: String) {
-        _uiState.value = _uiState.value.copy(workoutNotes = notes)
+    fun onWorkoutNotesChanged(workoutType: WorkoutType, notes: String) {
+        val updatedMap = _uiState.value.workoutNotesMap.toMutableMap()
+        if (notes.isEmpty()) {
+            updatedMap.remove(workoutType)
+        } else {
+            updatedMap[workoutType] = notes
+        }
+        _uiState.value = _uiState.value.copy(workoutNotesMap = updatedMap)
     }
 
     fun onShowDatePicker(show: Boolean) {
@@ -125,7 +141,7 @@ class HomeViewModel(
                 date = state.selectedDate,
                 timestamp = cal.timeInMillis,
                 createdAt = System.currentTimeMillis(),
-                notes = state.workoutNotes
+                notes = state.workoutNotesMap[workoutType] ?: ""
             )
         }
 
@@ -136,7 +152,7 @@ class HomeViewModel(
 
         _uiState.value = _uiState.value.copy(
             selectedWorkoutTypes = emptySet(),
-            workoutNotes = ""
+            workoutNotesMap = emptyMap()
         )
     }
 

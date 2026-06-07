@@ -155,7 +155,7 @@ fun HistoryScreen(
     editingWorkout?.let { workout ->
         EditNotesDialog(
             workout = workout,
-            onDismiss = { },
+            onDismiss = { editingWorkout = null },
             onConfirm = { newNote ->
                 viewModel.updateWorkoutNote(workout, newNote)
             }
