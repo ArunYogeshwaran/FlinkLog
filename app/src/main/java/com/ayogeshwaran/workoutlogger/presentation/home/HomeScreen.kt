@@ -35,6 +35,9 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
@@ -78,11 +81,18 @@ fun HomeScreen(
     val prefs = remember { context.getSharedPreferences("onboarding", Context.MODE_PRIVATE) }
     var showSwipeHint by remember { mutableStateOf(!prefs.getBoolean("swipe_hint_dismissed", false)) }
     var editingWorkout by remember { mutableStateOf<WorkoutEntry?>(null) }
+    var showLogBottomSheet by remember { mutableStateOf(false) }
 
     val sortedSelectedTypes = remember(uiState.selectedWorkoutTypes) {
         uiState.selectedWorkoutTypes.sortedWith(
             compareBy<WorkoutType> { it.category.ordinal }.thenBy { it.name }
         )
+    }
+
+    LaunchedEffect(sortedSelectedTypes) {
+        if (sortedSelectedTypes.isEmpty()) {
+            showLogBottomSheet = false
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -200,51 +210,11 @@ fun HomeScreen(
                 }
             }
 
-            // Notes fields (visible only when one or more workout types are selected)
-            if (sortedSelectedTypes.isNotEmpty()) {
-                item {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = stringResource(R.string.workout_notes_title),
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-
-                items(
-                    items = sortedSelectedTypes,
-                    key = { "note_${it.category.name}_${it.name}" }
-                ) { workoutType ->
-                    val noteValue = uiState.workoutNotesMap[workoutType] ?: ""
-                    Spacer(modifier = Modifier.height(4.dp))
-                    androidx.compose.material3.OutlinedTextField(
-                        value = noteValue,
-                        onValueChange = { viewModel.onWorkoutNotesChanged(workoutType, it) },
-                        label = { Text(stringResource(R.string.notes_label, workoutType.emoji, workoutType.localizedName())) },
-                        placeholder = { Text(stringResource(R.string.notes_placeholder)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = false,
-                        maxLines = 3,
-                        trailingIcon = {
-                            if (noteValue.isNotEmpty()) {
-                                IconButton(onClick = { viewModel.onWorkoutNotesChanged(workoutType, "") }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Clear,
-                                        contentDescription = stringResource(R.string.clear_notes_desc)
-                                    )
-                                }
-                            }
-                        },
-                        shape = MaterialTheme.shapes.medium
-                    )
-                }
-            }
-
             // Log Workout button
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
-                    onClick = { viewModel.logWorkout() },
+                    onClick = { showLogBottomSheet = true },
                     enabled = uiState.selectedWorkoutTypes.isNotEmpty(),
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -356,6 +326,88 @@ fun HomeScreen(
                 viewModel.updateWorkoutNote(workout, newNote)
             }
         )
+    }
+
+    if (showLogBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showLogBottomSheet = false },
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .padding(bottom = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.workout_notes_title),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                LazyColumn(
+                    modifier = Modifier.weight(1f, fill = false),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(
+                        items = sortedSelectedTypes,
+                        key = { "sheet_note_${it.category.name}_${it.name}" }
+                    ) { workoutType ->
+                        val noteValue = uiState.workoutNotesMap[workoutType] ?: ""
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                androidx.compose.material3.OutlinedTextField(
+                                    value = noteValue,
+                                    onValueChange = { viewModel.onWorkoutNotesChanged(workoutType, it) },
+                                    label = { Text(stringResource(R.string.notes_label, workoutType.emoji, workoutType.localizedName())) },
+                                    placeholder = { Text(stringResource(R.string.notes_placeholder)) },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    singleLine = false,
+                                    maxLines = 3,
+                                    trailingIcon = {
+                                        if (noteValue.isNotEmpty()) {
+                                            IconButton(onClick = { viewModel.onWorkoutNotesChanged(workoutType, "") }) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Clear,
+                                                    contentDescription = stringResource(R.string.clear_notes_desc)
+                                                )
+                                            }
+                                        }
+                                    },
+                                    shape = MaterialTheme.shapes.medium
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            IconButton(
+                                onClick = { viewModel.onWorkoutTypeToggled(workoutType) },
+                                modifier = Modifier.align(Alignment.CenterVertically)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = stringResource(R.string.delete_action),
+                                    tint = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Button(
+                    onClick = {
+                        viewModel.logWorkout()
+                        showLogBottomSheet = false
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.log_workout_btn))
+                }
+            }
+        }
     }
 }
 

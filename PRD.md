@@ -52,8 +52,9 @@ The application is structured into two main views via a simple bottom navigation
   - *Cardio & General:* Running, Cycling, Swimming, Walking, HIIT, Yoga, Stretching.
   - *Gym / Muscle Groups:* Chest, Back, Shoulders, Biceps, Triceps, Legs, Abs, Full Body.
 - **Multi-Activity Logging:** Users can select multiple activities at once.
-- **Workout Notes:** When activities are selected, dedicated text fields enable users to enter custom details (e.g., sets, reps, weight, or distance).
-- **Quick Logging:** Tapping "Log Workout" saves all selected activities and notes, clears inputs, and displays a confirmation notification with an "Undo" option.
+- **Workout Logging Bottom Sheet:** Once the user selects all the workouts and taps "Log Workout", a bottom sheet is displayed listing all the selected workouts. The user can add notes/details to each selected workout directly in this bottom sheet.
+- **Remove Selected Workouts:** In the bottom sheet, the user can remove a workout from their selection using a delete button next to each workout.
+- **Final Log Confirmation:** Clicking the "Log Workout" button inside the bottom sheet saves all selected workouts and notes, clears all inputs, dismisses the bottom sheet, and displays a confirmation notification with an "Undo" option.
 - **Daily Workout List:** A list at the bottom shows all logged workouts for the selected date.
   - **Edit Notes:** Tapping on a card's note text or edit icon opens a dialog to update the notes post-logging.
   - **Swipe to Delete:** Users can swipe any logged card to the left to delete it, with a confirmation notification and "Undo" option.
@@ -79,9 +80,10 @@ The application is structured into two main views via a simple bottom navigation
 ### 6.1 Log a Workout
 1. Open the app to the Home screen.
 2. Select one or more activity chips (e.g., "Running" and "Chest").
-3. (Optional) Enter custom notes (e.g., "5km, 25 mins" or "3 sets of 10 reps").
-4. Tap "Log Workout".
-5. The workout is saved, and a confirmation with "Undo" appears.
+3. Tap "Log Workout" to open the workout details bottom sheet.
+4. (Optional) Enter custom notes for each selected workout or remove any accidental selections.
+5. Tap "Log Workout" inside the bottom sheet.
+6. The workouts are saved, the bottom sheet is dismissed, and a confirmation with "Undo" appears.
 
 ### 6.2 View and Edit Past Logged Workouts
 1. Navigate to the "History" tab.
