@@ -35,6 +35,10 @@ android {
     buildFeatures {
         compose = true
     }
+    lint {
+        abortOnError = true
+        error += "HardcodedText"
+    }
 }
 
 kotlin {
