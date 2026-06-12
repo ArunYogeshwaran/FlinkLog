@@ -36,6 +36,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
+import com.ayogeshwaran.workoutlogger.domain.model.localizedType
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
+import com.ayogeshwaran.workoutlogger.R
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -79,7 +83,7 @@ fun SwipeToDeleteWorkoutCard(
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete",
+                    contentDescription = stringResource(R.string.delete_action),
                     tint = MaterialTheme.colorScheme.onErrorContainer
                 )
             }
@@ -96,7 +100,8 @@ fun WorkoutCard(
     onEditNotes: (WorkoutEntry) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val timeFormat = remember { SimpleDateFormat("h:mm a", Locale.getDefault()) }
+    val context = LocalContext.current
+    val timeFormat = remember(context) { android.text.format.DateFormat.getTimeFormat(context) }
 
     ElevatedCard(
         modifier = modifier.fillMaxWidth()
@@ -110,13 +115,13 @@ fun WorkoutCard(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = workout.workoutType,
+                    text = workout.localizedType(),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = if (workout.notes.isEmpty()) "Add notes..." else workout.notes,
+                    text = if (workout.notes.isEmpty()) stringResource(R.string.add_notes) else workout.notes,
                     style = MaterialTheme.typography.bodyMedium,
                     color = if (workout.notes.isEmpty()) MaterialTheme.colorScheme.primary.copy(alpha = 0.6f) else MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
@@ -140,7 +145,7 @@ fun WorkoutCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit notes",
+                        contentDescription = stringResource(R.string.edit_notes),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(16.dp)
                     )
@@ -159,13 +164,13 @@ fun EditNotesDialog(
     var text by remember { mutableStateOf(workout.notes) }
     androidx.compose.material3.AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Edit Notes / Details") },
+        title = { Text(stringResource(R.string.edit_notes_dialog_title)) },
         text = {
             androidx.compose.material3.OutlinedTextField(
                 value = text,
                 onValueChange = { text = it },
-                label = { Text("Workout: ${workout.workoutType}") },
-                placeholder = { Text("e.g., did 3 sets of chest workout") },
+                label = { Text(stringResource(R.string.edit_notes_workout_label, workout.localizedType())) },
+                placeholder = { Text(stringResource(R.string.edit_notes_placeholder)) },
                 modifier = Modifier.fillMaxWidth()
             )
         },
@@ -176,12 +181,12 @@ fun EditNotesDialog(
                     onDismiss()
                 }
             ) {
-                Text("Save")
+                Text(stringResource(R.string.save))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

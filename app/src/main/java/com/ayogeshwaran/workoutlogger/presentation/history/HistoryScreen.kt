@@ -47,6 +47,9 @@ import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
 import com.ayogeshwaran.workoutlogger.presentation.components.EditNotesDialog
 import com.ayogeshwaran.workoutlogger.presentation.components.SwipeToDeleteWorkoutCard
 import com.ayogeshwaran.workoutlogger.presentation.home.todayMidnight
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
+import com.ayogeshwaran.workoutlogger.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -63,13 +66,14 @@ fun HistoryScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var editingWorkout by remember { mutableStateOf<WorkoutEntry?>(null) }
 
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
                 is HistoryEvent.WorkoutDeleted -> {
                     snackbarHostState.showSnackbar(
-                        message = "Workout deleted",
-                        actionLabel = "Undo",
+                        message = context.getString(R.string.workout_deleted_msg),
+                        actionLabel = context.getString(R.string.undo),
                         duration = SnackbarDuration.Short
                     ).let { result ->
                         if (result == SnackbarResult.ActionPerformed) {
@@ -109,10 +113,18 @@ fun HistoryScreen(
 
             // Selected date header
             item {
-                val dateFormat = remember { SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault()) }
+                val dateString = remember(context, uiState.selectedDate) {
+                    android.text.format.DateUtils.formatDateTime(
+                        context,
+                        uiState.selectedDate,
+                        android.text.format.DateUtils.FORMAT_SHOW_DATE or
+                                android.text.format.DateUtils.FORMAT_SHOW_WEEKDAY or
+                                android.text.format.DateUtils.FORMAT_SHOW_YEAR
+                    )
+                }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = dateFormat.format(Date(uiState.selectedDate)),
+                    text = dateString,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -128,7 +140,7 @@ fun HistoryScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "No workouts on this day.",
+                            text = stringResource(R.string.empty_workouts_history),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center
@@ -184,10 +196,22 @@ private fun CalendarView(
     }
 
     val daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
-    val firstDayOfWeek = cal.get(Calendar.DAY_OF_WEEK) - 1 // 0 = Sunday
+    val firstDayOfWeekSetting = remember { cal.firstDayOfWeek }
+    val firstDayOfMonth = cal.get(Calendar.DAY_OF_WEEK)
+    val offset = (firstDayOfMonth - firstDayOfWeekSetting + 7) % 7
 
     val todayMidnight = remember { todayMidnight() }
-    val dayLabels = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
+    val dayLabels = remember(firstDayOfWeekSetting) {
+        val symbols = java.text.DateFormatSymbols.getInstance(Locale.getDefault())
+        val weekdays = symbols.shortWeekdays // index 1 is Sunday, 7 is Saturday
+        val list = mutableListOf<String>()
+        var day = firstDayOfWeekSetting
+        for (i in 0 until 7) {
+            list.add(weekdays[day])
+            day = if (day == Calendar.SATURDAY) Calendar.SUNDAY else day + 1
+        }
+        list
+    }
 
     ElevatedCard(
         modifier = Modifier.fillMaxWidth()
@@ -202,7 +226,7 @@ private fun CalendarView(
                 IconButton(onClick = onPreviousMonth) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                        contentDescription = "Previous month"
+                        contentDescription = stringResource(R.string.prev_month_desc)
                     )
                 }
                 Text(
@@ -213,7 +237,7 @@ private fun CalendarView(
                 IconButton(onClick = onNextMonth) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = "Next month"
+                        contentDescription = stringResource(R.string.next_month_desc)
                     )
                 }
             }
@@ -236,14 +260,14 @@ private fun CalendarView(
             Spacer(modifier = Modifier.height(4.dp))
 
             // Calendar grid
-            val totalCells = firstDayOfWeek + daysInMonth
+            val totalCells = offset + daysInMonth
             val rows = (totalCells + 6) / 7
 
             for (row in 0 until rows) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     for (col in 0..6) {
                         val cellIndex = row * 7 + col
-                        val day = cellIndex - firstDayOfWeek + 1
+                        val day = cellIndex - offset + 1
 
                         if (day in 1..daysInMonth) {
                             val dayCal = Calendar.getInstance()

@@ -24,10 +24,13 @@ import com.ayogeshwaran.workoutlogger.presentation.history.HistoryScreen
 import com.ayogeshwaran.workoutlogger.presentation.history.HistoryViewModel
 import com.ayogeshwaran.workoutlogger.presentation.home.HomeScreen
 import com.ayogeshwaran.workoutlogger.presentation.home.HomeViewModel
+import androidx.annotation.StringRes
+import androidx.compose.ui.res.stringResource
+import com.ayogeshwaran.workoutlogger.R
 
-sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
-    data object Home : Screen("home", "Today", Icons.Default.Home)
-    data object History : Screen("history", "History", Icons.Default.DateRange)
+sealed class Screen(val route: String, @param:StringRes val labelRes: Int, val icon: ImageVector) {
+    data object Home : Screen("home", R.string.nav_today, Icons.Default.Home)
+    data object History : Screen("history", R.string.nav_history, Icons.Default.DateRange)
 }
 
 object Route {
@@ -54,8 +57,8 @@ fun AppNavigation(
                 NavigationBar {
                     bottomNavItems.forEach { screen ->
                         NavigationBarItem(
-                            icon = { Icon(screen.icon, contentDescription = screen.label) },
-                            label = { Text(screen.label) },
+                            icon = { Icon(screen.icon, contentDescription = stringResource(screen.labelRes)) },
+                            label = { Text(stringResource(screen.labelRes)) },
                             selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                             onClick = {
                                 navController.navigate(screen.route) {

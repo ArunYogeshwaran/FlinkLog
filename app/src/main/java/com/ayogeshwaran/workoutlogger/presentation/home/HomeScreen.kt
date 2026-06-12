@@ -53,11 +53,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutType
+import com.ayogeshwaran.workoutlogger.domain.model.localizedName
 import com.ayogeshwaran.workoutlogger.presentation.components.EditNotesDialog
 import com.ayogeshwaran.workoutlogger.presentation.components.SwipeToDeleteWorkoutCard
+import androidx.compose.ui.res.stringResource
+import com.ayogeshwaran.workoutlogger.R
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.Calendar
 import androidx.core.content.edit
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -86,10 +90,10 @@ fun HomeScreen(
             when (event) {
                 is HomeEvent.WorkoutsLogged -> {
                     val count = event.entries.size
-                    val msg = if (count == 1) "Workout logged!" else "$count workouts logged!"
+                    val msg = context.resources.getQuantityString(R.plurals.workouts_logged, count, count)
                     snackbarHostState.showSnackbar(
                         message = msg,
-                        actionLabel = "Undo",
+                        actionLabel = context.getString(R.string.undo),
                         duration = SnackbarDuration.Short
                     ).let { result ->
                         if (result == SnackbarResult.ActionPerformed) {
@@ -99,8 +103,8 @@ fun HomeScreen(
                 }
                 is HomeEvent.WorkoutDeleted -> {
                     snackbarHostState.showSnackbar(
-                        message = "Workout deleted",
-                        actionLabel = "Undo",
+                        message = context.getString(R.string.workout_deleted_msg),
+                        actionLabel = context.getString(R.string.undo),
                         duration = SnackbarDuration.Short
                     ).let { result ->
                         if (result == SnackbarResult.ActionPerformed) {
@@ -132,7 +136,7 @@ fun HomeScreen(
                     IconButton(onClick = onNavigateToAbout) {
                         Icon(
                             imageVector = Icons.Default.Info,
-                            contentDescription = "About",
+                            contentDescription = stringResource(R.string.about_desc),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -150,7 +154,7 @@ fun HomeScreen(
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Cardio & General",
+                    text = stringResource(R.string.category_cardio),
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -175,7 +179,7 @@ fun HomeScreen(
             item {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Gym / Muscle Groups",
+                    text = stringResource(R.string.category_gym),
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -201,7 +205,7 @@ fun HomeScreen(
                 item {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Workout Notes",
+                        text = stringResource(R.string.workout_notes_title),
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -216,8 +220,8 @@ fun HomeScreen(
                     androidx.compose.material3.OutlinedTextField(
                         value = noteValue,
                         onValueChange = { viewModel.onWorkoutNotesChanged(workoutType, it) },
-                        label = { Text("Notes for ${workoutType.emoji} ${workoutType.name}") },
-                        placeholder = { Text("e.g., details, weight, sets") },
+                        label = { Text(stringResource(R.string.notes_label, workoutType.emoji, workoutType.localizedName())) },
+                        placeholder = { Text(stringResource(R.string.notes_placeholder)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = false,
                         maxLines = 3,
@@ -226,7 +230,7 @@ fun HomeScreen(
                                 IconButton(onClick = { viewModel.onWorkoutNotesChanged(workoutType, "") }) {
                                     Icon(
                                         imageVector = Icons.Default.Clear,
-                                        contentDescription = "Clear notes"
+                                        contentDescription = stringResource(R.string.clear_notes_desc)
                                     )
                                 }
                             }
@@ -244,7 +248,7 @@ fun HomeScreen(
                     enabled = uiState.selectedWorkoutTypes.isNotEmpty(),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Log Workout")
+                    Text(stringResource(R.string.log_workout_btn))
                 }
             }
 
@@ -252,7 +256,7 @@ fun HomeScreen(
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Logged Workouts",
+                    text = stringResource(R.string.logged_workouts_title),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -280,7 +284,7 @@ fun HomeScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "No workouts logged yet.\nStart your first session.",
+                            text = stringResource(R.string.empty_workouts_home),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center
@@ -315,12 +319,12 @@ fun HomeScreen(
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let { viewModel.onDateSelected(it) }
                 }) {
-                    Text("OK")
+                    Text(stringResource(R.string.ok))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { viewModel.onShowDatePicker(false) }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         ) {
@@ -363,9 +367,22 @@ private fun DateTimeHeader(
     onDateClick: () -> Unit,
     onTimeClick: () -> Unit
 ) {
-    val dateFormat = remember { SimpleDateFormat("EEEE, MMM d, yyyy", Locale.getDefault()) }
-    val timeString = remember(selectedHour, selectedMinute) {
-        String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute)
+    val context = LocalContext.current
+    val dateString = remember(context, selectedDate) {
+        android.text.format.DateUtils.formatDateTime(
+            context,
+            selectedDate,
+            android.text.format.DateUtils.FORMAT_SHOW_DATE or
+                    android.text.format.DateUtils.FORMAT_SHOW_WEEKDAY or
+                    android.text.format.DateUtils.FORMAT_SHOW_YEAR
+        )
+    }
+    val timeString = remember(context, selectedHour, selectedMinute) {
+        val cal = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, selectedHour)
+            set(Calendar.MINUTE, selectedMinute)
+        }
+        android.text.format.DateFormat.getTimeFormat(context).format(cal.time)
     }
 
     ElevatedCard(
@@ -380,7 +397,7 @@ private fun DateTimeHeader(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = dateFormat.format(Date(selectedDate)),
+                    text = dateString,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -395,10 +412,10 @@ private fun DateTimeHeader(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TextButton(onClick = onDateClick) {
-                    Text("Change Date")
+                    Text(stringResource(R.string.change_date))
                 }
                 TextButton(onClick = onTimeClick) {
-                    Text("Change Time")
+                    Text(stringResource(R.string.change_time))
                 }
             }
         }
@@ -414,7 +431,7 @@ private fun WorkoutChip(
     FilterChip(
         selected = isSelected,
         onClick = onSelected,
-        label = { Text(workoutType.name) }
+        label = { Text(workoutType.localizedName()) }
     )
 }
 
@@ -428,12 +445,12 @@ private fun TimePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text("OK")
+                Text(stringResource(R.string.ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         },
         text = { content() }
@@ -458,7 +475,7 @@ private fun SwipeToDeleteTooltip(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "💡 Tip: Swipe left on a workout to delete it",
+                text = stringResource(R.string.swipe_hint_text),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
                 modifier = Modifier.weight(1f)
@@ -466,7 +483,7 @@ private fun SwipeToDeleteTooltip(
             Spacer(modifier = Modifier.width(8.dp))
             TextButton(onClick = onDismiss) {
                 Text(
-                    text = "Got it",
+                    text = stringResource(R.string.swipe_hint_dismiss),
                     color = MaterialTheme.colorScheme.onTertiaryContainer
                 )
             }

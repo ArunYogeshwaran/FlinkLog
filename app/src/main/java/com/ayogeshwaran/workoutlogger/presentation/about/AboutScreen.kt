@@ -77,12 +77,12 @@ fun AboutScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("About") },
+                title = { Text(stringResource(R.string.about_title)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.back_desc)
                         )
                     }
                 }
@@ -130,13 +130,13 @@ fun AboutScreen(
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Open Source Licenses",
+                    text = stringResource(R.string.about_open_source_title),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "This app is built with the following open source libraries. Thank you to every contributor.",
+                    text = stringResource(R.string.about_open_source_subtitle),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -151,7 +151,7 @@ fun AboutScreen(
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "All libraries listed above are licensed under the Apache License 2.0.",
+                    text = stringResource(R.string.about_open_source_footer),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
@@ -183,7 +183,7 @@ private fun AppHeaderSection(versionName: String) {
             textAlign = TextAlign.Center
         )
         Text(
-            text = "Version $versionName",
+            text = stringResource(R.string.about_version, versionName),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
@@ -200,14 +200,14 @@ private fun PhilosophySection() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "\"Everyone deserves simple tools.\"",
+                text = stringResource(R.string.about_philosophy_quote),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "In an era where every app is bloated with features, subscriptions, and trackers — this app chooses to stay simple.\n\nNo accounts. No cloud. No ads. No tracking.\nJust log your workout and move on with your day.",
+                text = stringResource(R.string.about_philosophy_body),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -224,7 +224,7 @@ private fun DeveloperSection(developerName: String) {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "Built by",
+                text = stringResource(R.string.about_built_by),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -236,7 +236,7 @@ private fun DeveloperSection(developerName: String) {
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "I built this app for myself. Then I thought — maybe others want something this simple too.",
+                text = stringResource(R.string.about_developer_body),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -260,7 +260,7 @@ private fun ActionsSection(
         ) {
             Icon(imageVector = Icons.Default.Email, contentDescription = null)
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Send Feedback")
+            Text(stringResource(R.string.about_send_feedback))
         }
 
         OutlinedButton(
@@ -269,7 +269,7 @@ private fun ActionsSection(
         ) {
             Icon(imageVector = Icons.Default.Star, contentDescription = null)
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Rate on Play Store")
+            Text(stringResource(R.string.about_rate_play_store))
         }
     }
 }
