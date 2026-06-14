@@ -8,7 +8,7 @@ import com.ayogeshwaran.workoutlogger.data.local.entity.WorkoutEntryEntity
 
 @Database(
     entities = [WorkoutEntryEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class WorkoutDatabase : RoomDatabase() {

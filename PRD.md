@@ -47,7 +47,7 @@ thing and does it well.
 The application is structured into two main views via a simple bottom navigation bar, with a secondary info screen.
 
 ### 5.1 Home ("Today") Screen
-- **Date & Time Selector:** Defaults to the current date and time. Users can set a custom date or time for logging a workout.
+- **Automatic Date & Time:** All logged workouts automatically default to the current date and time.
 - **Activity Selector:** Preset exercises categorized under:
   - *Cardio & General:* Running, Cycling, Swimming, Walking, HIIT, Yoga, Stretching.
   - *Gym / Muscle Groups:* Chest, Back, Shoulders, Biceps, Triceps, Legs, Abs, Full Body.
@@ -55,7 +55,7 @@ The application is structured into two main views via a simple bottom navigation
 - **Workout Logging Bottom Sheet:** Once the user selects all the workouts and taps "Log Workout", a bottom sheet is displayed listing all the selected workouts. The user can add notes/details to each selected workout directly in this bottom sheet.
 - **Remove Selected Workouts:** In the bottom sheet, the user can remove a workout from their selection using a delete button next to each workout.
 - **Final Log Confirmation:** Clicking the "Log Workout" button inside the bottom sheet saves all selected workouts and notes, clears all inputs, dismisses the bottom sheet, and displays a confirmation notification with an "Undo" option.
-- **Daily Workout List:** A list at the bottom shows all logged workouts for the selected date.
+- **Daily Workout List:** A list at the bottom shows all logged workouts for today.
   - **Edit Notes:** Tapping on a card's note text or edit icon opens a dialog to update the notes post-logging.
   - **Swipe to Delete:** Users can swipe any logged card to the left to delete it, with a confirmation notification and "Undo" option.
   - **Swipe Tutorial:** First-time users see a dismissible tip teaching them how to swipe to delete.

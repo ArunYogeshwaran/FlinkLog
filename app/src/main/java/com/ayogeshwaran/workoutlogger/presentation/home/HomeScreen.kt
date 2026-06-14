@@ -136,7 +136,7 @@ fun HomeScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Date & Time Header
+            // About button Header
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
@@ -151,13 +151,6 @@ fun HomeScreen(
                         )
                     }
                 }
-                DateTimeHeader(
-                    selectedDate = uiState.selectedDate,
-                    selectedHour = uiState.selectedHour,
-                    selectedMinute = uiState.selectedMinute,
-                    onDateClick = { viewModel.onShowDatePicker(true) },
-                    onTimeClick = { viewModel.onShowTimePicker(true) }
-                )
             }
 
             // Cardio & General chips
@@ -278,45 +271,7 @@ fun HomeScreen(
         }
     }
 
-    // Date Picker Dialog
-    if (uiState.showDatePicker) {
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = uiState.selectedDate
-        )
-        DatePickerDialog(
-            onDismissRequest = { viewModel.onShowDatePicker(false) },
-            confirmButton = {
-                TextButton(onClick = {
-                    datePickerState.selectedDateMillis?.let { viewModel.onDateSelected(it) }
-                }) {
-                    Text(stringResource(R.string.ok))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { viewModel.onShowDatePicker(false) }) {
-                    Text(stringResource(R.string.cancel))
-                }
-            }
-        ) {
-            DatePicker(state = datePickerState)
-        }
-    }
 
-    // Time Picker Dialog
-    if (uiState.showTimePicker) {
-        val timePickerState = rememberTimePickerState(
-            initialHour = uiState.selectedHour,
-            initialMinute = uiState.selectedMinute
-        )
-        TimePickerDialog(
-            onDismiss = { viewModel.onShowTimePicker(false) },
-            onConfirm = {
-                viewModel.onTimeSelected(timePickerState.hour, timePickerState.minute)
-            }
-        ) {
-            TimePicker(state = timePickerState)
-        }
-    }
 
     editingWorkout?.let { workout ->
         EditNotesDialog(
@@ -411,68 +366,7 @@ fun HomeScreen(
     }
 }
 
-@Composable
-private fun DateTimeHeader(
-    selectedDate: Long,
-    selectedHour: Int,
-    selectedMinute: Int,
-    onDateClick: () -> Unit,
-    onTimeClick: () -> Unit
-) {
-    val context = LocalContext.current
-    val dateString = remember(context, selectedDate) {
-        android.text.format.DateUtils.formatDateTime(
-            context,
-            selectedDate,
-            android.text.format.DateUtils.FORMAT_SHOW_DATE or
-                    android.text.format.DateUtils.FORMAT_SHOW_WEEKDAY or
-                    android.text.format.DateUtils.FORMAT_SHOW_YEAR
-        )
-    }
-    val timeString = remember(context, selectedHour, selectedMinute) {
-        val cal = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, selectedHour)
-            set(Calendar.MINUTE, selectedMinute)
-        }
-        android.text.format.DateFormat.getTimeFormat(context).format(cal.time)
-    }
 
-    ElevatedCard(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = dateString,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = timeString,
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                TextButton(onClick = onDateClick) {
-                    Text(stringResource(R.string.change_date))
-                }
-                TextButton(onClick = onTimeClick) {
-                    Text(stringResource(R.string.change_time))
-                }
-            }
-        }
-    }
-}
 
 @Composable
 private fun WorkoutChip(
@@ -487,27 +381,7 @@ private fun WorkoutChip(
     )
 }
 
-@Composable
-private fun TimePickerDialog(
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
-    content: @Composable () -> Unit
-) {
-    androidx.compose.material3.AlertDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text(stringResource(R.string.ok))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
-            }
-        },
-        text = { content() }
-    )
-}
+
 
 @Composable
 private fun SwipeToDeleteTooltip(

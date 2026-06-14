@@ -23,19 +23,16 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 
 data class HomeUiState(
-    val selectedDate: Long = todayMidnight(),
-    val selectedHour: Int = Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
-    val selectedMinute: Int = Calendar.getInstance().get(Calendar.MINUTE),
     val selectedWorkoutTypes: Set<WorkoutType> = emptySet(),
-    val workoutNotesMap: Map<WorkoutType, String> = emptyMap(),
-    val showDatePicker: Boolean = false,
-    val showTimePicker: Boolean = false
+    val workoutNotesMap: Map<WorkoutType, String> = emptyMap()
 )
 
 sealed class HomeEvent {
     data class WorkoutsLogged(val entries: List<WorkoutEntry>) : HomeEvent()
     data class WorkoutDeleted(val entry: WorkoutEntry) : HomeEvent()
 }
+
+private const val DAY_IN_MILLIS = 24 * 60 * 60 * 1000L
 
 fun todayMidnight(): Long {
     val cal = Calendar.getInstance()
@@ -60,29 +57,15 @@ class HomeViewModel(
     val events = _events.asSharedFlow()
 
     val workoutsForDate: StateFlow<List<WorkoutEntry>> = _uiState
-        .flatMapLatest { state ->
-            val startOfDay = state.selectedDate
-            val endOfDay = startOfDay + 24 * 60 * 60 * 1000L
+        .flatMapLatest {
+            val startOfDay = todayMidnight()
+            val endOfDay = startOfDay + DAY_IN_MILLIS
             getWorkoutsForDateUseCase(startOfDay, endOfDay)
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val cardioTypes = PresetWorkoutTypes.filter { it.category == WorkoutCategory.CARDIO }
     val gymTypes = PresetWorkoutTypes.filter { it.category == WorkoutCategory.GYM }
-
-    fun onDateSelected(millis: Long) {
-        val cal = Calendar.getInstance()
-        cal.timeInMillis = millis
-        cal.set(Calendar.HOUR_OF_DAY, 0)
-        cal.set(Calendar.MINUTE, 0)
-        cal.set(Calendar.SECOND, 0)
-        cal.set(Calendar.MILLISECOND, 0)
-        _uiState.value = _uiState.value.copy(selectedDate = cal.timeInMillis, showDatePicker = false)
-    }
-
-    fun onTimeSelected(hour: Int, minute: Int) {
-        _uiState.value = _uiState.value.copy(selectedHour = hour, selectedMinute = minute, showTimePicker = false)
-    }
 
     fun onWorkoutTypeToggled(type: WorkoutType) {
         val current = _uiState.value.selectedWorkoutTypes
@@ -114,33 +97,21 @@ class HomeViewModel(
         _uiState.value = _uiState.value.copy(workoutNotesMap = updatedMap)
     }
 
-    fun onShowDatePicker(show: Boolean) {
-        _uiState.value = _uiState.value.copy(showDatePicker = show)
-    }
-
-    fun onShowTimePicker(show: Boolean) {
-        _uiState.value = _uiState.value.copy(showTimePicker = show)
-    }
-
     fun logWorkout() {
         val state = _uiState.value
         val workoutTypes = state.selectedWorkoutTypes
         if (workoutTypes.isEmpty()) return
 
-        val cal = Calendar.getInstance()
-        cal.timeInMillis = state.selectedDate
-        cal.set(Calendar.HOUR_OF_DAY, state.selectedHour)
-        cal.set(Calendar.MINUTE, state.selectedMinute)
-        cal.set(Calendar.SECOND, 0)
-        cal.set(Calendar.MILLISECOND, 0)
+        val now = System.currentTimeMillis()
+        val today = todayMidnight()
 
         val entries = workoutTypes.map { workoutType ->
             WorkoutEntry(
                 workoutCategory = workoutType.category,
                 workoutType = workoutType.name,
-                date = state.selectedDate,
-                timestamp = cal.timeInMillis,
-                createdAt = System.currentTimeMillis(),
+                date = today,
+                timestamp = now,
+                createdAt = now,
                 notes = state.workoutNotesMap[workoutType] ?: ""
             )
         }
