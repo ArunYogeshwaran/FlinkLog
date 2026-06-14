@@ -17,31 +17,25 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberTimePickerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,21 +45,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ayogeshwaran.workoutlogger.R
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutType
 import com.ayogeshwaran.workoutlogger.domain.model.localizedName
 import com.ayogeshwaran.workoutlogger.presentation.components.EditNotesDialog
 import com.ayogeshwaran.workoutlogger.presentation.components.SwipeToDeleteWorkoutCard
-import androidx.compose.ui.res.stringResource
-import com.ayogeshwaran.workoutlogger.R
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.Calendar
-import androidx.core.content.edit
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -79,7 +69,14 @@ fun HomeScreen(
 
     val context = LocalContext.current
     val prefs = remember { context.getSharedPreferences("onboarding", Context.MODE_PRIVATE) }
-    var showSwipeHint by remember { mutableStateOf(!prefs.getBoolean("swipe_hint_dismissed", false)) }
+    var showSwipeHint by remember {
+        mutableStateOf(
+            !prefs.getBoolean(
+                "swipe_hint_dismissed",
+                false
+            )
+        )
+    }
     var editingWorkout by remember { mutableStateOf<WorkoutEntry?>(null) }
     var showLogBottomSheet by remember { mutableStateOf(false) }
 
@@ -100,7 +97,8 @@ fun HomeScreen(
             when (event) {
                 is HomeEvent.WorkoutsLogged -> {
                     val count = event.entries.size
-                    val msg = context.resources.getQuantityString(R.plurals.workouts_logged, count, count)
+                    val msg =
+                        context.resources.getQuantityString(R.plurals.workouts_logged, count, count)
                     snackbarHostState.showSnackbar(
                         message = msg,
                         actionLabel = context.getString(R.string.undo),
@@ -111,6 +109,7 @@ fun HomeScreen(
                         }
                     }
                 }
+
                 is HomeEvent.WorkoutDeleted -> {
                     snackbarHostState.showSnackbar(
                         message = context.getString(R.string.workout_deleted_msg),
@@ -318,15 +317,33 @@ fun HomeScreen(
                             Column(modifier = Modifier.weight(1f)) {
                                 androidx.compose.material3.OutlinedTextField(
                                     value = noteValue,
-                                    onValueChange = { viewModel.onWorkoutNotesChanged(workoutType, it) },
-                                    label = { Text(stringResource(R.string.notes_label, workoutType.emoji, workoutType.localizedName())) },
+                                    onValueChange = {
+                                        viewModel.onWorkoutNotesChanged(
+                                            workoutType,
+                                            it
+                                        )
+                                    },
+                                    label = {
+                                        Text(
+                                            stringResource(
+                                                R.string.notes_label,
+                                                workoutType.emoji,
+                                                workoutType.localizedName()
+                                            )
+                                        )
+                                    },
                                     placeholder = { Text(stringResource(R.string.notes_placeholder)) },
                                     modifier = Modifier.fillMaxWidth(),
                                     singleLine = false,
                                     maxLines = 3,
                                     trailingIcon = {
                                         if (noteValue.isNotEmpty()) {
-                                            IconButton(onClick = { viewModel.onWorkoutNotesChanged(workoutType, "") }) {
+                                            IconButton(onClick = {
+                                                viewModel.onWorkoutNotesChanged(
+                                                    workoutType,
+                                                    ""
+                                                )
+                                            }) {
                                                 Icon(
                                                     imageVector = Icons.Default.Clear,
                                                     contentDescription = stringResource(R.string.clear_notes_desc)
@@ -367,7 +384,6 @@ fun HomeScreen(
 }
 
 
-
 @Composable
 private fun WorkoutChip(
     workoutType: WorkoutType,
@@ -380,7 +396,6 @@ private fun WorkoutChip(
         label = { Text(workoutType.localizedName()) }
     )
 }
-
 
 
 @Composable
