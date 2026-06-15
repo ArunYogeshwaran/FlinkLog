@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -271,6 +272,15 @@ private fun ActionsSection(
             Spacer(modifier = Modifier.width(8.dp))
             Text(stringResource(R.string.about_rate_play_store))
         }
+
+        OutlinedButton(
+            onClick = { shareApp(context) },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(imageVector = Icons.Default.Share, contentDescription = null)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(stringResource(R.string.about_share_app))
+        }
     }
 }
 
@@ -328,6 +338,22 @@ private fun openPlayStore(context: Context) {
                 "https://play.google.com/store/apps/details?id=$packageName".toUri()
             )
         )
+    }
+}
+
+private fun shareApp(context: Context) {
+    val packageName = context.packageName
+    val playStoreLink = "https://play.google.com/store/apps/details?id=$packageName"
+    val shareMessage = context.getString(R.string.share_app_message, playStoreLink)
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, shareMessage)
+    }
+    val chooser = Intent.createChooser(intent, context.getString(R.string.about_share_app))
+    try {
+        context.startActivity(chooser)
+    } catch (_: ActivityNotFoundException) {
+        // No sharing activity available
     }
 }
 

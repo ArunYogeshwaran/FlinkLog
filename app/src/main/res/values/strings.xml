@@ -87,4 +87,7 @@
     <string name="delete_custom_workout_title">Delete Custom Workout</string>
     <string name="delete_custom_workout_confirm">Are you sure you want to delete the custom workout \"%1$s\"? This will not affect your logged workouts.</string>
     <string name="delete_custom_workout_success">Custom workout deleted</string>
+    <!-- Sharing Feature -->
+    <string name="about_share_app">Share App</string>
+    <string name="share_app_message">Check out Workout Logger — a lightweight, 100%% offline fitness logger that respects your privacy! Get it here: %1$s</string>
 </resources>

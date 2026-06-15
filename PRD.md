@@ -69,6 +69,7 @@ The application is structured into two main views via a simple bottom navigation
 - A secondary screen accessible via an info button on the Home screen.
 - Displays app information, developer details, and rating links.
 - **Feedback Email:** Tapping the feedback button opens the user's email client with pre-filled developer email and subject line.
+- **Sharing Feature:** Tapping the "Share App" button triggers a standard Android share intent containing a description of the app and a Play Store link.
 - **Licenses:** Lists all open-source libraries used.
 
 ---
@@ -125,4 +126,5 @@ The application is structured into two main views via a simple bottom navigation
 * **Version 1.0:** Initial launch featuring daily workout logging with multi-activity selection and notes, calendar-based history tracking, post-logging note edits, swipe-to-delete with undo, onboarding tutorial, About & Feedback screens, and automatic device-wide dark/light theme support.
 * **Version 1.1:** Added custom date and time picker support during workout logging inside the bottom sheet.
 * **Version 1.1:** Added custom workout category creation (persisted in local DB) via "+" category chips, and deletion support by tapping a clear/delete icon on custom chips.
+* **Version 1.1:** Added a system-level app sharing action button on the About screen.
 
