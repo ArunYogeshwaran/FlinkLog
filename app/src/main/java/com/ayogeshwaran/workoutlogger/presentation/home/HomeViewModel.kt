@@ -24,7 +24,9 @@ import java.util.Calendar
 
 data class HomeUiState(
     val selectedWorkoutTypes: Set<WorkoutType> = emptySet(),
-    val workoutNotesMap: Map<WorkoutType, String> = emptyMap()
+    val workoutNotesMap: Map<WorkoutType, String> = emptyMap(),
+    val isCustomDateTime: Boolean = false,
+    val customTimestamp: Long = System.currentTimeMillis()
 )
 
 sealed class HomeEvent {
@@ -103,14 +105,23 @@ class HomeViewModel(
         if (workoutTypes.isEmpty()) return
 
         val now = System.currentTimeMillis()
-        val today = todayMidnight()
+        val timestampToUse = if (state.isCustomDateTime) state.customTimestamp else now
+
+        val cal = Calendar.getInstance().apply {
+            timeInMillis = timestampToUse
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        val dateMidnight = cal.timeInMillis
 
         val entries = workoutTypes.map { workoutType ->
             WorkoutEntry(
                 workoutCategory = workoutType.category,
                 workoutType = workoutType.name,
-                date = today,
-                timestamp = now,
+                date = dateMidnight,
+                timestamp = timestampToUse,
                 createdAt = now,
                 notes = state.workoutNotesMap[workoutType] ?: ""
             )
@@ -123,8 +134,43 @@ class HomeViewModel(
 
         _uiState.value = _uiState.value.copy(
             selectedWorkoutTypes = emptySet(),
-            workoutNotesMap = emptyMap()
+            workoutNotesMap = emptyMap(),
+            isCustomDateTime = false,
+            customTimestamp = System.currentTimeMillis()
         )
+    }
+
+    fun updateCustomDate(year: Int, month: Int, dayOfMonth: Int) {
+        val cal = Calendar.getInstance().apply {
+            timeInMillis = _uiState.value.customTimestamp
+            set(Calendar.YEAR, year)
+            set(Calendar.MONTH, month)
+            set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        }
+        _uiState.value = _uiState.value.copy(
+            isCustomDateTime = true,
+            customTimestamp = cal.timeInMillis
+        )
+    }
+
+    fun updateCustomTime(hourOfDay: Int, minute: Int) {
+        val cal = Calendar.getInstance().apply {
+            timeInMillis = _uiState.value.customTimestamp
+            set(Calendar.HOUR_OF_DAY, hourOfDay)
+            set(Calendar.MINUTE, minute)
+        }
+        _uiState.value = _uiState.value.copy(
+            isCustomDateTime = true,
+            customTimestamp = cal.timeInMillis
+        )
+    }
+
+    fun onLogSheetOpened() {
+        if (!_uiState.value.isCustomDateTime) {
+            _uiState.value = _uiState.value.copy(
+                customTimestamp = System.currentTimeMillis()
+            )
+        }
     }
 
     fun updateWorkoutNote(entry: WorkoutEntry, newNote: String) {

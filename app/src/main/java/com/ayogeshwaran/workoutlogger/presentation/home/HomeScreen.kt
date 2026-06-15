@@ -17,8 +17,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
+import java.util.Calendar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -79,6 +81,59 @@ fun HomeScreen(
     }
     var editingWorkout by remember { mutableStateOf<WorkoutEntry?>(null) }
     var showLogBottomSheet by remember { mutableStateOf(false) }
+
+    val customTimestamp = uiState.customTimestamp
+    val calendar = remember(customTimestamp) {
+        Calendar.getInstance().apply {
+            timeInMillis = customTimestamp
+        }
+    }
+
+    val datePickerDialog = remember(context, customTimestamp) {
+        android.app.DatePickerDialog(
+            context,
+            { _, year, month, dayOfMonth ->
+                viewModel.updateCustomDate(year, month, dayOfMonth)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+    }
+
+    val timePickerDialog = remember(context, customTimestamp) {
+        val is24Hour = android.text.format.DateFormat.is24HourFormat(context)
+        android.app.TimePickerDialog(
+            context,
+            { _, hourOfDay, minute ->
+                viewModel.updateCustomTime(hourOfDay, minute)
+            },
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
+            is24Hour
+        )
+    }
+
+    val formattedDate = remember(context, customTimestamp) {
+        android.text.format.DateUtils.formatDateTime(
+            context,
+            customTimestamp,
+            android.text.format.DateUtils.FORMAT_SHOW_DATE or
+                    android.text.format.DateUtils.FORMAT_SHOW_WEEKDAY or
+                    android.text.format.DateUtils.FORMAT_SHOW_YEAR
+        )
+    }
+
+    val timeFormat = remember(context) { android.text.format.DateFormat.getTimeFormat(context) }
+    val formattedTime = remember(timeFormat, customTimestamp) {
+        timeFormat.format(java.util.Date(customTimestamp))
+    }
+
+    LaunchedEffect(showLogBottomSheet) {
+        if (showLogBottomSheet) {
+            viewModel.onLogSheetOpened()
+        }
+    }
 
     val sortedSelectedTypes = remember(uiState.selectedWorkoutTypes) {
         uiState.selectedWorkoutTypes.sortedWith(
@@ -300,6 +355,26 @@ fun HomeScreen(
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.fillMaxWidth()
                 )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    androidx.compose.material3.SuggestionChip(
+                        onClick = { datePickerDialog.show() },
+                        label = { Text(formattedDate) },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = stringResource(R.string.change_date)
+                            )
+                        }
+                    )
+                    androidx.compose.material3.SuggestionChip(
+                        onClick = { timePickerDialog.show() },
+                        label = { Text(formattedTime) }
+                    )
+                }
 
                 LazyColumn(
                     modifier = Modifier.weight(1f, fill = false),
