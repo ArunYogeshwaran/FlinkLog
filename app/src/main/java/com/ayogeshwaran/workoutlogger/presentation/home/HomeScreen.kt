@@ -1,6 +1,7 @@
 package com.ayogeshwaran.workoutlogger.presentation.home
 
 import android.content.Context
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,7 +22,6 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
-import java.util.Calendar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -43,6 +44,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,11 +55,14 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ayogeshwaran.workoutlogger.R
+import com.ayogeshwaran.workoutlogger.domain.model.WorkoutCategory
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutType
 import com.ayogeshwaran.workoutlogger.domain.model.localizedName
 import com.ayogeshwaran.workoutlogger.presentation.components.EditNotesDialog
 import com.ayogeshwaran.workoutlogger.presentation.components.SwipeToDeleteWorkoutCard
+import kotlinx.coroutines.launch
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -70,6 +75,14 @@ fun HomeScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    val cardioTypes by viewModel.cardioTypes.collectAsStateWithLifecycle()
+    val gymTypes by viewModel.gymTypes.collectAsStateWithLifecycle()
+
+    var showAddCustomDialog by remember { mutableStateOf(false) }
+    var customWorkoutCategory by remember { mutableStateOf<WorkoutCategory?>(null) }
+    var deletingCustomWorkoutType by remember { mutableStateOf<WorkoutType?>(null) }
     val prefs = remember { context.getSharedPreferences("onboarding", Context.MODE_PRIVATE) }
     var showSwipeHint by remember {
         mutableStateOf(
@@ -220,15 +233,26 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    viewModel.cardioTypes.forEach { type ->
+                    cardioTypes.forEach { type ->
                         WorkoutChip(
                             workoutType = type,
                             isSelected = uiState.selectedWorkoutTypes.contains(type),
                             onSelected = {
                                 viewModel.onWorkoutTypeToggled(type)
+                            },
+                            onDeleteCustom = {
+                                deletingCustomWorkoutType = type
                             }
                         )
                     }
+                    FilterChip(
+                        selected = false,
+                        onClick = {
+                            customWorkoutCategory = WorkoutCategory.CARDIO
+                            showAddCustomDialog = true
+                        },
+                        label = { Text("+") }
+                    )
                 }
             }
 
@@ -245,15 +269,26 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    viewModel.gymTypes.forEach { type ->
+                    gymTypes.forEach { type ->
                         WorkoutChip(
                             workoutType = type,
                             isSelected = uiState.selectedWorkoutTypes.contains(type),
                             onSelected = {
                                 viewModel.onWorkoutTypeToggled(type)
+                            },
+                            onDeleteCustom = {
+                                deletingCustomWorkoutType = type
                             }
                         )
                     }
+                    FilterChip(
+                        selected = false,
+                        onClick = {
+                            customWorkoutCategory = WorkoutCategory.GYM
+                            showAddCustomDialog = true
+                        },
+                        label = { Text("+") }
+                    )
                 }
             }
 
@@ -334,6 +369,57 @@ fun HomeScreen(
             onConfirm = { newNote ->
                 viewModel.updateWorkoutNote(workout, newNote)
             }
+        )
+    }
+
+    deletingCustomWorkoutType?.let { type ->
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { deletingCustomWorkoutType = null },
+            title = { Text(stringResource(R.string.delete_custom_workout_title)) },
+            text = { Text(stringResource(R.string.delete_custom_workout_confirm, type.name)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.deleteCustomWorkoutType(type)
+                        deletingCustomWorkoutType = null
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = context.getString(R.string.delete_custom_workout_success)
+                            )
+                        }
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.delete_action),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { deletingCustomWorkoutType = null }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
+
+    if (showAddCustomDialog && customWorkoutCategory != null) {
+        AddCustomWorkoutDialog(
+            category = customWorkoutCategory!!,
+            onDismiss = {
+                showAddCustomDialog = false
+                customWorkoutCategory = null
+            },
+            onConfirm = {
+                showAddCustomDialog = false
+                customWorkoutCategory = null
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = context.getString(R.string.add_custom_workout_success)
+                    )
+                }
+            },
+            viewModel = viewModel
         )
     }
 
@@ -463,12 +549,25 @@ fun HomeScreen(
 private fun WorkoutChip(
     workoutType: WorkoutType,
     isSelected: Boolean,
-    onSelected: () -> Unit
+    onSelected: () -> Unit,
+    onDeleteCustom: (() -> Unit)? = null
 ) {
     FilterChip(
         selected = isSelected,
         onClick = onSelected,
-        label = { Text(workoutType.localizedName()) }
+        label = { Text(workoutType.localizedName()) },
+        trailingIcon = {
+            if (workoutType.nameRes == 0 && onDeleteCustom != null) {
+                Icon(
+                    imageVector = Icons.Default.Clear,
+                    contentDescription = stringResource(R.string.delete_action),
+                    modifier = Modifier
+                        .size(18.dp)
+                        .clickable { onDeleteCustom() },
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
+        }
     )
 }
 
@@ -505,5 +604,76 @@ private fun SwipeToDeleteTooltip(
             }
         }
     }
+}
+
+
+@Composable
+private fun AddCustomWorkoutDialog(
+    category: WorkoutCategory,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    viewModel: HomeViewModel
+) {
+    var name by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
+
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.add_custom_workout_title)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                androidx.compose.material3.OutlinedTextField(
+                    value = name,
+                    onValueChange = {
+                        name = it
+                        errorMessage = null
+                    },
+                    label = { Text(stringResource(R.string.workout_name_label)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = errorMessage != null,
+                    supportingText = {
+                        if (errorMessage != null) {
+                            Text(
+                                text = errorMessage!!,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    if (name.trim().isEmpty()) {
+                        errorMessage = context.getString(R.string.add_custom_workout_error_empty)
+                    } else {
+                        viewModel.addCustomWorkoutType(
+                            name = name,
+                            category = category,
+                            onSuccess = {
+                                onConfirm()
+                            },
+                            onError = { errorType ->
+                                errorMessage = when (errorType) {
+                                    "empty" -> context.getString(R.string.add_custom_workout_error_empty)
+                                    "exists" -> context.getString(R.string.add_custom_workout_error_exists)
+                                    else -> "Unknown error"
+                                }
+                            }
+                        )
+                    }
+                }
+            ) {
+                Text(stringResource(R.string.save))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
 }
 

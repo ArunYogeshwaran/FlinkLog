@@ -25,17 +25,17 @@ data class WorkoutType(
 
 @Composable
 fun WorkoutType.localizedName(): String {
-    return stringResource(nameRes)
+    return if (nameRes != 0) {
+        stringResource(nameRes)
+    } else {
+        name
+    }
 }
 
 @Composable
 fun WorkoutEntry.localizedType(): String {
     val preset = PresetWorkoutTypes.find { it.name.equals(workoutType, ignoreCase = true) }
-    return if (preset != null) {
-        stringResource(preset.nameRes)
-    } else {
-        workoutType
-    }
+    return preset?.localizedName() ?: workoutType
 }
 
 val PresetWorkoutTypes = listOf(

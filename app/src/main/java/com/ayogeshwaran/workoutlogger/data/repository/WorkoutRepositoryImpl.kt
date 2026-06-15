@@ -1,9 +1,11 @@
 package com.ayogeshwaran.workoutlogger.data.repository
 
 import com.ayogeshwaran.workoutlogger.data.local.WorkoutDao
+import com.ayogeshwaran.workoutlogger.data.local.entity.CustomWorkoutTypeEntity
 import com.ayogeshwaran.workoutlogger.data.local.entity.WorkoutEntryEntity
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutCategory
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
+import com.ayogeshwaran.workoutlogger.domain.model.WorkoutType
 import com.ayogeshwaran.workoutlogger.domain.repository.WorkoutRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -34,6 +36,32 @@ class WorkoutRepositoryImpl(
         return dao.getWorkoutsInRange(start, end).map { entities ->
             entities.map { it.toDomain() }
         }
+    }
+
+    override suspend fun insertCustomWorkoutType(name: String, category: WorkoutCategory) {
+        dao.insertCustomWorkoutType(
+            CustomWorkoutTypeEntity(
+                name = name,
+                category = category.name.lowercase()
+            )
+        )
+    }
+
+    override fun getCustomWorkoutTypes(): Flow<List<WorkoutType>> {
+        return dao.getCustomWorkoutTypes().map { entities ->
+            entities.map { entity ->
+                WorkoutType(
+                    name = entity.name,
+                    emoji = "",
+                    category = WorkoutCategory.fromString(entity.category),
+                    nameRes = 0
+                )
+            }
+        }
+    }
+
+    override suspend fun deleteCustomWorkoutType(name: String, category: WorkoutCategory) {
+        dao.deleteCustomWorkoutTypeByName(name, category.name.lowercase())
     }
 
     private fun WorkoutEntry.toEntity(): WorkoutEntryEntity {

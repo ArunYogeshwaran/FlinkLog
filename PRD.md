@@ -47,10 +47,8 @@ thing and does it well.
 The application is structured into two main views via a simple bottom navigation bar, with a secondary info screen.
 
 ### 5.1 Home ("Today") Screen
-- **Automatic Date & Time:** All logged workouts automatically default to the current date and time.
-- **Activity Selector:** Preset exercises categorized under:
-  - *Cardio & General:* Running, Cycling, Swimming, Walking, HIIT, Yoga, Stretching.
-  - *Gym / Muscle Groups:* Chest, Back, Shoulders, Biceps, Triceps, Legs, Abs, Full Body.
+- **Automatic Date & Time:** All logged workouts default to the current date/time. Users can optionally customize the logging date and time using picker buttons inside the logging bottom sheet.
+- **Activity Selector & Custom Workouts:** Preset exercises categorized under Cardio & General or Gym / Muscle Groups. Users can also add their own custom, permanent categories dynamically via a "+" button, and delete custom workout categories by tapping a clear/delete icon on the category chip. Custom workouts persist in the local database.
 - **Multi-Activity Logging:** Users can select multiple activities at once.
 - **Workout Logging Bottom Sheet:** Once the user selects all the workouts and taps "Log Workout", a bottom sheet is displayed listing all the selected workouts. The user can add notes/details to each selected workout directly in this bottom sheet.
 - **Remove Selected Workouts:** In the bottom sheet, the user can remove a workout from their selection using a delete button next to each workout.
@@ -101,7 +99,7 @@ The application is structured into two main views via a simple bottom navigation
 ## 7. Future Roadmap
 
 - **Structured Inputs:** Support logging structured sets, reps, weights, or distance instead of relying solely on free-form text.
-- **Custom Activities:** Allow users to create, rename, and manage custom workout categories and activities.
+- **Custom Activities Management:** Allow users to rename, delete, or re-organize custom workout categories and activities.
 - **Statistics & Streaks:** Introduce a dashboard showing monthly workout trends, consistency streaks, and total workouts.
 - **Data Portability:** Enable exporting and importing workout history via CSV/JSON files.
 - **Reminders:** Optional local daily notifications to encourage logging consistency.
@@ -124,6 +122,7 @@ The application is structured into two main views via a simple bottom navigation
 
 ## 9. Product Changelog
 
-* **Version 1.0:** Initial launch featuring daily workout logging, calendar view history, swipe-to-delete with undo, and light/dark theme support.
-* **Version 1.0:** Added the About and Feedback screen, first-time swipe onboarding, and automatic device-wide theme alignment.
-* **Version 1.0:** Added free-form notes input during logging, multi-activity selection, and post-logging notes editing.
+* **Version 1.0:** Initial launch featuring daily workout logging with multi-activity selection and notes, calendar-based history tracking, post-logging note edits, swipe-to-delete with undo, onboarding tutorial, About & Feedback screens, and automatic device-wide dark/light theme support.
+* **Version 1.1:** Added custom date and time picker support during workout logging inside the bottom sheet.
+* **Version 1.1:** Added custom workout category creation (persisted in local DB) via "+" category chips, and deletion support by tapping a clear/delete icon on custom chips.
+

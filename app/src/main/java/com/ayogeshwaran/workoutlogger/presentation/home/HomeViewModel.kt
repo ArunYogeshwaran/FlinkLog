@@ -7,8 +7,11 @@ import com.ayogeshwaran.workoutlogger.domain.model.PresetWorkoutTypes
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutCategory
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutType
+import com.ayogeshwaran.workoutlogger.domain.usecase.AddCustomWorkoutTypeUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.AddWorkoutUseCase
+import com.ayogeshwaran.workoutlogger.domain.usecase.DeleteCustomWorkoutTypeUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.DeleteWorkoutUseCase
+import com.ayogeshwaran.workoutlogger.domain.usecase.GetCustomWorkoutTypesUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.GetWorkoutsForDateUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,7 +20,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -49,7 +55,10 @@ fun todayMidnight(): Long {
 class HomeViewModel(
     private val addWorkoutUseCase: AddWorkoutUseCase,
     private val deleteWorkoutUseCase: DeleteWorkoutUseCase,
-    private val getWorkoutsForDateUseCase: GetWorkoutsForDateUseCase
+    private val getWorkoutsForDateUseCase: GetWorkoutsForDateUseCase,
+    private val addCustomWorkoutTypeUseCase: AddCustomWorkoutTypeUseCase,
+    private val getCustomWorkoutTypesUseCase: GetCustomWorkoutTypesUseCase,
+    private val deleteCustomWorkoutTypeUseCase: DeleteCustomWorkoutTypeUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -66,8 +75,19 @@ class HomeViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val cardioTypes = PresetWorkoutTypes.filter { it.category == WorkoutCategory.CARDIO }
-    val gymTypes = PresetWorkoutTypes.filter { it.category == WorkoutCategory.GYM }
+    val cardioTypes: StateFlow<List<WorkoutType>> = combine(
+        flowOf(PresetWorkoutTypes.filter { it.category == WorkoutCategory.CARDIO }),
+        getCustomWorkoutTypesUseCase()
+    ) { presets, customs ->
+        presets + customs.filter { it.category == WorkoutCategory.CARDIO }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val gymTypes: StateFlow<List<WorkoutType>> = combine(
+        flowOf(PresetWorkoutTypes.filter { it.category == WorkoutCategory.GYM }),
+        getCustomWorkoutTypesUseCase()
+    ) { presets, customs ->
+        presets + customs.filter { it.category == WorkoutCategory.GYM }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun onWorkoutTypeToggled(type: WorkoutType) {
         val current = _uiState.value.selectedWorkoutTypes
@@ -192,14 +212,66 @@ class HomeViewModel(
         }
     }
 
+    fun addCustomWorkoutType(
+        name: String,
+        category: WorkoutCategory,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val trimmedName = name.trim()
+        if (trimmedName.isEmpty()) {
+            onError("empty")
+            return
+        }
+
+        viewModelScope.launch {
+            val isPreset = PresetWorkoutTypes.any { it.name.equals(trimmedName, ignoreCase = true) }
+            val existingCustoms = getCustomWorkoutTypesUseCase().first()
+            val isCustom = existingCustoms.any { it.name.equals(trimmedName, ignoreCase = true) }
+
+            if (isPreset || isCustom) {
+                onError("exists")
+            } else {
+                addCustomWorkoutTypeUseCase(trimmedName, category)
+                onSuccess()
+            }
+        }
+    }
+
+    fun deleteCustomWorkoutType(type: WorkoutType) {
+        viewModelScope.launch {
+            deleteCustomWorkoutTypeUseCase(type.name, type.category)
+            val currentSelected = _uiState.value.selectedWorkoutTypes
+            if (currentSelected.contains(type)) {
+                val updatedSelected = currentSelected - type
+                val updatedNotesMap = _uiState.value.workoutNotesMap.toMutableMap()
+                updatedNotesMap.remove(type)
+                _uiState.value = _uiState.value.copy(
+                    selectedWorkoutTypes = updatedSelected,
+                    workoutNotesMap = updatedNotesMap
+                )
+            }
+        }
+    }
+
     class Factory(
         private val addWorkoutUseCase: AddWorkoutUseCase,
         private val deleteWorkoutUseCase: DeleteWorkoutUseCase,
-        private val getWorkoutsForDateUseCase: GetWorkoutsForDateUseCase
+        private val getWorkoutsForDateUseCase: GetWorkoutsForDateUseCase,
+        private val addCustomWorkoutTypeUseCase: AddCustomWorkoutTypeUseCase,
+        private val getCustomWorkoutTypesUseCase: GetCustomWorkoutTypesUseCase,
+        private val deleteCustomWorkoutTypeUseCase: DeleteCustomWorkoutTypeUseCase
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return HomeViewModel(addWorkoutUseCase, deleteWorkoutUseCase, getWorkoutsForDateUseCase) as T
+            return HomeViewModel(
+                addWorkoutUseCase,
+                deleteWorkoutUseCase,
+                getWorkoutsForDateUseCase,
+                addCustomWorkoutTypeUseCase,
+                getCustomWorkoutTypesUseCase,
+                deleteCustomWorkoutTypeUseCase
+            ) as T
         }
     }
 }

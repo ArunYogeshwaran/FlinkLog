@@ -4,8 +4,11 @@ import android.content.Context
 import com.ayogeshwaran.workoutlogger.data.local.WorkoutDatabase
 import com.ayogeshwaran.workoutlogger.data.repository.WorkoutRepositoryImpl
 import com.ayogeshwaran.workoutlogger.domain.repository.WorkoutRepository
+import com.ayogeshwaran.workoutlogger.domain.usecase.AddCustomWorkoutTypeUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.AddWorkoutUseCase
+import com.ayogeshwaran.workoutlogger.domain.usecase.DeleteCustomWorkoutTypeUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.DeleteWorkoutUseCase
+import com.ayogeshwaran.workoutlogger.domain.usecase.GetCustomWorkoutTypesUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.GetDatesWithWorkoutsUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.GetWorkoutsForDateUseCase
 
@@ -20,5 +23,8 @@ class AppContainer(context: Context) {
     val deleteWorkoutUseCase = DeleteWorkoutUseCase(repository)
     val getWorkoutsForDateUseCase = GetWorkoutsForDateUseCase(repository)
     val getDatesWithWorkoutsUseCase = GetDatesWithWorkoutsUseCase(repository)
+    val addCustomWorkoutTypeUseCase = AddCustomWorkoutTypeUseCase(repository)
+    val getCustomWorkoutTypesUseCase = GetCustomWorkoutTypesUseCase(repository)
+    val deleteCustomWorkoutTypeUseCase = DeleteCustomWorkoutTypeUseCase(repository)
 }
 

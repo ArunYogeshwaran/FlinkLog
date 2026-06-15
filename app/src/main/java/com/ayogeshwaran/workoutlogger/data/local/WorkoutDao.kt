@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.ayogeshwaran.workoutlogger.data.local.entity.CustomWorkoutTypeEntity
 import com.ayogeshwaran.workoutlogger.data.local.entity.WorkoutEntryEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -25,5 +26,14 @@ interface WorkoutDao {
 
     @Query("SELECT * FROM workout_entries WHERE date >= :start AND date < :end ORDER BY timestamp DESC")
     fun getWorkoutsInRange(start: Long, end: Long): Flow<List<WorkoutEntryEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertCustomWorkoutType(type: CustomWorkoutTypeEntity)
+
+    @Query("SELECT * FROM custom_workout_types ORDER BY name ASC")
+    fun getCustomWorkoutTypes(): Flow<List<CustomWorkoutTypeEntity>>
+
+    @Query("DELETE FROM custom_workout_types WHERE name = :name AND category = :category")
+    suspend fun deleteCustomWorkoutTypeByName(name: String, category: String)
 }
 

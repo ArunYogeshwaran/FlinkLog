@@ -25,7 +25,10 @@ class MainActivity : ComponentActivity() {
                     factory = HomeViewModel.Factory(
                         addWorkoutUseCase = container.addWorkoutUseCase,
                         deleteWorkoutUseCase = container.deleteWorkoutUseCase,
-                        getWorkoutsForDateUseCase = container.getWorkoutsForDateUseCase
+                        getWorkoutsForDateUseCase = container.getWorkoutsForDateUseCase,
+                        addCustomWorkoutTypeUseCase = container.addCustomWorkoutTypeUseCase,
+                        getCustomWorkoutTypesUseCase = container.getCustomWorkoutTypesUseCase,
+                        deleteCustomWorkoutTypeUseCase = container.deleteCustomWorkoutTypeUseCase
                     )
                 )
                 val historyViewModel: HistoryViewModel = viewModel(

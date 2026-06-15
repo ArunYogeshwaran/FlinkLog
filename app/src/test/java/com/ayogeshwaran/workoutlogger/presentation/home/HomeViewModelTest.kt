@@ -1,17 +1,23 @@
 package com.ayogeshwaran.workoutlogger.presentation.home
 
 import com.ayogeshwaran.workoutlogger.domain.model.PresetWorkoutTypes
+import com.ayogeshwaran.workoutlogger.domain.model.WorkoutCategory
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
+import com.ayogeshwaran.workoutlogger.domain.model.WorkoutType
 import com.ayogeshwaran.workoutlogger.domain.repository.WorkoutRepository
+import com.ayogeshwaran.workoutlogger.domain.usecase.AddCustomWorkoutTypeUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.AddWorkoutUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.DeleteWorkoutUseCase
+import com.ayogeshwaran.workoutlogger.domain.usecase.GetCustomWorkoutTypesUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.GetWorkoutsForDateUseCase
+import com.ayogeshwaran.workoutlogger.domain.usecase.DeleteCustomWorkoutTypeUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -62,6 +68,29 @@ class FakeWorkoutRepository : WorkoutRepository {
                 .sortedByDescending { it.timestamp }
         }
     }
+
+    val customWorkoutTypes = MutableStateFlow<List<WorkoutType>>(emptyList())
+
+    override suspend fun insertCustomWorkoutType(name: String, category: WorkoutCategory) {
+        val current = customWorkoutTypes.value.toMutableList()
+        current.add(
+            WorkoutType(
+                name = name,
+                emoji = "",
+                category = category,
+                nameRes = 0
+            )
+        )
+        customWorkoutTypes.value = current
+    }
+
+    override fun getCustomWorkoutTypes(): Flow<List<WorkoutType>> {
+        return customWorkoutTypes
+    }
+
+    override suspend fun deleteCustomWorkoutType(name: String, category: WorkoutCategory) {
+        customWorkoutTypes.value = customWorkoutTypes.value.filterNot { it.name == name && it.category == category }
+    }
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -78,7 +107,10 @@ class HomeViewModelTest {
         viewModel = HomeViewModel(
             addWorkoutUseCase = AddWorkoutUseCase(repository),
             deleteWorkoutUseCase = DeleteWorkoutUseCase(repository),
-            getWorkoutsForDateUseCase = GetWorkoutsForDateUseCase(repository)
+            getWorkoutsForDateUseCase = GetWorkoutsForDateUseCase(repository),
+            addCustomWorkoutTypeUseCase = AddCustomWorkoutTypeUseCase(repository),
+            getCustomWorkoutTypesUseCase = GetCustomWorkoutTypesUseCase(repository),
+            deleteCustomWorkoutTypeUseCase = DeleteCustomWorkoutTypeUseCase(repository)
         )
     }
 
@@ -164,5 +196,92 @@ class HomeViewModelTest {
         val state = viewModel.uiState.value
         assertTrue(state.selectedWorkoutTypes.isEmpty())
         assertFalse(state.isCustomDateTime)
+    }
+
+    @Test
+    fun addCustomWorkoutType_successfullySavesAndPresentsCustomWorkout() = runTest(testDispatcher) {
+        val collectJob = launch {
+            viewModel.cardioTypes.collect {}
+        }
+
+        var successCalled = false
+        viewModel.addCustomWorkoutType(
+            name = "Zumba",
+            category = WorkoutCategory.CARDIO,
+            onSuccess = { successCalled = true },
+            onError = {}
+        )
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(successCalled)
+
+        val cardioList = viewModel.cardioTypes.value
+        val hasZumba = cardioList.any { it.name == "Zumba" && it.category == WorkoutCategory.CARDIO }
+        assertTrue(hasZumba)
+
+        collectJob.cancel()
+    }
+
+    @Test
+    fun addCustomWorkoutType_uniquenessValidation() = runTest(testDispatcher) {
+        // Preset conflict
+        var errorType: String? = null
+        viewModel.addCustomWorkoutType(
+            name = "Running", // running already exists in PresetWorkoutTypes
+            category = WorkoutCategory.CARDIO,
+            onSuccess = {},
+            onError = { errorType = it }
+        )
+        testDispatcher.scheduler.advanceUntilIdle()
+        assertEquals("exists", errorType)
+
+        // Custom duplicate conflict
+        viewModel.addCustomWorkoutType(
+            name = "Kettlebell",
+            category = WorkoutCategory.GYM,
+            onSuccess = {},
+            onError = {}
+        )
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        var dupError: String? = null
+        viewModel.addCustomWorkoutType(
+            name = "Kettlebell",
+            category = WorkoutCategory.GYM,
+            onSuccess = {},
+            onError = { dupError = it }
+        )
+        testDispatcher.scheduler.advanceUntilIdle()
+        assertEquals("exists", dupError)
+    }
+
+    @Test
+    fun deleteCustomWorkoutType_successfullyRemovesWorkoutAndClearsUiSelection() = runTest(testDispatcher) {
+        val collectJob = launch {
+            viewModel.cardioTypes.collect {}
+        }
+
+        viewModel.addCustomWorkoutType(
+            name = "Zumba",
+            category = WorkoutCategory.CARDIO,
+            onSuccess = {},
+            onError = {}
+        )
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val runningList = viewModel.cardioTypes.value
+        val zumbaType = runningList.first { it.name == "Zumba" }
+
+        viewModel.onWorkoutTypeToggled(zumbaType)
+        assertTrue(viewModel.uiState.value.selectedWorkoutTypes.contains(zumbaType))
+
+        viewModel.deleteCustomWorkoutType(zumbaType)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val updatedList = viewModel.cardioTypes.value
+        assertFalse(updatedList.contains(zumbaType))
+        assertFalse(viewModel.uiState.value.selectedWorkoutTypes.contains(zumbaType))
+
+        collectJob.cancel()
     }
 }
