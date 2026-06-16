@@ -308,7 +308,7 @@ fun HomeScreen(
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = stringResource(R.string.logged_workouts_title),
+                    text = stringResource(R.string.logged_workouts_today),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -488,7 +488,6 @@ fun HomeScreen(
                                         Text(
                                             stringResource(
                                                 R.string.notes_label,
-                                                workoutType.emoji,
                                                 workoutType.localizedName()
                                             )
                                         )

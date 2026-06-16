@@ -3,6 +3,7 @@ package com.ayogeshwaran.workoutlogger.presentation.history
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -40,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -50,6 +51,14 @@ import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
 import com.ayogeshwaran.workoutlogger.presentation.components.EditNotesDialog
 import com.ayogeshwaran.workoutlogger.presentation.components.SwipeToDeleteWorkoutCard
 import com.ayogeshwaran.workoutlogger.presentation.home.todayMidnight
+import com.ayogeshwaran.workoutlogger.presentation.theme.OnWorkoutDoneDark
+import com.ayogeshwaran.workoutlogger.presentation.theme.OnWorkoutDoneLight
+import com.ayogeshwaran.workoutlogger.presentation.theme.OnWorkoutMissedDark
+import com.ayogeshwaran.workoutlogger.presentation.theme.OnWorkoutMissedLight
+import com.ayogeshwaran.workoutlogger.presentation.theme.WorkoutDoneDark
+import com.ayogeshwaran.workoutlogger.presentation.theme.WorkoutDoneLight
+import com.ayogeshwaran.workoutlogger.presentation.theme.WorkoutMissedDark
+import com.ayogeshwaran.workoutlogger.presentation.theme.WorkoutMissedLight
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -277,6 +286,33 @@ private fun CalendarView(
                             val isSelected = dayMillis == selectedDate
                             val isToday = dayMillis == todayMidnight
                             val hasWorkout = datesWithWorkouts.contains(dayMillis)
+                            val isPast = dayMillis < todayMidnight
+
+                            val isDark = isSystemInDarkTheme()
+                            val workoutDoneColor = if (isDark) WorkoutDoneDark else WorkoutDoneLight
+                            val onWorkoutDoneColor = if (isDark) OnWorkoutDoneDark else OnWorkoutDoneLight
+                            val workoutMissedColor = if (isDark) WorkoutMissedDark else WorkoutMissedLight
+                            val onWorkoutMissedColor = if (isDark) OnWorkoutMissedDark else OnWorkoutMissedLight
+
+                            val bgColor = when {
+                                isSelected -> MaterialTheme.colorScheme.primary
+                                hasWorkout -> workoutDoneColor
+                                isPast && !hasWorkout -> workoutMissedColor
+                                else -> Color.Transparent
+                            }
+
+                            val textColor = when {
+                                isSelected -> MaterialTheme.colorScheme.onPrimary
+                                hasWorkout -> onWorkoutDoneColor
+                                isPast && !hasWorkout -> onWorkoutMissedColor
+                                else -> MaterialTheme.colorScheme.onSurface
+                            }
+
+                            val borderModifier = if (isToday && !isSelected) {
+                                Modifier.border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                            } else {
+                                Modifier
+                            }
 
                             Box(
                                 modifier = Modifier
@@ -284,44 +320,18 @@ private fun CalendarView(
                                     .aspectRatio(1f)
                                     .padding(2.dp)
                                     .clip(CircleShape)
-                                    .then(
-                                        if (isSelected) Modifier.background(
-                                            MaterialTheme.colorScheme.primary,
-                                            CircleShape
-                                        )
-                                        else if (isToday) Modifier.border(
-                                            2.dp,
-                                            MaterialTheme.colorScheme.primary,
-                                            CircleShape
-                                        )
-                                        else Modifier
-                                    )
+                                    .background(bgColor)
+                                    .then(borderModifier)
                                     .clickable {
                                         onDateSelected(year, month, day)
                                     },
                                 contentAlignment = Alignment.Center
                             ) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Text(
-                                        text = day.toString(),
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = if (isSelected) MaterialTheme.colorScheme.onPrimary
-                                        else MaterialTheme.colorScheme.onSurface
-                                    )
-                                    if (hasWorkout) {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(4.dp)
-                                                .background(
-                                                    if (isSelected) MaterialTheme.colorScheme.onPrimary
-                                                    else MaterialTheme.colorScheme.primary,
-                                                    CircleShape
-                                                )
-                                        )
-                                    }
-                                }
+                                Text(
+                                    text = day.toString(),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = textColor
+                                )
                             }
                         } else {
                             Box(modifier = Modifier.weight(1f).aspectRatio(1f))

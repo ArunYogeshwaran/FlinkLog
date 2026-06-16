@@ -27,11 +27,11 @@
     <string name="category_cardio">Cardio &amp; General</string>
     <string name="category_gym">Gym / Muscle Groups</string>
     <string name="workout_notes_title">Workout Notes</string>
-    <string name="notes_label">Notes for %1$s %2$s</string>
+    <string name="notes_label">Notes for %1$s</string>
     <string name="notes_placeholder">e.g., details, weight, sets</string>
     <string name="clear_notes_desc">Clear notes</string>
     <string name="log_workout_btn">Log Workout</string>
-    <string name="logged_workouts_title">Logged Workouts</string>
+    <string name="logged_workouts_today">Logged Workouts Today</string>
     <string name="swipe_hint_text">💡 Tip: Swipe left on a workout to delete it</string>
     <string name="swipe_hint_dismiss">Got it</string>
     <string name="empty_workouts_home">No workouts logged yet.\nStart your first session.</string>
