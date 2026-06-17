@@ -72,6 +72,11 @@ The application is structured into two main views via a simple bottom navigation
 - **Sharing Feature:** Tapping the "Share App" button triggers a standard Android share intent containing a description of the app and a Play Store link.
 - **Licenses:** Lists all open-source libraries used.
 
+### 5.4 Data Backup & Phone Recovery
+- **Google Auto Backup**: The application fully supports Android's Auto Backup system. All local Room database files (including SQLite journals, WAL, and SHM files) are backed up securely to the user's private Google Drive storage associated with their Android Google Account.
+- **Quota & Encryption**: Backups are encrypted end-to-end and do not count against the user's personal Google Drive storage quota.
+- **Frictionless Recovery**: When a user changes phones or reinstalls the app on a new device, Android automatically restores their entire workout history, custom exercises, and settings during the initial setup.
+
 ---
 
 ## 6. Key User Flows
@@ -118,13 +123,19 @@ The application is structured into two main views via a simple bottom navigation
 - [x] The UI automatically supports system-wide light and dark mode preferences.
 - [x] Users can send pre-addressed feedback emails and access open-source licenses.
 - [x] First-time users are presented with a dismissible swipe-to-delete tutorial.
+- [x] All database transaction files (including WAL/SHM logs) are correctly configured for Android Auto Backup to ensure clean data recovery on phone transition without corruption.
 
 ---
 
 ## 9. Product Changelog
 
-* **Version 1.0:** Initial launch featuring daily workout logging with multi-activity selection and notes, calendar-based history tracking, post-logging note edits, swipe-to-delete with undo, onboarding tutorial, About & Feedback screens, and automatic device-wide dark/light theme support.
-* **Version 1.1:** Added custom date and time picker support during workout logging inside the bottom sheet.
-* **Version 1.1:** Added custom workout category creation (persisted in local DB) via "+" category chips, and deletion support by tapping a clear/delete icon on custom chips.
-* **Version 1.1:** Added a system-level app sharing action button on the About screen.
+* **Version 1.0:** Initial launch featuring:
+  - Daily workout logging with multi-activity selection, custom date/time logging support, and workout details/notes.
+  - Custom workout category creation (persisted in local DB) and category chip deletion.
+  - History screen supporting toggling between Monthly Calendar view and rolling 7-day Weekly view, and a grouped chronological workout feed.
+  - Post-logging note edits and swipe-to-delete with undo (plus a dismissible onboarding tutorial).
+  - Lightweight programmatic vector illustrations for empty screens (Home and History).
+  - Configured secure, robust Google Auto Backup rules to ensure complete and corruption-free workout history recovery when transitioning devices.
+  - About and Feedback screens, including a system-level app sharing action.
+  - Cohesive Gemini-inspired design system with automatic system-wide dark/light theme support.
 

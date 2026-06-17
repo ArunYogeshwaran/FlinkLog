@@ -59,7 +59,7 @@ What this app does NOT do:
 ✗ No AI-powered anything
 ✗ No subscription walls
 
-Your data stays on your device. Period.
+Your data stays on your device. Period. (With secure, automated cloud backup to your Google account for seamless device upgrades).
 
 —
 
@@ -68,11 +68,12 @@ Features — the short list:
 • Log workouts with one tap — Cardio, Gym, or any preset type
 • Pick a date and time, or just log "right now"
 • Swipe to delete, with undo
-• Calendar view with dot indicators on days you worked out
-• Browse any month — past, present, or future
+• Toggle between Monthly Calendar view and rolling 7-day Weekly view
+• Grouped history feed sorting workouts chronologically by date
+• Works 100% offline — no internet connection required to log or view
+• Worry-free device switching — securely backed up to your Google account (encrypted, zero quota cost) to restore your history automatically on your next phone
 • Material You theming — adapts to your wallpaper colors
 • Light and dark mode — follows your system setting
-• Works 100% offline
 
 That's it. No feature bloat. No settings maze. No onboarding screens.
 

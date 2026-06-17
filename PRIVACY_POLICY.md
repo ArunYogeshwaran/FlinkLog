@@ -1,6 +1,6 @@
 # Privacy Policy — Workout Logger
 
-**Last updated:** March 31, 2026
+**Last updated:** June 17, 2026
 
 ## Overview
 
@@ -31,7 +31,7 @@ The App does **not** use any third-party services, SDKs, or analytics tools.
 
 ## Data Storage
 
-All data is stored locally on your device using Android's Room (SQLite) database. If you uninstall the App, all stored data will be permanently deleted. Your data may be included in Android's automatic backup system (Google Drive backup) if you have enabled it in your device settings.
+All data is stored locally on your device using Android's Room (SQLite) database. To protect your workout history and custom exercises when you switch devices, the App supports **Android Auto Backup**. All local database files (including transaction logs) are securely backed up to the private Google Drive storage associated with your Android Google Account. This backup is fully encrypted end-to-end, is completely private to you, and does not count against your Google Drive storage limit. Your workout history will automatically restore when you reinstall the App on a new device. If you disable Android system backups in your device settings and uninstall the App, all local data will be permanently deleted.
 
 ## Children's Privacy
 
