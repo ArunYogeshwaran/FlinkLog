@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AppFunctionAppMetadata xmlns:appfn="http://schemas.android.com/apk/androidx.appfunctions"
+    appfn:description="This app logs and queries workout logs and provides daily exercise suggestions based on history.
+    Operational Patterns:
+    - Use 'logWorkout' to log workouts.
+    - Use 'getWorkoutsForRange' to retrieve logged workouts for a specific period.
+    - Use 'suggestWorkout' to recommend today's workout.
+    Constraints:
+    - Queries and suggestions depend on local historical log data."
+    appfn:displayDescription="@string/app_metadata_desc" />

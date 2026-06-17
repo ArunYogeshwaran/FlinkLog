@@ -77,6 +77,17 @@ The application is structured into two main views via a simple bottom navigation
 - **Quota & Encryption**: Backups are encrypted end-to-end and do not count against the user's personal Google Drive storage quota.
 - **Frictionless Recovery**: When a user changes phones or reinstalls the app on a new device, Android automatically restores their entire workout history, custom exercises, and settings during the initial setup.
 
+### 5.5 On-Device AI Integration (Android 16 AppFunctions)
+- **AppFunctions Support**: Exposes core app capabilities to the Android system, allowing local AI assistants (like Google Gemini) or other automation tools to interact with the app.
+- **Exposed Tools**:
+  - `logWorkout`: Allows the assistant to log workouts (e.g., via voice commands).
+  - `getWorkoutsForRange`: Allows the assistant to query workout history within any custom date range.
+  - `getCustomWorkoutTypes`: Allows the assistant to retrieve custom exercises configured by the user.
+  - `suggestWorkout`: Generates dynamic recommendations today based on two preference modes:
+    - `"LEAST_RECENT"`: Recommends the workout type neglected for the longest time over the last 30 days.
+    - `"WEEKDAY_PATTERN"`: Learns the user's weekday routines dynamically and suggests what they typically train on this day of the week.
+- **Local & Private Execution**: All operations are executed directly on the device using standard Android API pathways. No data is sent to external servers or remote models.
+
 ---
 
 ## 6. Key User Flows
@@ -124,6 +135,7 @@ The application is structured into two main views via a simple bottom navigation
 - [x] Users can send pre-addressed feedback emails and access open-source licenses.
 - [x] First-time users are presented with a dismissible swipe-to-delete tutorial.
 - [x] All database transaction files (including WAL/SHM logs) are correctly configured for Android Auto Backup to ensure clean data recovery on phone transition without corruption.
+- [x] App integrates with Android 16 AppFunctions for secure, local assistant capabilities (workout logging, history retrieval, custom types query, and smart suggestions based on neglected/pattern preferences).
 
 ---
 
@@ -136,6 +148,7 @@ The application is structured into two main views via a simple bottom navigation
   - Post-logging note edits and swipe-to-delete with undo (plus a dismissible onboarding tutorial).
   - Lightweight programmatic vector illustrations for empty screens (Home and History).
   - Configured secure, robust Google Auto Backup rules to ensure complete and corruption-free workout history recovery when transitioning devices.
+  - Exposed secure on-device Android 16 AppFunctions for local AI assistants (workout logging, history retrieval, custom type querying, and intelligent habits-based workout suggestions).
   - About and Feedback screens, including a system-level app sharing action.
   - Cohesive Gemini-inspired design system with automatic system-wide dark/light theme support.
 

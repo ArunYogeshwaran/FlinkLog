@@ -96,4 +96,6 @@
     <!-- Sharing Feature -->
     <string name="about_share_app">Share App</string>
     <string name="share_app_message">Check out Workout Logger — a lightweight, 100%% offline fitness logger that respects your privacy! Get it here: %1$s</string>
+    <!-- AppFunctions Metadata -->
+    <string name="app_metadata_desc">Logs workouts and manages your fitness history offline.</string>
 </resources>

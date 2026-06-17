@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.ayogeshwaran.workoutlogger"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.ayogeshwaran.workoutlogger"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
@@ -41,6 +41,10 @@ android {
     }
 }
 
+ksp {
+    arg("appfunctions:aggregateAppFunctions", "true")
+}
+
 kotlin {
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
@@ -49,6 +53,11 @@ kotlin {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+
+    // AppFunctions
+    implementation(libs.androidx.appfunctions)
+    implementation(libs.androidx.appfunctions.service)
+    ksp(libs.androidx.appfunctions.compiler)
 
     // Compose
     implementation(platform(libs.compose.bom))
@@ -76,6 +85,8 @@ dependencies {
     // Test
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
