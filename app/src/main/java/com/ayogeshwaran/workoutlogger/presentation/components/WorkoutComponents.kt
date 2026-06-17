@@ -54,7 +54,7 @@ fun SwipeToDeleteWorkoutCard(
         confirmValueChange = { value ->
             if (value == SwipeToDismissBoxValue.EndToStart) {
                 onDelete()
-                true
+                false
             } else {
                 false
             }
@@ -67,10 +67,17 @@ fun SwipeToDeleteWorkoutCard(
         backgroundContent = {
             val color by animateColorAsState(
                 when (dismissState.targetValue) {
-                    SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.tertiary
-                    else -> MaterialTheme.colorScheme.surface
+                    SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.error
+                    else -> MaterialTheme.colorScheme.errorContainer
                 },
                 label = "swipe_bg"
+            )
+            val iconColor by animateColorAsState(
+                when (dismissState.targetValue) {
+                    SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.onError
+                    else -> MaterialTheme.colorScheme.onErrorContainer
+                },
+                label = "swipe_icon"
             )
             Box(
                 modifier = Modifier
@@ -82,7 +89,7 @@ fun SwipeToDeleteWorkoutCard(
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = stringResource(R.string.delete_action),
-                    tint = MaterialTheme.colorScheme.onSecondary
+                    tint = iconColor
                 )
             }
         },
