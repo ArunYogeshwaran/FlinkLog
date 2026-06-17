@@ -195,6 +195,7 @@ class WorkoutAppFunctions(
         )
     }
 
+
     private fun findCategoryForType(typeName: String): WorkoutCategory {
         val preset = PresetWorkoutTypes.find { it.name.equals(typeName, ignoreCase = true) }
         return preset?.category ?: WorkoutCategory.GYM

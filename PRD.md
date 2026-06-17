@@ -50,7 +50,8 @@ The application is structured into two main views via a simple bottom navigation
 - **Automatic Date & Time:** All logged workouts default to the current date/time. Users can optionally customize the logging date and time using picker buttons inside the logging bottom sheet.
 - **Activity Selector & Custom Workouts:** Preset exercises categorized under Cardio & General or Gym / Muscle Groups. Users can also add their own custom, permanent categories dynamically via a "+" button, and delete custom workout categories by tapping a clear/delete icon on the category chip. Custom workouts persist in the local database.
 - **Multi-Activity Logging:** Users can select multiple activities at once.
-- **Workout Logging Bottom Sheet:** Once the user selects all the workouts and taps "Log Workout", a bottom sheet is displayed listing all the selected workouts. The user can add notes/details to each selected workout directly in this bottom sheet.
+- **Workout Logging Bottom Sheet:** 
+- Once the user selects all the workouts and taps "Log Workout", a bottom sheet is displayed listing all the selected workouts. The user can add notes/details to each selected workout directly in this bottom sheet.
 - **Copy to All Notes:** When multiple workouts are selected, a "Copy to All" button is provided next to each note text field, allowing the user to copy the current notes text to all other text fields instantly.
 - **Remove Selected Workouts:** In the bottom sheet, the user can remove a workout from their selection using a delete button next to each workout.
 - **Final Log Confirmation:** Clicking the "Log Workout" button inside the bottom sheet saves all selected workouts and notes, clears all inputs, dismisses the bottom sheet, and displays a confirmation notification with an "Undo" option.

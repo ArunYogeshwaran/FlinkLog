@@ -4,8 +4,7 @@
 
 ## App Name
 
-Workout Logger — Simple Daily Log
-
+Super Simple Workout Logger
 ---
 
 ## Short Description (80 chars max)
