@@ -1,18 +1,22 @@
 # Developer Guidelines — Workout Logger
 
-All developers and coding agents must follow these standards to preserve localization (i18n) and formatting integrity.
+All developers and coding agents must follow these standards to preserve localization (i18n) and
+formatting integrity.
 
 ---
 
 ## 1. Localization Standards
+
 * **No Hardcoded UI Strings:** Raw string literals must never be passed to user-visible views.
-* **Compose UI:** Use `stringResource(R.string.id)` for static text and `pluralStringResource(R.plurals.id, count)` for plurals.
+* **Compose UI:** Use `stringResource(R.string.id)` for static text and
+  `pluralStringResource(R.plurals.id, count)` for plurals.
 * **Event Handlers / Callbacks:** Resolve strings via Android `Context` in non-composable scopes:
   ```kotlin
   val msg = context.resources.getQuantityString(R.plurals.workouts_logged, count, count)
   val action = context.getString(R.string.undo)
   ```
-* **Domain Models:** Store stable IDs in the database/model. Resolve localized display names in the presentation layer via `@param:StringRes` properties and Compose extension functions:
+* **Domain Models:** Store stable IDs in the database/model. Resolve localized display names in the
+  presentation layer via `@param:StringRes` properties and Compose extension functions:
   ```kotlin
   @Composable
   fun WorkoutEntry.localizedType(): String {
@@ -24,7 +28,9 @@ All developers and coding agents must follow these standards to preserve localiz
 ---
 
 ## 2. Date & Time Formatting
-* **No Hardcoded Patterns:** Do not use hardcoded formatting templates (e.g., `"h:mm a"` or `"EEEE, dd/MM"`).
+
+* **No Hardcoded Patterns:** Do not use hardcoded formatting templates (e.g., `"h:mm a"` or
+  `"EEEE, dd/MM"`).
 * **Time Formatting:** Respect system 12h/24h clocks using:
   ```kotlin
   val timeFormat = remember(context) { android.text.format.DateFormat.getTimeFormat(context) }
@@ -42,6 +48,7 @@ All developers and coding agents must follow these standards to preserve localiz
 ---
 
 ## 3. Automated Verification
+
 * Android Lint will fail the build on any hardcoded XML layout text.
 * Run verification tasks locally before committing code:
   ```bash

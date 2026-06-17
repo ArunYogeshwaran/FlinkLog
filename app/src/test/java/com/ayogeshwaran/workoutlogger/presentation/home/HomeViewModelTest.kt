@@ -89,7 +89,8 @@ class FakeWorkoutRepository : WorkoutRepository {
     }
 
     override suspend fun deleteCustomWorkoutType(name: String, category: WorkoutCategory) {
-        customWorkoutTypes.value = customWorkoutTypes.value.filterNot { it.name == name && it.category == category }
+        customWorkoutTypes.value =
+            customWorkoutTypes.value.filterNot { it.name == name && it.category == category }
     }
 }
 
@@ -122,7 +123,7 @@ class HomeViewModelTest {
     @Test
     fun togglingWorkoutType_updatesSelectedWorkoutTypes() = runTest(testDispatcher) {
         val running = PresetWorkoutTypes.first { it.name == "Running" }
-        
+
         viewModel.onWorkoutTypeToggled(running)
         testDispatcher.scheduler.advanceUntilIdle()
         assertTrue(viewModel.uiState.value.selectedWorkoutTypes.contains(running))
@@ -133,70 +134,73 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun updatingCustomDate_updatesCustomTimestampAndSetsIsCustomDateTime() = runTest(testDispatcher) {
-        viewModel.updateCustomDate(2026, Calendar.JUNE, 20)
-        testDispatcher.scheduler.advanceUntilIdle()
-        
-        val state = viewModel.uiState.value
-        assertTrue(state.isCustomDateTime)
-        
-        val cal = Calendar.getInstance().apply {
-            timeInMillis = state.customTimestamp
+    fun updatingCustomDate_updatesCustomTimestampAndSetsIsCustomDateTime() =
+        runTest(testDispatcher) {
+            viewModel.updateCustomDate(2026, Calendar.JUNE, 20)
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+            assertTrue(state.isCustomDateTime)
+
+            val cal = Calendar.getInstance().apply {
+                timeInMillis = state.customTimestamp
+            }
+            assertEquals(2026, cal.get(Calendar.YEAR))
+            assertEquals(Calendar.JUNE, cal.get(Calendar.MONTH))
+            assertEquals(20, cal.get(Calendar.DAY_OF_MONTH))
         }
-        assertEquals(2026, cal.get(Calendar.YEAR))
-        assertEquals(Calendar.JUNE, cal.get(Calendar.MONTH))
-        assertEquals(20, cal.get(Calendar.DAY_OF_MONTH))
-    }
 
     @Test
-    fun updatingCustomTime_updatesCustomTimestampAndSetsIsCustomDateTime() = runTest(testDispatcher) {
-        viewModel.updateCustomTime(15, 30)
-        testDispatcher.scheduler.advanceUntilIdle()
-        
-        val state = viewModel.uiState.value
-        assertTrue(state.isCustomDateTime)
-        
-        val cal = Calendar.getInstance().apply {
-            timeInMillis = state.customTimestamp
+    fun updatingCustomTime_updatesCustomTimestampAndSetsIsCustomDateTime() =
+        runTest(testDispatcher) {
+            viewModel.updateCustomTime(15, 30)
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+            assertTrue(state.isCustomDateTime)
+
+            val cal = Calendar.getInstance().apply {
+                timeInMillis = state.customTimestamp
+            }
+            assertEquals(15, cal.get(Calendar.HOUR_OF_DAY))
+            assertEquals(30, cal.get(Calendar.MINUTE))
         }
-        assertEquals(15, cal.get(Calendar.HOUR_OF_DAY))
-        assertEquals(30, cal.get(Calendar.MINUTE))
-    }
 
     @Test
-    fun logWorkoutWithCustomDateTime_savesWithCorrectMidnightAndTimestamp() = runTest(testDispatcher) {
-        val running = PresetWorkoutTypes.first { it.name == "Running" }
-        viewModel.onWorkoutTypeToggled(running)
+    fun logWorkoutWithCustomDateTime_savesWithCorrectMidnightAndTimestamp() =
+        runTest(testDispatcher) {
+            val running = PresetWorkoutTypes.first { it.name == "Running" }
+            viewModel.onWorkoutTypeToggled(running)
 
-        viewModel.updateCustomDate(2026, Calendar.JUNE, 20)
-        viewModel.updateCustomTime(15, 30)
-        testDispatcher.scheduler.advanceUntilIdle()
+            viewModel.updateCustomDate(2026, Calendar.JUNE, 20)
+            viewModel.updateCustomTime(15, 30)
+            testDispatcher.scheduler.advanceUntilIdle()
 
-        val customTime = viewModel.uiState.value.customTimestamp
+            val customTime = viewModel.uiState.value.customTimestamp
 
-        viewModel.logWorkout()
-        testDispatcher.scheduler.advanceUntilIdle()
+            viewModel.logWorkout()
+            testDispatcher.scheduler.advanceUntilIdle()
 
-        val savedWorkouts = repository.workouts.first()
-        assertEquals(1, savedWorkouts.size)
-        val saved = savedWorkouts[0]
+            val savedWorkouts = repository.workouts.first()
+            assertEquals(1, savedWorkouts.size)
+            val saved = savedWorkouts[0]
 
-        assertEquals("Running", saved.workoutType)
-        assertEquals(customTime, saved.timestamp)
+            assertEquals("Running", saved.workoutType)
+            assertEquals(customTime, saved.timestamp)
 
-        val cal = Calendar.getInstance().apply {
-            timeInMillis = customTime
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
+            val cal = Calendar.getInstance().apply {
+                timeInMillis = customTime
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+            assertEquals(cal.timeInMillis, saved.date)
+
+            val state = viewModel.uiState.value
+            assertTrue(state.selectedWorkoutTypes.isEmpty())
+            assertFalse(state.isCustomDateTime)
         }
-        assertEquals(cal.timeInMillis, saved.date)
-        
-        val state = viewModel.uiState.value
-        assertTrue(state.selectedWorkoutTypes.isEmpty())
-        assertFalse(state.isCustomDateTime)
-    }
 
     @Test
     fun addCustomWorkoutType_successfullySavesAndPresentsCustomWorkout() = runTest(testDispatcher) {
@@ -216,7 +220,8 @@ class HomeViewModelTest {
         assertTrue(successCalled)
 
         val cardioList = viewModel.cardioTypes.value
-        val hasZumba = cardioList.any { it.name == "Zumba" && it.category == WorkoutCategory.CARDIO }
+        val hasZumba =
+            cardioList.any { it.name == "Zumba" && it.category == WorkoutCategory.CARDIO }
         assertTrue(hasZumba)
 
         collectJob.cancel()
@@ -256,32 +261,33 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun deleteCustomWorkoutType_successfullyRemovesWorkoutAndClearsUiSelection() = runTest(testDispatcher) {
-        val collectJob = launch {
-            viewModel.cardioTypes.collect {}
+    fun deleteCustomWorkoutType_successfullyRemovesWorkoutAndClearsUiSelection() =
+        runTest(testDispatcher) {
+            val collectJob = launch {
+                viewModel.cardioTypes.collect {}
+            }
+
+            viewModel.addCustomWorkoutType(
+                name = "Zumba",
+                category = WorkoutCategory.CARDIO,
+                onSuccess = {},
+                onError = {}
+            )
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            val runningList = viewModel.cardioTypes.value
+            val zumbaType = runningList.first { it.name == "Zumba" }
+
+            viewModel.onWorkoutTypeToggled(zumbaType)
+            assertTrue(viewModel.uiState.value.selectedWorkoutTypes.contains(zumbaType))
+
+            viewModel.deleteCustomWorkoutType(zumbaType)
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            val updatedList = viewModel.cardioTypes.value
+            assertFalse(updatedList.contains(zumbaType))
+            assertFalse(viewModel.uiState.value.selectedWorkoutTypes.contains(zumbaType))
+
+            collectJob.cancel()
         }
-
-        viewModel.addCustomWorkoutType(
-            name = "Zumba",
-            category = WorkoutCategory.CARDIO,
-            onSuccess = {},
-            onError = {}
-        )
-        testDispatcher.scheduler.advanceUntilIdle()
-
-        val runningList = viewModel.cardioTypes.value
-        val zumbaType = runningList.first { it.name == "Zumba" }
-
-        viewModel.onWorkoutTypeToggled(zumbaType)
-        assertTrue(viewModel.uiState.value.selectedWorkoutTypes.contains(zumbaType))
-
-        viewModel.deleteCustomWorkoutType(zumbaType)
-        testDispatcher.scheduler.advanceUntilIdle()
-
-        val updatedList = viewModel.cardioTypes.value
-        assertFalse(updatedList.contains(zumbaType))
-        assertFalse(viewModel.uiState.value.selectedWorkoutTypes.contains(zumbaType))
-
-        collectJob.cancel()
-    }
 }

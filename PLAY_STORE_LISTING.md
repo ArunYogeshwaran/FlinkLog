@@ -17,7 +17,8 @@ Log your workouts. See your history. That's it. No accounts. No tracking. Free.
 
 Everyone deserves simple tools.
 
-We live in an era where every app wants your email, your location, your attention, and your money. Workout Logger wants none of that.
+We live in an era where every app wants your email, your location, your attention, and your money.
+Workout Logger wants none of that.
 
 —
 
@@ -58,7 +59,8 @@ What this app does NOT do:
 ✗ No remote AI processing or cloud-based data selling
 ✗ No subscription walls
 
-Your data stays on your device. Period. (With secure, automated cloud backup to your Google account for seamless device upgrades).
+Your data stays on your device. Period. (With secure, automated cloud backup to your Google account
+for seamless device upgrades).
 
 —
 
@@ -70,8 +72,10 @@ Features — the short list:
 • Toggle between Monthly Calendar view and rolling 7-day Weekly view
 • Grouped history feed sorting workouts chronologically by date
 • Works 100% offline — no internet connection required to log or view
-• Worry-free device switching — securely backed up to your Google account (encrypted, zero quota cost) to restore your history automatically on your next phone
-• Android 16 AppFunctions integration — let your secure on-device assistant (like Gemini) log workouts, query history, or suggest today's workouts locally and privately
+• Worry-free device switching — securely backed up to your Google account (encrypted, zero quota
+cost) to restore your history automatically on your next phone
+• Android 16 AppFunctions integration — let your secure on-device assistant (like Gemini) log
+workouts, query history, or suggest today's workouts locally and privately
 • Material You theming — adapts to your wallpaper colors
 • Light and dark mode — follows your system setting
 

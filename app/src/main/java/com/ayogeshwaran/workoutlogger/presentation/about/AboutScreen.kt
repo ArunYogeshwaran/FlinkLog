@@ -3,7 +3,9 @@ package com.ayogeshwaran.workoutlogger.presentation.about
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,21 +13,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -33,6 +37,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,23 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.ayogeshwaran.workoutlogger.R
-
-private data class LibraryInfo(
-    val name: String,
-    val license: String
-)
-
-private val openSourceLibraries = listOf(
-    LibraryInfo("Kotlin", "Apache License 2.0"),
-    LibraryInfo("Kotlin Coroutines", "Apache License 2.0"),
-    LibraryInfo("AndroidX Core KTX", "Apache License 2.0"),
-    LibraryInfo("Jetpack Compose", "Apache License 2.0"),
-    LibraryInfo("Compose Material 3", "Apache License 2.0"),
-    LibraryInfo("AndroidX Activity Compose", "Apache License 2.0"),
-    LibraryInfo("AndroidX Lifecycle", "Apache License 2.0"),
-    LibraryInfo("AndroidX Navigation Compose", "Apache License 2.0"),
-    LibraryInfo("AndroidX Room", "Apache License 2.0")
-)
+import com.google.android.gms.oss.licenses.v2.OssLicensesMenuActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -95,70 +85,41 @@ fun AboutScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // App header
+            // App Header Section
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 AppHeaderSection(versionName = versionName)
             }
 
-            // Philosophy
+            // Quick Highlighted Action Cards
             item {
-                Spacer(modifier = Modifier.height(8.dp))
-                PhilosophySection()
-            }
-
-            // Developer
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-                DeveloperSection(developerName = developerName)
-            }
-
-            // Actions
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-                ActionsSection(
+                ActionsRow(
                     context = context,
                     developerEmail = developerEmail,
                     feedbackSubject = feedbackSubject
                 )
             }
 
-            // Licenses header
+            // Philosophy Section
             item {
-                Spacer(modifier = Modifier.height(16.dp))
-                HorizontalDivider()
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = stringResource(R.string.about_open_source_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = stringResource(R.string.about_open_source_subtitle),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                PhilosophySection()
             }
 
-            // License list
-            items(openSourceLibraries) { library ->
-                LibraryCard(library = library)
+            // Developer Section
+            item {
+                DeveloperSection(developerName = developerName)
             }
 
-            // Footer
+            // Open Source Licenses Link
             item {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = stringResource(R.string.about_open_source_footer),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                LicensesLinkCard(
+                    onClick = {
+                        context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
+                    }
                 )
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
@@ -189,6 +150,97 @@ private fun AppHeaderSection(versionName: String) {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
+    }
+}
+
+@Composable
+private fun ActionsRow(
+    context: Context,
+    developerEmail: String,
+    feedbackSubject: String
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        // Share App Card
+        ActionCard(
+            icon = Icons.Default.Share,
+            label = stringResource(R.string.about_share_app),
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            iconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            modifier = Modifier.weight(1f),
+            onClick = { shareApp(context) }
+        )
+
+        // Rate App Card
+        ActionCard(
+            icon = Icons.Default.Star,
+            label = stringResource(R.string.about_rate_play_store_short),
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            iconColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            modifier = Modifier.weight(1f),
+            onClick = { openPlayStore(context) }
+        )
+
+        // Send Feedback Card
+        ActionCard(
+            icon = Icons.Default.Email,
+            label = stringResource(R.string.about_send_feedback_short),
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            iconColor = MaterialTheme.colorScheme.onTertiaryContainer,
+            modifier = Modifier.weight(1f),
+            onClick = { sendFeedback(context, developerEmail, feedbackSubject) }
+        )
+    }
+}
+
+@Composable
+private fun ActionCard(
+    icon: ImageVector,
+    label: String,
+    containerColor: Color,
+    iconColor: Color,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    ElevatedCard(
+        onClick = onClick,
+        modifier = modifier,
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp, horizontal = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .background(containerColor, shape = CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = iconColor,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center,
+                maxLines = 1
+            )
+        }
     }
 }
 
@@ -246,68 +298,52 @@ private fun DeveloperSection(developerName: String) {
 }
 
 @Composable
-private fun ActionsSection(
-    context: Context,
-    developerEmail: String,
-    feedbackSubject: String
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        OutlinedButton(
-            onClick = { sendFeedback(context, developerEmail, feedbackSubject) },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(imageVector = Icons.Default.Email, contentDescription = null)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(R.string.about_send_feedback))
-        }
-
-        OutlinedButton(
-            onClick = { openPlayStore(context) },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(imageVector = Icons.Default.Star, contentDescription = null)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(R.string.about_rate_play_store))
-        }
-
-        OutlinedButton(
-            onClick = { shareApp(context) },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(imageVector = Icons.Default.Share, contentDescription = null)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(R.string.about_share_app))
-        }
-    }
-}
-
-@Composable
-private fun LibraryCard(library: LibraryInfo) {
+private fun LicensesLinkCard(onClick: () -> Unit) {
     ElevatedCard(
+        onClick = onClick,
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.weight(1f)) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .background(MaterialTheme.colorScheme.primaryContainer, shape = CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
                 Text(
-                    text = library.name,
-                    style = MaterialTheme.typography.bodyLarge,
+                    text = stringResource(R.string.about_open_source_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = library.license,
+                    text = stringResource(R.string.about_open_source_desc),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
@@ -332,12 +368,16 @@ private fun openPlayStore(context: Context) {
             Intent(Intent.ACTION_VIEW, "market://details?id=$packageName".toUri())
         )
     } catch (_: ActivityNotFoundException) {
-        context.startActivity(
-            Intent(
-                Intent.ACTION_VIEW,
-                "https://play.google.com/store/apps/details?id=$packageName".toUri()
+        try {
+            context.startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    "https://play.google.com/store/apps/details?id=$packageName".toUri()
+                )
             )
-        )
+        } catch (_: ActivityNotFoundException) {
+            // Play Store or browser not found
+        }
     }
 }
 
@@ -356,4 +396,3 @@ private fun shareApp(context: Context) {
         // No sharing activity available
     }
 }
-

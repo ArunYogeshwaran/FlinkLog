@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 fun EmptyHomeIllustration(modifier: Modifier = Modifier) {
     val primaryColor = MaterialTheme.colorScheme.primary
     val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
-    
+
     Box(
         modifier = modifier.aspectRatio(1.5f),
         contentAlignment = Alignment.Center
@@ -32,14 +32,14 @@ fun EmptyHomeIllustration(modifier: Modifier = Modifier) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             val width = size.width
             val height = size.height
-            
+
             // Glow/Shadow shadow beneath kettlebell
             drawOval(
                 color = primaryColor.copy(alpha = 0.1f),
                 topLeft = Offset(width * 0.3f, height * 0.75f),
                 size = Size(width * 0.4f, height * 0.1f)
             )
-            
+
             // Kettlebell handle
             val handlePath = Path().apply {
                 moveTo(width * 0.38f, height * 0.45f)
@@ -48,7 +48,7 @@ fun EmptyHomeIllustration(modifier: Modifier = Modifier) {
                 quadraticTo(width * 0.62f, height * 0.15f, width * 0.62f, height * 0.28f)
                 lineTo(width * 0.62f, height * 0.45f)
             }
-            
+
             drawPath(
                 path = handlePath,
                 color = primaryColor,
@@ -57,7 +57,7 @@ fun EmptyHomeIllustration(modifier: Modifier = Modifier) {
                     cap = StrokeCap.Round
                 )
             )
-            
+
             // Inner handle cutout layer to overlay properly
             drawPath(
                 path = handlePath,
@@ -78,7 +78,7 @@ fun EmptyHomeIllustration(modifier: Modifier = Modifier) {
                 radius = width * 0.22f,
                 center = Offset(width * 0.5f, height * 0.52f)
             )
-            
+
             // Modern gloss highlight curve on the body
             val highlightPath = Path().apply {
                 val cx = width * 0.5f
@@ -108,7 +108,7 @@ fun EmptyHistoryIllustration(modifier: Modifier = Modifier) {
     val primaryColor = MaterialTheme.colorScheme.primary
     val primaryLight = primaryColor.copy(alpha = 0.12f)
     val onSurface = MaterialTheme.colorScheme.onSurface
-    
+
     Box(
         modifier = modifier.aspectRatio(1.5f),
         contentAlignment = Alignment.Center
@@ -116,14 +116,14 @@ fun EmptyHistoryIllustration(modifier: Modifier = Modifier) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             val width = size.width
             val height = size.height
-            
+
             // Soft shadow
             drawOval(
                 color = primaryColor.copy(alpha = 0.08f),
                 topLeft = Offset(width * 0.25f, height * 0.78f),
                 size = Size(width * 0.5f, height * 0.1f)
             )
-            
+
             // Rounded calendar card base
             val cardRect = RoundRect(
                 left = width * 0.32f,
@@ -135,12 +135,12 @@ fun EmptyHistoryIllustration(modifier: Modifier = Modifier) {
             val cardPath = Path().apply {
                 addRoundRect(cardRect)
             }
-            
+
             drawPath(
                 path = cardPath,
                 color = primaryLight
             )
-            
+
             drawPath(
                 path = cardPath,
                 color = primaryColor,
@@ -148,7 +148,7 @@ fun EmptyHistoryIllustration(modifier: Modifier = Modifier) {
                     width = 4.dp.toPx()
                 )
             )
-            
+
             // Header bar of the calendar
             val headerPath = Path().apply {
                 val r = 12.dp.toPx()
@@ -164,7 +164,7 @@ fun EmptyHistoryIllustration(modifier: Modifier = Modifier) {
                 path = headerPath,
                 color = primaryColor
             )
-            
+
             // Top binding rings
             drawRoundRect(
                 color = onSurface.copy(alpha = 0.3f),
@@ -178,13 +178,13 @@ fun EmptyHistoryIllustration(modifier: Modifier = Modifier) {
                 size = Size(5.dp.toPx(), 12.dp.toPx()),
                 cornerRadius = CornerRadius(2.dp.toPx())
             )
-            
+
             // Sleeping crescent moon for the empty/rest day concept
             val moonPath = Path().apply {
                 val mx = width * 0.5f
                 val my = height * 0.55f
                 val mr = width * 0.09f
-                
+
                 arcTo(
                     rect = Rect(mx - mr, my - mr, mx + mr, my + mr),
                     startAngleDegrees = -90f,
@@ -203,7 +203,7 @@ fun EmptyHistoryIllustration(modifier: Modifier = Modifier) {
                 path = moonPath,
                 color = primaryColor
             )
-            
+
             // Restful stars
             drawCircle(
                 color = primaryColor.copy(alpha = 0.6f),

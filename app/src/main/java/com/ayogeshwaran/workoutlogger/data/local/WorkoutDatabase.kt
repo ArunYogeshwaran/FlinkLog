@@ -27,8 +27,8 @@ abstract class WorkoutDatabase : RoomDatabase() {
                     WorkoutDatabase::class.java,
                     "workout_logger_db"
                 )
-                .fallbackToDestructiveMigration(true)
-                .build()
+                    .fallbackToDestructiveMigration(true)
+                    .build()
                 INSTANCE = instance
                 instance
             }

@@ -3,9 +3,9 @@ package com.ayogeshwaran.workoutlogger.appfunctions
 import androidx.appfunctions.AppFunctionContext
 import androidx.appfunctions.AppFunctionSerializable
 import androidx.appfunctions.service.AppFunction
+import com.ayogeshwaran.workoutlogger.domain.model.PresetWorkoutTypes
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutCategory
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
-import com.ayogeshwaran.workoutlogger.domain.model.PresetWorkoutTypes
 import com.ayogeshwaran.workoutlogger.domain.repository.WorkoutRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -141,7 +141,7 @@ class WorkoutAppFunctions(
 
         // Fetch recent workouts (last 30 days)
         val recentWorkouts = repository.getWorkoutsInRange(thirtyDaysAgo, now).first()
-        
+
         // Get all possible workout types (preset + custom)
         val customTypes = repository.getCustomWorkoutTypes().first().map { it.name }
         val allTypes = (PresetWorkoutTypes.map { it.name } + customTypes).distinct()

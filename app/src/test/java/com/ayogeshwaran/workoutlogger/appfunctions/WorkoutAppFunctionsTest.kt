@@ -1,7 +1,6 @@
 package com.ayogeshwaran.workoutlogger.appfunctions
 
 import androidx.appfunctions.AppFunctionContext
-import com.ayogeshwaran.workoutlogger.domain.model.PresetWorkoutTypes
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutCategory
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
 import com.ayogeshwaran.workoutlogger.presentation.home.FakeWorkoutRepository
@@ -104,7 +103,7 @@ class WorkoutAppFunctionsTest {
     @Test
     fun suggestWorkout_leastRecent_returnsNeglectedWorkout() = runTest(testDispatcher) {
         val now = System.currentTimeMillis()
-        
+
         // Log "Chest" recently
         repository.insertWorkout(
             WorkoutEntry(
@@ -123,7 +122,11 @@ class WorkoutAppFunctionsTest {
 
         // "Chest" was done recently, so something else should be suggested
         assertTrue(suggestion.workoutType != "Chest")
-        assertTrue(suggestion.rationale.contains("You haven't logged") || suggestion.rationale.contains("You haven't trained"))
+        assertTrue(
+            suggestion.rationale.contains("You haven't logged") || suggestion.rationale.contains(
+                "You haven't trained"
+            )
+        )
     }
 
     @Test

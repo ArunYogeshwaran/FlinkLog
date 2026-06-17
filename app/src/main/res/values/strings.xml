@@ -20,7 +20,10 @@
     <string name="about_built_by">Built by</string>
     <string name="about_developer_body">I built this app for myself. Then I thought — maybe others want something this simple too.</string>
     <string name="about_send_feedback">Send Feedback</string>
+    <string name="about_send_feedback_short">Feedback</string>
     <string name="about_rate_play_store">Rate on Play Store</string>
+    <string name="about_rate_play_store_short">Rate App</string>
+    <string name="about_open_source_desc">View licenses of third-party libraries</string>
 
     <!-- Home Screen -->
     <string name="about_desc">About</string>

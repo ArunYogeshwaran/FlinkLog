@@ -233,7 +233,6 @@ fun HomeScreen(
             }
 
 
-
             // Cardio & General chips
             item {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -511,11 +510,12 @@ fun HomeScreen(
                                         )
                                     },
                                     placeholder = {
-                                        val placeholderRes = if (workoutType.category == com.ayogeshwaran.workoutlogger.domain.model.WorkoutCategory.CARDIO) {
-                                            R.string.notes_placeholder_cardio
-                                        } else {
-                                            R.string.notes_placeholder_weights
-                                        }
+                                        val placeholderRes =
+                                            if (workoutType.category == com.ayogeshwaran.workoutlogger.domain.model.WorkoutCategory.CARDIO) {
+                                                R.string.notes_placeholder_cardio
+                                            } else {
+                                                R.string.notes_placeholder_weights
+                                            }
                                         Text(stringResource(placeholderRes))
                                     },
                                     modifier = Modifier.fillMaxWidth(),
@@ -728,7 +728,7 @@ private fun AddCustomWorkoutChip(
     modifier: Modifier = Modifier
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
-    
+
     FilterChip(
         selected = false,
         onClick = onClick,

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.compose)
     alias(libs.plugins.google.ksp)
+    alias(libs.plugins.google.oss.licenses)
 }
 
 android {
@@ -52,6 +53,9 @@ kotlin {
 }
 
 dependencies {
+    // OSS Licenses
+    implementation(libs.play.services.oss.licenses)
+
     implementation(libs.androidx.core.ktx)
 
     // AppFunctions

@@ -12,8 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WorkoutLogger">
 
-        <property android:name="android.app.appfunctions.app_metadata"
-                  android:resource="@xml/app_metadata" />
+        <property
+            android:name="android.app.appfunctions.app_metadata"
+            android:resource="@xml/app_metadata" />
 
         <activity
             android:name=".MainActivity"
@@ -24,6 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
 
     </application>
 

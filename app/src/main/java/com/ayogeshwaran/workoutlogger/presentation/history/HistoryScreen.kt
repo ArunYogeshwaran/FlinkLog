@@ -386,8 +386,18 @@ private fun CalendarView(
                             }
 
                             val borderModifier = when {
-                                isSelected -> Modifier.border(2.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
-                                isToday -> Modifier.border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), CircleShape)
+                                isSelected -> Modifier.border(
+                                    2.dp,
+                                    MaterialTheme.colorScheme.onSurface,
+                                    CircleShape
+                                )
+
+                                isToday -> Modifier.border(
+                                    1.dp,
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                                    CircleShape
+                                )
+
                                 else -> Modifier
                             }
 
@@ -411,7 +421,9 @@ private fun CalendarView(
                                 )
                             }
                         } else {
-                            Box(modifier = Modifier.weight(1f).aspectRatio(1f))
+                            Box(modifier = Modifier
+                                .weight(1f)
+                                .aspectRatio(1f))
                         }
                     }
                 }
@@ -440,7 +452,7 @@ private fun ViewModeToggle(
                 HistoryViewMode.WEEKLY -> stringResource(R.string.weekly_view_title)
                 HistoryViewMode.MONTHLY -> stringResource(R.string.monthly_view_title)
             }
-            
+
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -487,12 +499,13 @@ private fun WeeklyView(
     }
 
     val rangeString = remember(selectedDate) {
-        val startCal = Calendar.getInstance().apply { timeInMillis = selectedDate; add(Calendar.DAY_OF_YEAR, -6) }
+        val startCal = Calendar.getInstance()
+            .apply { timeInMillis = selectedDate; add(Calendar.DAY_OF_YEAR, -6) }
         val endCal = Calendar.getInstance().apply { timeInMillis = selectedDate }
-        
+
         val format = SimpleDateFormat("MMM d", Locale.getDefault())
         val formatWithYear = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
-        
+
         if (startCal.get(Calendar.YEAR) == endCal.get(Calendar.YEAR)) {
             "${format.format(startCal.time)} - ${formatWithYear.format(endCal.time)}"
         } else {
@@ -521,7 +534,7 @@ private fun WeeklyView(
                         contentDescription = stringResource(R.string.prev_month_desc)
                     )
                 }
-                
+
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = rangeString,
@@ -530,7 +543,11 @@ private fun WeeklyView(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = stringResource(R.string.weekly_view_subtitle, workoutsCount, activeDaysCount),
+                        text = stringResource(
+                            R.string.weekly_view_subtitle,
+                            workoutsCount,
+                            activeDaysCount
+                        ),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -577,8 +594,18 @@ private fun WeeklyView(
                     }
 
                     val borderModifier = when {
-                        isSelected -> Modifier.border(2.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
-                        isToday -> Modifier.border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), CircleShape)
+                        isSelected -> Modifier.border(
+                            2.dp,
+                            MaterialTheme.colorScheme.onSurface,
+                            CircleShape
+                        )
+
+                        isToday -> Modifier.border(
+                            1.dp,
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                            CircleShape
+                        )
+
                         else -> Modifier
                     }
 

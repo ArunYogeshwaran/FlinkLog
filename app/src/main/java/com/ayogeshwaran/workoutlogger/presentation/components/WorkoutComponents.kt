@@ -168,7 +168,14 @@ fun EditNotesDialog(
             androidx.compose.material3.OutlinedTextField(
                 value = text,
                 onValueChange = { text = it },
-                label = { Text(stringResource(R.string.edit_notes_workout_label, workout.localizedType())) },
+                label = {
+                    Text(
+                        stringResource(
+                            R.string.edit_notes_workout_label,
+                            workout.localizedType()
+                        )
+                    )
+                },
                 placeholder = { Text(stringResource(R.string.edit_notes_placeholder)) },
                 modifier = Modifier.fillMaxWidth()
             )
