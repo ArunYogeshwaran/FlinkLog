@@ -84,6 +84,7 @@
         <item quantity="other">%1$d workouts logged!</item>
     </plurals>
     <!-- Custom Workouts -->
+    <string name="add_custom_workout_title_short">Add Custom</string>
     <string name="add_custom_workout_title">Add Custom Workout</string>
     <string name="workout_name_label">Workout Name</string>
     <string name="add_custom_workout_error_empty">Name cannot be empty</string>

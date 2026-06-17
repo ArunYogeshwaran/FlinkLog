@@ -18,16 +18,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -215,9 +216,9 @@ fun HomeScreen(
                 ) {
                     IconButton(onClick = onNavigateToAbout) {
                         Icon(
-                            imageVector = Icons.Default.Info,
+                            imageVector = Icons.Outlined.Info,
                             contentDescription = stringResource(R.string.about_desc),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = MaterialTheme.colorScheme.tertiary
                         )
                     }
                 }
@@ -248,13 +249,11 @@ fun HomeScreen(
                             }
                         )
                     }
-                    FilterChip(
-                        selected = false,
+                    AddCustomWorkoutChip(
                         onClick = {
                             customWorkoutCategory = WorkoutCategory.CARDIO
                             showAddCustomDialog = true
-                        },
-                        label = { Text("+") }
+                        }
                     )
                 }
             }
@@ -284,13 +283,11 @@ fun HomeScreen(
                             }
                         )
                     }
-                    FilterChip(
-                        selected = false,
+                    AddCustomWorkoutChip(
                         onClick = {
                             customWorkoutCategory = WorkoutCategory.GYM
                             showAddCustomDialog = true
-                        },
-                        label = { Text("+") }
+                        }
                     )
                 }
             }
@@ -400,7 +397,7 @@ fun HomeScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.delete_action),
-                        color = MaterialTheme.colorScheme.error
+                        color = MaterialTheme.colorScheme.secondary
                     )
                 }
             },
@@ -525,7 +522,7 @@ fun HomeScreen(
                                                 )
                                             }) {
                                                 Icon(
-                                                    imageVector = Icons.Outlined.Clear,
+                                                    imageVector = Icons.Default.Clear,
                                                     contentDescription = stringResource(R.string.clear_notes_desc)
                                                 )
                                             }
@@ -542,7 +539,6 @@ fun HomeScreen(
                                 Icon(
                                     imageVector = Icons.Outlined.Delete,
                                     contentDescription = stringResource(R.string.delete_action),
-                                    tint = MaterialTheme.colorScheme.error
                                 )
                             }
                         }
@@ -573,6 +569,7 @@ private fun WorkoutChip(
 ) {
     FilterChip(
         selected = isSelected,
+
         onClick = onSelected,
         label = { Text(workoutType.localizedName()) },
         trailingIcon = {
@@ -583,7 +580,7 @@ private fun WorkoutChip(
                     modifier = Modifier
                         .size(18.dp)
                         .clickable { onDeleteCustom() },
-                    tint = MaterialTheme.colorScheme.error
+                    tint = MaterialTheme.colorScheme.secondary
                 )
             }
         }
@@ -655,7 +652,7 @@ private fun AddCustomWorkoutDialog(
                         if (errorMessage != null) {
                             Text(
                                 text = errorMessage!!,
-                                color = MaterialTheme.colorScheme.error
+                                color = MaterialTheme.colorScheme.onSecondary
                             )
                         }
                     }
@@ -692,6 +689,40 @@ private fun AddCustomWorkoutDialog(
             TextButton(onClick = onDismiss) {
                 Text(stringResource(R.string.cancel))
             }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AddCustomWorkoutChip(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    
+    FilterChip(
+        selected = false,
+        onClick = onClick,
+        modifier = modifier,
+        colors = FilterChipDefaults.filterChipColors(
+            labelColor = primaryColor,
+            iconColor = primaryColor
+        ),
+        border = null,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = null,
+                modifier = Modifier.size(16.dp),
+                tint = primaryColor
+            )
+        },
+        label = {
+            Text(
+                text = stringResource(R.string.add_custom_workout_title_short),
+                style = MaterialTheme.typography.labelMedium
+            )
         }
     )
 }

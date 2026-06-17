@@ -67,7 +67,7 @@ fun SwipeToDeleteWorkoutCard(
         backgroundContent = {
             val color by animateColorAsState(
                 when (dismissState.targetValue) {
-                    SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.errorContainer
+                    SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.secondary
                     else -> MaterialTheme.colorScheme.surface
                 },
                 label = "swipe_bg"
@@ -82,7 +82,7 @@ fun SwipeToDeleteWorkoutCard(
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = stringResource(R.string.delete_action),
-                    tint = MaterialTheme.colorScheme.onErrorContainer
+                    tint = MaterialTheme.colorScheme.onSecondary
                 )
             }
         },
