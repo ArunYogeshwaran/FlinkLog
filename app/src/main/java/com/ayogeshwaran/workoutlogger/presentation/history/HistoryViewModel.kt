@@ -22,10 +22,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
+enum class HistoryViewMode {
+    WEEKLY, MONTHLY
+}
+
 data class HistoryUiState(
     val displayedYear: Int = Calendar.getInstance().get(Calendar.YEAR),
     val displayedMonth: Int = Calendar.getInstance().get(Calendar.MONTH),
-    val selectedDate: Long = todayMidnight()
+    val selectedDate: Long = todayMidnight(),
+    val viewMode: HistoryViewMode = HistoryViewMode.MONTHLY
 )
 
 sealed class HistoryEvent {
@@ -52,17 +57,40 @@ class HistoryViewModel(
 
     val workoutsForSelectedDate: StateFlow<List<WorkoutEntry>> = _uiState
         .flatMapLatest { state ->
-            val startOfDay = state.selectedDate
-            val endOfDay = startOfDay + 24 * 60 * 60 * 1000L
+            val endOfDay = state.selectedDate + 24 * 60 * 60 * 1000L
+            val startOfDay = if (state.viewMode == HistoryViewMode.WEEKLY) {
+                state.selectedDate - 6 * 24 * 60 * 60 * 1000L
+            } else {
+                state.selectedDate
+            }
             getWorkoutsForDateUseCase(startOfDay, endOfDay)
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    fun setViewMode(viewMode: HistoryViewMode) {
+        _uiState.value = _uiState.value.copy(viewMode = viewMode)
+    }
+
+    fun adjustSelectedDate(days: Int) {
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = _uiState.value.selectedDate
+        cal.add(Calendar.DAY_OF_YEAR, days)
+        _uiState.value = _uiState.value.copy(
+            selectedDate = cal.timeInMillis,
+            displayedYear = cal.get(Calendar.YEAR),
+            displayedMonth = cal.get(Calendar.MONTH)
+        )
+    }
 
     fun onDateSelected(year: Int, month: Int, dayOfMonth: Int) {
         val cal = Calendar.getInstance()
         cal.set(year, month, dayOfMonth, 0, 0, 0)
         cal.set(Calendar.MILLISECOND, 0)
-        _uiState.value = _uiState.value.copy(selectedDate = cal.timeInMillis)
+        _uiState.value = _uiState.value.copy(
+            selectedDate = cal.timeInMillis,
+            displayedYear = year,
+            displayedMonth = month
+        )
     }
 
     fun previousMonth() {

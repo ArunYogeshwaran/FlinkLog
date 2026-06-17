@@ -94,68 +94,152 @@ fun HistoryScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Calendar
+            // View Mode Toggle
             item {
                 Spacer(modifier = Modifier.height(8.dp))
-                CalendarView(
-                    year = uiState.displayedYear,
-                    month = uiState.displayedMonth,
-                    selectedDate = uiState.selectedDate,
-                    datesWithWorkouts = datesWithWorkouts,
-                    onDateSelected = { year, month, day ->
-                        viewModel.onDateSelected(year, month, day)
-                    },
-                    onPreviousMonth = { viewModel.previousMonth() },
-                    onNextMonth = { viewModel.nextMonth() }
+                ViewModeToggle(
+                    currentMode = uiState.viewMode,
+                    onModeSelected = { viewModel.setViewMode(it) }
                 )
             }
 
-            // Selected date header
-            item {
-                val dateString = remember(context, uiState.selectedDate) {
-                    android.text.format.DateUtils.formatDateTime(
-                        context,
-                        uiState.selectedDate,
-                        android.text.format.DateUtils.FORMAT_SHOW_DATE or
-                                android.text.format.DateUtils.FORMAT_SHOW_WEEKDAY or
-                                android.text.format.DateUtils.FORMAT_SHOW_YEAR
+            if (uiState.viewMode == HistoryViewMode.WEEKLY) {
+                // Weekly View (Last 7 Days)
+                item {
+                    WeeklyView(
+                        selectedDate = uiState.selectedDate,
+                        datesWithWorkouts = datesWithWorkouts,
+                        onDateSelected = { year, month, day ->
+                            viewModel.onDateSelected(year, month, day)
+                        },
+                        onPreviousDay = { viewModel.adjustSelectedDate(-1) },
+                        onNextDay = { viewModel.adjustSelectedDate(1) },
+                        workoutsCount = workouts.size
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = dateString,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
 
-            // Workout list or empty
-            if (workouts.isEmpty()) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 32.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(R.string.empty_workouts_history),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center
-                        )
+                // Workouts Grouped by Date (Weekly view)
+                if (workouts.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = stringResource(R.string.empty_workouts_weekly_history),
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                } else {
+                    val groupedWorkouts = workouts.groupBy { workout ->
+                        val cal = Calendar.getInstance().apply {
+                            timeInMillis = workout.timestamp
+                            set(Calendar.HOUR_OF_DAY, 0)
+                            set(Calendar.MINUTE, 0)
+                            set(Calendar.SECOND, 0)
+                            set(Calendar.MILLISECOND, 0)
+                        }
+                        cal.timeInMillis
+                    }.toSortedMap(reverseOrder())
+
+                    groupedWorkouts.forEach { (dateMillis, dayWorkouts) ->
+                        item(key = "header_$dateMillis") {
+                            val dateString = remember(dateMillis) {
+                                android.text.format.DateUtils.formatDateTime(
+                                    context,
+                                    dateMillis,
+                                    android.text.format.DateUtils.FORMAT_SHOW_DATE or
+                                            android.text.format.DateUtils.FORMAT_SHOW_WEEKDAY or
+                                            android.text.format.DateUtils.FORMAT_SHOW_YEAR
+                                )
+                            }
+                            Text(
+                                text = dateString,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+                            )
+                        }
+                        items(
+                            items = dayWorkouts,
+                            key = { it.id }
+                        ) { workout ->
+                            SwipeToDeleteWorkoutCard(
+                                workout = workout,
+                                onDelete = { viewModel.deleteWorkout(workout) },
+                                onEditNotes = { editingWorkout = it }
+                            )
+                        }
                     }
                 }
             } else {
-                items(
-                    items = workouts,
-                    key = { it.id }
-                ) { workout ->
-                    SwipeToDeleteWorkoutCard(
-                        workout = workout,
-                        onDelete = { viewModel.deleteWorkout(workout) },
-                        onEditNotes = { editingWorkout = it }
+                // Monthly Calendar
+                item {
+                    CalendarView(
+                        year = uiState.displayedYear,
+                        month = uiState.displayedMonth,
+                        selectedDate = uiState.selectedDate,
+                        datesWithWorkouts = datesWithWorkouts,
+                        onDateSelected = { year, month, day ->
+                            viewModel.onDateSelected(year, month, day)
+                        },
+                        onPreviousMonth = { viewModel.previousMonth() },
+                        onNextMonth = { viewModel.nextMonth() }
                     )
+                }
+
+                // Selected date header
+                item {
+                    val dateString = remember(context, uiState.selectedDate) {
+                        android.text.format.DateUtils.formatDateTime(
+                            context,
+                            uiState.selectedDate,
+                            android.text.format.DateUtils.FORMAT_SHOW_DATE or
+                                    android.text.format.DateUtils.FORMAT_SHOW_WEEKDAY or
+                                    android.text.format.DateUtils.FORMAT_SHOW_YEAR
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = dateString,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+
+                // Workout list or empty (Monthly view)
+                if (workouts.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = stringResource(R.string.empty_workouts_history),
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                } else {
+                    items(
+                        items = workouts,
+                        key = { it.id }
+                    ) { workout ->
+                        SwipeToDeleteWorkoutCard(
+                            workout = workout,
+                            onDelete = { viewModel.deleteWorkout(workout) },
+                            onEditNotes = { editingWorkout = it }
+                        )
+                    }
                 }
             }
 
@@ -316,6 +400,212 @@ private fun CalendarView(
                             }
                         } else {
                             Box(modifier = Modifier.weight(1f).aspectRatio(1f))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ViewModeToggle(
+    currentMode: HistoryViewMode,
+    onModeSelected: (HistoryViewMode) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(4.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        HistoryViewMode.values().forEach { mode ->
+            val isSelected = currentMode == mode
+            val label = when (mode) {
+                HistoryViewMode.WEEKLY -> stringResource(R.string.weekly_view_title)
+                HistoryViewMode.MONTHLY -> stringResource(R.string.monthly_view_title)
+            }
+            
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .clip(CircleShape)
+                    .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
+                    .clickable { onModeSelected(mode) }
+                    .padding(vertical = 8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun WeeklyView(
+    selectedDate: Long,
+    datesWithWorkouts: Set<Long>,
+    onDateSelected: (Int, Int, Int) -> Unit,
+    onPreviousDay: () -> Unit,
+    onNextDay: () -> Unit,
+    workoutsCount: Int
+) {
+    val todayMidnight = remember { todayMidnight() }
+    val lastSevenDays = remember(selectedDate) {
+        val list = mutableListOf<Long>()
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = selectedDate
+        cal.add(Calendar.DAY_OF_YEAR, -6)
+        for (i in 0 until 7) {
+            list.add(cal.timeInMillis)
+            cal.add(Calendar.DAY_OF_YEAR, 1)
+        }
+        list
+    }
+
+    val activeDaysCount = remember(lastSevenDays, datesWithWorkouts) {
+        lastSevenDays.count { datesWithWorkouts.contains(it) }
+    }
+
+    val rangeString = remember(selectedDate) {
+        val startCal = Calendar.getInstance().apply { timeInMillis = selectedDate; add(Calendar.DAY_OF_YEAR, -6) }
+        val endCal = Calendar.getInstance().apply { timeInMillis = selectedDate }
+        
+        val format = SimpleDateFormat("MMM d", Locale.getDefault())
+        val formatWithYear = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
+        
+        if (startCal.get(Calendar.YEAR) == endCal.get(Calendar.YEAR)) {
+            "${format.format(startCal.time)} - ${formatWithYear.format(endCal.time)}"
+        } else {
+            "${formatWithYear.format(startCal.time)} - ${formatWithYear.format(endCal.time)}"
+        }
+    }
+
+    val dayOfWeekFormat = remember { SimpleDateFormat("EEE", Locale.getDefault()) }
+    val dayOfMonthFormat = remember { SimpleDateFormat("d", Locale.getDefault()) }
+
+    ElevatedCard(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onPreviousDay) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                        contentDescription = stringResource(R.string.prev_month_desc)
+                    )
+                }
+                
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = rangeString,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = stringResource(R.string.weekly_view_subtitle, workoutsCount, activeDaysCount),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                IconButton(onClick = onNextDay) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = stringResource(R.string.next_month_desc)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                lastSevenDays.forEach { dayMillis ->
+                    val cal = remember(dayMillis) {
+                        Calendar.getInstance().apply { timeInMillis = dayMillis }
+                    }
+                    val isSelected = dayMillis == selectedDate
+                    val isToday = dayMillis == todayMidnight
+                    val hasWorkout = datesWithWorkouts.contains(dayMillis)
+
+                    val weekdayLabel = remember(dayMillis) {
+                        dayOfWeekFormat.format(cal.time)
+                    }
+                    val dayLabel = remember(dayMillis) {
+                        dayOfMonthFormat.format(cal.time)
+                    }
+
+                    val bgColor = when {
+                        hasWorkout -> MaterialTheme.colorScheme.primary
+                        else -> Color.Transparent
+                    }
+
+                    val textColor = when {
+                        hasWorkout -> MaterialTheme.colorScheme.onPrimary
+                        isSelected -> MaterialTheme.colorScheme.primary
+                        else -> MaterialTheme.colorScheme.onSurface
+                    }
+
+                    val borderModifier = when {
+                        isSelected -> Modifier.border(2.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
+                        isToday -> Modifier.border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), CircleShape)
+                        else -> Modifier
+                    }
+
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(CircleShape)
+                            .clickable {
+                                onDateSelected(
+                                    cal.get(Calendar.YEAR),
+                                    cal.get(Calendar.MONTH),
+                                    cal.get(Calendar.DAY_OF_MONTH)
+                                )
+                            }
+                            .padding(vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = weekdayLabel,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        Box(
+                            modifier = Modifier
+                                .aspectRatio(1f)
+                                .padding(2.dp)
+                                .clip(CircleShape)
+                                .background(bgColor)
+                                .then(borderModifier),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = dayLabel,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = textColor
+                            )
                         }
                     }
                 }

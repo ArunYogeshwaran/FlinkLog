@@ -56,6 +56,10 @@
     <string name="empty_workouts_history">No workouts on this day.</string>
     <string name="prev_month_desc">Previous month</string>
     <string name="next_month_desc">Next month</string>
+    <string name="weekly_view_title">Weekly View</string>
+    <string name="weekly_view_subtitle">%1$d workouts • %2$d days active</string>
+    <string name="empty_workouts_weekly_history">No workouts logged in this 7-day period.</string>
+    <string name="monthly_view_title">Monthly View</string>
 
     <!-- Preset Workout Types -->
     <string name="workout_type_running">Running</string>
