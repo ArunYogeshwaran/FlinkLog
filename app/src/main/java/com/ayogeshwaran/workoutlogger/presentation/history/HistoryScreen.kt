@@ -291,20 +291,16 @@ private fun CalendarView(
                             val isDark = isSystemInDarkTheme()
                             val workoutDoneColor = if (isDark) WorkoutDoneDark else WorkoutDoneLight
                             val onWorkoutDoneColor = if (isDark) OnWorkoutDoneDark else OnWorkoutDoneLight
-                            val workoutMissedColor = if (isDark) WorkoutMissedDark else WorkoutMissedLight
-                            val onWorkoutMissedColor = if (isDark) OnWorkoutMissedDark else OnWorkoutMissedLight
 
                             val bgColor = when {
                                 isSelected -> MaterialTheme.colorScheme.primary
                                 hasWorkout -> workoutDoneColor
-                                isPast && !hasWorkout -> workoutMissedColor
                                 else -> Color.Transparent
                             }
 
                             val textColor = when {
                                 isSelected -> MaterialTheme.colorScheme.onPrimary
                                 hasWorkout -> onWorkoutDoneColor
-                                isPast && !hasWorkout -> onWorkoutMissedColor
                                 else -> MaterialTheme.colorScheme.onSurface
                             }
 
