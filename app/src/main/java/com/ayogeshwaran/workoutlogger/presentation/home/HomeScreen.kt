@@ -229,8 +229,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = stringResource(R.string.category_cardio),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    style = MaterialTheme.typography.titleLarge,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 FlowRow(
@@ -263,8 +262,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = stringResource(R.string.category_strength_training),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    style = MaterialTheme.typography.titleLarge,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 FlowRow(
@@ -569,7 +567,6 @@ private fun WorkoutChip(
 ) {
     FilterChip(
         selected = isSelected,
-
         onClick = onSelected,
         label = { Text(workoutType.localizedName()) },
         trailingIcon = {
@@ -580,7 +577,6 @@ private fun WorkoutChip(
                     modifier = Modifier
                         .size(18.dp)
                         .clickable { onDeleteCustom() },
-                    tint = MaterialTheme.colorScheme.secondary
                 )
             }
         }

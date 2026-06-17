@@ -67,7 +67,7 @@ fun SwipeToDeleteWorkoutCard(
         backgroundContent = {
             val color by animateColorAsState(
                 when (dismissState.targetValue) {
-                    SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.secondary
+                    SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.tertiary
                     else -> MaterialTheme.colorScheme.surface
                 },
                 label = "swipe_bg"
@@ -118,14 +118,15 @@ fun WorkoutCard(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = if (workout.notes.isEmpty()) stringResource(R.string.add_notes) else workout.notes,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = if (workout.notes.isEmpty()) MaterialTheme.colorScheme.primary.copy(alpha = 0.6f) else MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onEditNotes(workout) }
-                )
+                if (workout.notes.isNotBlank()) {
+                    Text(
+                        text = workout.notes,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onEditNotes(workout) }
+                    )
+                }
             }
             Spacer(modifier = Modifier.width(8.dp))
             Row(

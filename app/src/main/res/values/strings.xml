@@ -29,7 +29,7 @@
     <string name="workout_notes_title">Workout Notes</string>
     <string name="notes_label">Notes for %1$s</string>
     <string name="notes_placeholder_weights">e.g., details, weight, sets</string>
-    <string name="notes_placeholder_cardio">e.g., distance, time, pace</string>
+    <string name="notes_placeholder_cardio">e.g., distance, duration, pace</string>
     <string name="clear_notes_desc">Clear notes</string>
     <string name="log_workout_btn">Log Workout</string>
     <string name="logged_workouts_today">Logged Workouts Today</string>
@@ -47,9 +47,9 @@
     <string name="delete_action">Delete</string>
     <string name="add_notes">Add notes…</string>
     <string name="edit_notes">Edit notes</string>
-    <string name="edit_notes_dialog_title">Edit Notes / Details</string>
+    <string name="edit_notes_dialog_title">Edit Notes</string>
     <string name="edit_notes_workout_label">Workout: %1$s</string>
-    <string name="edit_notes_placeholder">e.g., did 3 sets of chest workout</string>
+    <string name="edit_notes_placeholder">e.g., details, sets, duration</string>
     <string name="save">Save</string>
 
     <!-- History Screen -->
