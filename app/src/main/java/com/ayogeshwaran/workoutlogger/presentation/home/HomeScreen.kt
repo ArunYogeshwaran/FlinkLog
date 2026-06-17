@@ -52,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -529,14 +530,36 @@ fun HomeScreen(
                                     shape = MaterialTheme.shapes.medium
                                 )
                             }
-                            Spacer(modifier = Modifier.width(8.dp))
+                            if (sortedSelectedTypes.size > 1) {
+                                Spacer(modifier = Modifier.width(4.dp))
+                                IconButton(
+                                    onClick = {
+                                        sortedSelectedTypes.forEach { targetType ->
+                                            viewModel.onWorkoutNotesChanged(targetType, noteValue)
+                                        }
+                                    },
+                                    modifier = Modifier
+                                        .align(Alignment.CenterVertically)
+                                        .size(36.dp)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_copy_all),
+                                        contentDescription = stringResource(R.string.copy_to_all),
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.width(4.dp))
                             IconButton(
                                 onClick = { viewModel.onWorkoutTypeToggled(workoutType) },
-                                modifier = Modifier.align(Alignment.CenterVertically)
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .size(36.dp)
                             ) {
                                 Icon(
                                     imageVector = Icons.Outlined.Delete,
                                     contentDescription = stringResource(R.string.delete_action),
+                                    modifier = Modifier.size(20.dp)
                                 )
                             }
                         }
