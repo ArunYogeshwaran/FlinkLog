@@ -492,7 +492,14 @@ fun HomeScreen(
                                             )
                                         )
                                     },
-                                    placeholder = { Text(stringResource(R.string.notes_placeholder)) },
+                                    placeholder = {
+                                        val placeholderRes = if (workoutType.category == com.ayogeshwaran.workoutlogger.domain.model.WorkoutCategory.CARDIO) {
+                                            R.string.notes_placeholder_cardio
+                                        } else {
+                                            R.string.notes_placeholder_weights
+                                        }
+                                        Text(stringResource(placeholderRes))
+                                    },
                                     modifier = Modifier.fillMaxWidth(),
                                     singleLine = false,
                                     maxLines = 3,
