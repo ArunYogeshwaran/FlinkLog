@@ -7,7 +7,7 @@ import com.ayogeshwaran.workoutlogger.R
 
 enum class WorkoutCategory(@param:StringRes val displayNameRes: Int) {
     CARDIO(R.string.category_cardio),
-    GYM(R.string.category_gym);
+    GYM(R.string.category_strength_training);
 
     companion object {
         fun fromString(value: String): WorkoutCategory {

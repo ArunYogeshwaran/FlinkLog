@@ -25,7 +25,7 @@
     <!-- Home Screen -->
     <string name="about_desc">About</string>
     <string name="category_cardio">Cardio &amp; General</string>
-    <string name="category_gym">Gym / Muscle Groups</string>
+    <string name="category_strength_training">Strength Training</string>
     <string name="workout_notes_title">Workout Notes</string>
     <string name="notes_label">Notes for %1$s</string>
     <string name="notes_placeholder_weights">e.g., details, weight, sets</string>
