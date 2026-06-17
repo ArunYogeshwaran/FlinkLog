@@ -52,14 +52,3 @@ val SurfaceVariantDark = Color(0xFF444746)
 val OnSurfaceVariantDark = Color(0xFFC4C7C5)
 val OutlineDark = Color(0xFF8E918F)
 
-// Custom Semantic Colors for Calendar
-val WorkoutDoneLight = Color(0xFF1E8E3E)
-val OnWorkoutDoneLight = Color(0xFFFFFFFF)
-val WorkoutMissedLight = Color(0xFFFCE8E6)
-val OnWorkoutMissedLight = Color(0xFFD93025)
-
-val WorkoutDoneDark = Color(0xFF81C995)
-val OnWorkoutDoneDark = Color(0xFF0F5223)
-val WorkoutMissedDark = Color(0xFF3C1F1D)
-val OnWorkoutMissedDark = Color(0xFFF28B82)
-

@@ -51,14 +51,10 @@ import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
 import com.ayogeshwaran.workoutlogger.presentation.components.EditNotesDialog
 import com.ayogeshwaran.workoutlogger.presentation.components.SwipeToDeleteWorkoutCard
 import com.ayogeshwaran.workoutlogger.presentation.home.todayMidnight
-import com.ayogeshwaran.workoutlogger.presentation.theme.OnWorkoutDoneDark
-import com.ayogeshwaran.workoutlogger.presentation.theme.OnWorkoutDoneLight
-import com.ayogeshwaran.workoutlogger.presentation.theme.OnWorkoutMissedDark
-import com.ayogeshwaran.workoutlogger.presentation.theme.OnWorkoutMissedLight
-import com.ayogeshwaran.workoutlogger.presentation.theme.WorkoutDoneDark
-import com.ayogeshwaran.workoutlogger.presentation.theme.WorkoutDoneLight
-import com.ayogeshwaran.workoutlogger.presentation.theme.WorkoutMissedDark
-import com.ayogeshwaran.workoutlogger.presentation.theme.WorkoutMissedLight
+import com.ayogeshwaran.workoutlogger.presentation.theme.OnPrimaryDark
+import com.ayogeshwaran.workoutlogger.presentation.theme.OnPrimaryLight
+import com.ayogeshwaran.workoutlogger.presentation.theme.PrimaryDark
+import com.ayogeshwaran.workoutlogger.presentation.theme.PrimaryLight
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -289,8 +285,8 @@ private fun CalendarView(
                             val isPast = dayMillis < todayMidnight
 
                             val isDark = isSystemInDarkTheme()
-                            val workoutDoneColor = if (isDark) WorkoutDoneDark else WorkoutDoneLight
-                            val onWorkoutDoneColor = if (isDark) OnWorkoutDoneDark else OnWorkoutDoneLight
+                            val workoutDoneColor = if (isDark) PrimaryDark else PrimaryLight
+                            val onWorkoutDoneColor = if (isDark) OnPrimaryDark else OnPrimaryLight
 
                             val bgColor = when {
                                 isSelected -> MaterialTheme.colorScheme.primary

@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,8 +22,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.outlined.Clear
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -428,9 +431,13 @@ fun HomeScreen(
             onDismissRequest = { showLogBottomSheet = false },
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         ) {
+            val configuration = LocalConfiguration.current
+            val screenHeight = configuration.screenHeightDp.dp
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .heightIn(max = screenHeight * 0.8f)
                     .padding(16.dp)
                     .padding(bottom = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -512,7 +519,7 @@ fun HomeScreen(
                                                 )
                                             }) {
                                                 Icon(
-                                                    imageVector = Icons.Default.Clear,
+                                                    imageVector = Icons.Outlined.Clear,
                                                     contentDescription = stringResource(R.string.clear_notes_desc)
                                                 )
                                             }
@@ -527,7 +534,7 @@ fun HomeScreen(
                                 modifier = Modifier.align(Alignment.CenterVertically)
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.Delete,
+                                    imageVector = Icons.Outlined.Delete,
                                     contentDescription = stringResource(R.string.delete_action),
                                     tint = MaterialTheme.colorScheme.error
                                 )
