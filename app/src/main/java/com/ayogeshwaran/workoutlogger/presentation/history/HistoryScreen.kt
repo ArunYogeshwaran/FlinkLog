@@ -3,7 +3,6 @@ package com.ayogeshwaran.workoutlogger.presentation.history
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,10 +50,6 @@ import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
 import com.ayogeshwaran.workoutlogger.presentation.components.EditNotesDialog
 import com.ayogeshwaran.workoutlogger.presentation.components.SwipeToDeleteWorkoutCard
 import com.ayogeshwaran.workoutlogger.presentation.home.todayMidnight
-import com.ayogeshwaran.workoutlogger.presentation.theme.OnPrimaryDark
-import com.ayogeshwaran.workoutlogger.presentation.theme.OnPrimaryLight
-import com.ayogeshwaran.workoutlogger.presentation.theme.PrimaryDark
-import com.ayogeshwaran.workoutlogger.presentation.theme.PrimaryLight
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -282,28 +277,22 @@ private fun CalendarView(
                             val isSelected = dayMillis == selectedDate
                             val isToday = dayMillis == todayMidnight
                             val hasWorkout = datesWithWorkouts.contains(dayMillis)
-                            val isPast = dayMillis < todayMidnight
-
-                            val isDark = isSystemInDarkTheme()
-                            val workoutDoneColor = if (isDark) PrimaryDark else PrimaryLight
-                            val onWorkoutDoneColor = if (isDark) OnPrimaryDark else OnPrimaryLight
 
                             val bgColor = when {
-                                isSelected -> MaterialTheme.colorScheme.primary
-                                hasWorkout -> workoutDoneColor
+                                hasWorkout -> MaterialTheme.colorScheme.primary
                                 else -> Color.Transparent
                             }
 
                             val textColor = when {
-                                isSelected -> MaterialTheme.colorScheme.onPrimary
-                                hasWorkout -> onWorkoutDoneColor
+                                hasWorkout -> MaterialTheme.colorScheme.onPrimary
+                                isSelected -> MaterialTheme.colorScheme.primary
                                 else -> MaterialTheme.colorScheme.onSurface
                             }
 
-                            val borderModifier = if (isToday && !isSelected) {
-                                Modifier.border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
-                            } else {
-                                Modifier
+                            val borderModifier = when {
+                                isSelected -> Modifier.border(2.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
+                                isToday -> Modifier.border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), CircleShape)
+                                else -> Modifier
                             }
 
                             Box(

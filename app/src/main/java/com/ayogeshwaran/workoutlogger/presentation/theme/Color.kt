@@ -2,53 +2,60 @@ package com.ayogeshwaran.workoutlogger.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Light theme colors
-val PrimaryLight = Color(0xFF1A73E8) // Google Blue
+// Light theme colors - based on #1164DE
+val PrimaryLight = Color(0xFF1164DE)
 val OnPrimaryLight = Color(0xFFFFFFFF)
-val PrimaryContainerLight = Color(0xFFD3E3FD)
-val OnPrimaryContainerLight = Color(0xFF041E49)
-val SecondaryLight = Color(0xFF9333EA) // Purple accent
+val PrimaryContainerLight = Color(0xFFD7E2FF)
+val OnPrimaryContainerLight = Color(0xFF001A41)
+
+val SecondaryLight = Color(0xFF1164DE)
 val OnSecondaryLight = Color(0xFFFFFFFF)
-val SecondaryContainerLight = Color(0xFFF3E8FD)
-val OnSecondaryContainerLight = Color(0xFF3B0764)
-val TertiaryLight = Color(0xFF1E8E3E) // Green
+val SecondaryContainerLight = Color(0xFFD7E2FF)
+val OnSecondaryContainerLight = Color(0xFF001A41)
+
+val TertiaryLight = Color(0xFF4C5E90)
 val OnTertiaryLight = Color(0xFFFFFFFF)
-val TertiaryContainerLight = Color(0xFFE6F4EA)
-val OnTertiaryContainerLight = Color(0xFF0D652D)
+val TertiaryContainerLight = Color(0xFFDDE1FF)
+val OnTertiaryContainerLight = Color(0xFF04184A)
+
 val ErrorLight = Color(0xFFD93025)
 val OnErrorLight = Color(0xFFFFFFFF)
 val ErrorContainerLight = Color(0xFFFCE8E6)
 val OnErrorContainerLight = Color(0xFFB31412)
-val BackgroundLight = Color(0xFFF8F9FA)
-val OnBackgroundLight = Color(0xFF202124)
-val SurfaceLight = Color(0xFFFFFFFF)
-val OnSurfaceLight = Color(0xFF202124)
-val SurfaceVariantLight = Color(0xFFE8EAED)
-val OnSurfaceVariantLight = Color(0xFF5F6368)
-val OutlineLight = Color(0xFFDADCE0)
 
-// Dark theme colors
-val PrimaryDark = Color(0xFFA8C7FA)
-val OnPrimaryDark = Color(0xFF062E6F)
-val PrimaryContainerDark = Color(0xFF0842A0)
-val OnPrimaryContainerDark = Color(0xFFD3E3FD)
-val SecondaryDark = Color(0xFFD8B4FE)
-val OnSecondaryDark = Color(0xFF4C1D95)
-val SecondaryContainerDark = Color(0xFF6B21A8)
-val OnSecondaryContainerDark = Color(0xFFF3E8FD)
-val TertiaryDark = Color(0xFF81C995)
-val OnTertiaryDark = Color(0xFF0F5223)
-val TertiaryContainerDark = Color(0xFF188038)
-val OnTertiaryContainerDark = Color(0xFFE6F4EA)
+val BackgroundLight = Color(0xFFF8F9FA)
+val OnBackgroundLight = Color(0xFF1A1B20)
+val SurfaceLight = Color(0xFFFFFFFF)
+val OnSurfaceLight = Color(0xFF1A1B20)
+val SurfaceVariantLight = Color(0xFFE2E2EC)
+val OnSurfaceVariantLight = Color(0xFF45464F)
+val OutlineLight = Color(0xFF757780)
+
+// Dark theme colors - based on #1164DE
+val PrimaryDark = Color(0xFF1164DE)
+val OnPrimaryDark = Color(0xFFFFFFFF)
+val PrimaryContainerDark = Color(0xFF0040A1)
+val OnPrimaryContainerDark = Color(0xFFD7E2FF)
+
+val SecondaryDark = Color(0xFF1164DE)
+val OnSecondaryDark = Color(0xFFFFFFFF)
+val SecondaryContainerDark = Color(0xFF0040A1)
+val OnSecondaryContainerDark = Color(0xFFD7E2FF)
+
+val TertiaryDark = Color(0xFFB8C4FF)
+val OnTertiaryDark = Color(0xFF1E2F5E)
+val TertiaryContainerDark = Color(0xFF344676)
+val OnTertiaryContainerDark = Color(0xFFDDE1FF)
+
 val ErrorDark = Color(0xFFF28B82)
 val OnErrorDark = Color(0xFF601410)
 val ErrorContainerDark = Color(0xFF8C1D18)
 val OnErrorContainerDark = Color(0xFFFCE8E6)
-val BackgroundDark = Color(0xFF131314) // Gemini dark background
-val OnBackgroundDark = Color(0xFFE3E3E3)
-val SurfaceDark = Color(0xFF1E1F20)
-val OnSurfaceDark = Color(0xFFE3E3E3)
-val SurfaceVariantDark = Color(0xFF444746)
-val OnSurfaceVariantDark = Color(0xFFC4C7C5)
-val OutlineDark = Color(0xFF8E918F)
 
+val BackgroundDark = Color(0xFF131314)
+val OnBackgroundDark = Color(0xFFE3E2E6)
+val SurfaceDark = Color(0xFF1E1F20)
+val OnSurfaceDark = Color(0xFFE3E2E6)
+val SurfaceVariantDark = Color(0xFF45464F)
+val OnSurfaceVariantDark = Color(0xFFC5C6D0)
+val OutlineDark = Color(0xFF8F909A)
