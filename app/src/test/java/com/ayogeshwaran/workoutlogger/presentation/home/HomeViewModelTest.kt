@@ -7,10 +7,10 @@ import com.ayogeshwaran.workoutlogger.domain.model.WorkoutType
 import com.ayogeshwaran.workoutlogger.domain.repository.WorkoutRepository
 import com.ayogeshwaran.workoutlogger.domain.usecase.AddCustomWorkoutTypeUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.AddWorkoutUseCase
+import com.ayogeshwaran.workoutlogger.domain.usecase.DeleteCustomWorkoutTypeUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.DeleteWorkoutUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.GetCustomWorkoutTypesUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.GetWorkoutsForDateUseCase
-import com.ayogeshwaran.workoutlogger.domain.usecase.DeleteCustomWorkoutTypeUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

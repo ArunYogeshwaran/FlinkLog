@@ -48,6 +48,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ayogeshwaran.workoutlogger.R
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
 import com.ayogeshwaran.workoutlogger.presentation.components.EditNotesDialog
+import com.ayogeshwaran.workoutlogger.presentation.components.EmptyHistoryIllustration
 import com.ayogeshwaran.workoutlogger.presentation.components.SwipeToDeleteWorkoutCard
 import com.ayogeshwaran.workoutlogger.presentation.home.todayMidnight
 import java.text.SimpleDateFormat
@@ -121,12 +122,18 @@ fun HistoryScreen(
                 // Workouts Grouped by Date (Weekly view)
                 if (workouts.isEmpty()) {
                     item {
-                        Box(
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 32.dp),
-                            contentAlignment = Alignment.Center
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
                         ) {
+                            EmptyHistoryIllustration(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.4f)
+                                    .padding(bottom = 16.dp)
+                            )
                             Text(
                                 text = stringResource(R.string.empty_workouts_weekly_history),
                                 style = MaterialTheme.typography.bodyLarge,
@@ -215,12 +222,18 @@ fun HistoryScreen(
                 // Workout list or empty (Monthly view)
                 if (workouts.isEmpty()) {
                     item {
-                        Box(
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 32.dp),
-                            contentAlignment = Alignment.Center
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
                         ) {
+                            EmptyHistoryIllustration(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.4f)
+                                    .padding(bottom = 16.dp)
+                            )
                             Text(
                                 text = stringResource(R.string.empty_workouts_history),
                                 style = MaterialTheme.typography.bodyLarge,

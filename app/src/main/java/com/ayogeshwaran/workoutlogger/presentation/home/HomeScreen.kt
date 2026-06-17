@@ -3,7 +3,6 @@ package com.ayogeshwaran.workoutlogger.presentation.home
 import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -63,6 +62,7 @@ import com.ayogeshwaran.workoutlogger.domain.model.WorkoutEntry
 import com.ayogeshwaran.workoutlogger.domain.model.WorkoutType
 import com.ayogeshwaran.workoutlogger.domain.model.localizedName
 import com.ayogeshwaran.workoutlogger.presentation.components.EditNotesDialog
+import com.ayogeshwaran.workoutlogger.presentation.components.EmptyHomeIllustration
 import com.ayogeshwaran.workoutlogger.presentation.components.SwipeToDeleteWorkoutCard
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -332,12 +332,18 @@ fun HomeScreen(
             // Workout list or empty state
             if (workouts.isEmpty()) {
                 item {
-                    Box(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 32.dp),
-                        contentAlignment = Alignment.Center
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
+                        EmptyHomeIllustration(
+                            modifier = Modifier
+                                .fillMaxWidth(0.5f)
+                                .padding(bottom = 16.dp)
+                        )
                         Text(
                             text = stringResource(R.string.empty_workouts_home),
                             style = MaterialTheme.typography.bodyLarge,
