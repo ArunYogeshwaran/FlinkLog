@@ -3,8 +3,8 @@ package com.ayogeshwaran.workoutlogger.presentation.about
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.widget.ImageView
 import androidx.compose.foundation.background
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,8 +41,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -143,9 +143,12 @@ private fun AppHeaderSection(versionName: String) {
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(R.mipmap.ic_launcher),
-            contentDescription = stringResource(R.string.app_name),
+        AndroidView(
+            factory = { ctx ->
+                ImageView(ctx).apply {
+                    setImageResource(R.mipmap.ic_launcher)
+                }
+            },
             modifier = Modifier.size(80.dp)
         )
         Spacer(modifier = Modifier.height(12.dp))
