@@ -61,12 +61,11 @@ The App does not knowingly collect any personal information from anyone, includi
 If this privacy policy is updated, the changes will be posted on this page with an updated "Last
 updated" date.
 
-## Contact
+## Contact & Support
 
-If you have questions about this privacy policy, you can reach out at:
+If you have questions or inquiries about this privacy policy, please reach out by opening an issue or discussion on the official GitHub repository:
 
-- **Developer:** Arun Yogeshwaran
-- **Email:** arun.yogeshwaran.b [at] gmail [dot] com
+*   **GitHub Repository**: [https://github.com/ArunYogeshwaran/Workout-Logger](https://github.com/ArunYogeshwaran/Workout-Logger)
 
 ---
 

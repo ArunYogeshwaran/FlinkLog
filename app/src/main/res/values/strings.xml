@@ -17,7 +17,7 @@
     <string name="about_philosophy_body">In an era where every app is bloated with features, subscriptions, and trackers — this app chooses to stay simple.\n\nNo accounts. No cloud. No ads. No tracking.\nJust log your workout and move on with your day.\n\nTo ensure your history is safe, your data is securely backed up using Android\'s system backup (Google Drive) and will automatically restore when you switch to a new phone.</string>
     <string name="about_built_by">Built by</string>
     <string name="about_developer_body">Built for humans with compassion</string>
-    <string name="about_send_feedback_short">Feedback</string>
+    <string name="about_report_issue">Report Issue</string>
     <string name="about_rate_play_store_short">Rate App</string>
     <string name="about_open_source_desc">View licenses of third-party libraries</string>
     <string name="about_privacy_policy_title">Privacy Policy</string>

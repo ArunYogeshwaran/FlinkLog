@@ -20,10 +20,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,8 +55,6 @@ fun AboutScreen(
 ) {
     val context = LocalContext.current
     val developerName = stringResource(R.string.developer_name)
-    val developerEmail = stringResource(R.string.developer_email)
-    val feedbackSubject = stringResource(R.string.feedback_subject)
     val versionName = remember {
         try {
             context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "1.0"
@@ -95,11 +93,7 @@ fun AboutScreen(
 
             // Quick Highlighted Action Cards
             item {
-                ActionsRow(
-                    context = context,
-                    developerEmail = developerEmail,
-                    feedbackSubject = feedbackSubject
-                )
+                ActionsRow(context = context)
             }
 
             // Philosophy Section
@@ -165,9 +159,7 @@ private fun AppHeaderSection(versionName: String) {
 
 @Composable
 private fun ActionsRow(
-    context: Context,
-    developerEmail: String,
-    feedbackSubject: String
+    context: Context
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -193,14 +185,14 @@ private fun ActionsRow(
             onClick = { openPlayStore(context) }
         )
 
-        // Send Feedback Card
+        // Report Issue Card
         ActionCard(
-            icon = Icons.Default.Email,
-            label = stringResource(R.string.about_send_feedback_short),
+            icon = Icons.Default.Warning,
+            label = stringResource(R.string.about_report_issue),
             containerColor = MaterialTheme.colorScheme.tertiaryContainer,
             iconColor = MaterialTheme.colorScheme.onTertiaryContainer,
             modifier = Modifier.weight(1f),
-            onClick = { sendFeedback(context, developerEmail, feedbackSubject) }
+            onClick = { openUrl(context, "https://github.com/ArunYogeshwaran/Workout-Logger/issues") }
         )
     }
 }
@@ -414,19 +406,6 @@ private fun openUrl(context: Context, url: String) {
         context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
     } catch (_: ActivityNotFoundException) {
         // No browser available
-    }
-}
-
-private fun sendFeedback(context: Context, email: String, subject: String) {
-    val intent = Intent(Intent.ACTION_SENDTO).apply {
-        data = "mailto:".toUri()
-        putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
-        putExtra(Intent.EXTRA_SUBJECT, subject)
-    }
-    try {
-        context.startActivity(intent)
-    } catch (_: ActivityNotFoundException) {
-        // No email app installed
     }
 }
 
