@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">Workout Logger</string>
+    <string name="app_name">FlinkLog</string>
     <string name="developer_name">Humanware Labs</string>
     <string name="developer_email">h.arunbuilds+workoutlogger@gmail.com</string>
-    <string name="feedback_subject">Feedback — Workout Logger</string>
+    <string name="feedback_subject">Feedback — FlinkLog</string>
 
     <!-- Navigation -->
     <string name="nav_today">Today</string>
@@ -93,7 +93,7 @@
     <string name="delete_custom_workout_success">Custom workout deleted</string>
     <!-- Sharing Feature -->
     <string name="about_share_app">Share App</string>
-    <string name="share_app_message">Check out Workout Logger — a lightweight, 100%% offline fitness logger that respects your privacy! Get it here: %1$s</string>
+    <string name="share_app_message">Check out FlinkLog — a lightweight, 100%% offline fitness logger that respects your privacy! Get it here: %1$s</string>
     <string name="copy_to_all">Copy to all</string>
     <!-- AppFunctions Metadata -->
     <string name="app_metadata_desc">Logs workouts and manages your fitness history offline.</string>

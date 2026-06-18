@@ -1,4 +1,4 @@
-# Workout Logger — Product Requirements Document
+# FlinkLog — Product Requirements Document
 
 **Version:** 1.0  
 **Date:** June 12, 2026  
@@ -8,7 +8,7 @@
 
 ## 1. Overview
 
-Workout Logger is a lightweight, offline-first Android application designed to help users log their
+FlinkLog is a lightweight, offline-first Android application designed to help users log their
 daily fitness activities effortlessly. The app focuses on speed, simplicity, and privacy—requiring
 no accounts, no cloud sync, and no internet connection to operate.
 

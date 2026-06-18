@@ -1,16 +1,16 @@
-# Workout Logger — Play Store Listing
+# FlinkLog — Play Store Listing
 
 ---
 
 ## App Name (30 chars max)
 
-Workout Logger (< 3MB)
+FlinkLog: Tiny Workout (<3MB)
 
 ---
 
 ## Short Description (80 chars max)
 
-Tiny 3MB workout logger. Offline, open-source, no ads, no tracking. Simple.
+Tiny <3MB workout log. Simple, fast, offline, no cloud, no ads, no tracking.
 
 ---
 
@@ -20,7 +20,7 @@ Everyone deserves simple, lightweight tools.
 
 We live in an era where every app wants your email, your location, your attention, and your money — bloated with megabytes of trackers and animations you don't need. 
 
-Workout Logger is different. At **under 3MB**, it is one of the smallest and fastest fitness apps on the Play Store.
+FlinkLog is different. At **under 3MB**, it is one of the smallest and fastest fitness apps on the Play Store.
 
 —
 
@@ -128,7 +128,7 @@ You must declare these answers inside the Play Console's **App Content** page:
   * Link to the hosted privacy policy (must point to a live URL, e.g. a GitHub Pages link hosting the contents of `PRIVACY_POLICY.md`).
 * **Data Safety Questionnaire:**
   * **Does your app collect or share user data?** Select **"No"**.
-  * Explanation: Since Workout Logger is 100% offline, requires no account, and doesn't transmit telemetry/analytics, it collects 0 user data. (Google Auto Backup is considered system-level backup and is exempt from data collection disclosure, but you can mention it in your public privacy policy).
+  * Explanation: Since FlinkLog is 100% offline, requires no account, and doesn't transmit telemetry/analytics, it collects 0 user data. (Google Auto Backup is considered system-level backup and is exempt from data collection disclosure, but you can mention it in your public privacy policy).
 * **Target Audience and Content:**
   * Age Group: Select **13 and older** or **Everyone (3+)**. Since it collects 0 data and is ad-free, it is highly compliant.
   * **Does your app intentionally appeal to children?** Select **"No"** (to avoid strict COPPA-related store review processes).

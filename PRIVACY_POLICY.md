@@ -1,15 +1,15 @@
-# Privacy Policy — Workout Logger
+# Privacy Policy — FlinkLog
 
 **Last updated:** June 17, 2026
 
 ## Overview
 
-Workout Logger ("the App") is a free Android application developed by Ayogeshwaran. This privacy
+FlinkLog ("the App") is a free Android application developed by Ayogeshwaran. This privacy
 policy explains how the App handles your information.
 
 ## Data Collection & Open Source Transparency
 
-**Workout Logger is 100% open-source and does not collect, store, or transmit any personal data to external servers.**
+**FlinkLog is 100% open-source and does not collect, store, or transmit any personal data to external servers.**
 
 Because the App is fully open-source under the GPLv3 license, the entire codebase is public and auditable. You can inspect the source code on GitHub to verify that there are no tracking SDKs, advertising libraries, or hidden network permissions.
 
@@ -70,5 +70,5 @@ If you have questions or inquiries about this privacy policy, please reach out b
 
 ---
 
-*This privacy policy applies to the Workout Logger app available on Google Play.*
+*This privacy policy applies to the FlinkLog app available on Google Play.*
 

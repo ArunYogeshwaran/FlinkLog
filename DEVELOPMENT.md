@@ -1,4 +1,4 @@
-# Developer Guidelines — Workout Logger
+# Developer Guidelines — FlinkLog
 
 All developers and coding agents must follow these standards to preserve localization (i18n) and
 formatting integrity.

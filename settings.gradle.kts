@@ -29,5 +29,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Workout Logger"
+rootProject.name = "FlinkLog"
 include(":app")
