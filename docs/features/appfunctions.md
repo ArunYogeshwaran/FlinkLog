@@ -38,30 +38,39 @@ adb shell cmd app_function list-app-functions | grep com.ayogeshwaran.workoutlog
 
 #### 2. Execute `logWorkout`
 ```bash
-adb shell cmd app_function execute-app-function \
+adb shell "cmd app_function execute-app-function \
   --package com.ayogeshwaran.workoutlogger \
-  --function logWorkout \
-  --parameters '{"workoutType":"Gym","notes":"Chest day","timestamp":1781683200000}'
+  --function com.ayogeshwaran.workoutlogger.appfunctions.WorkoutAppFunctions#logWorkout \
+  --parameters '{\"workoutType\":\"Gym\",\"notes\":\"Chest day\",\"timestamp\":1781683200000}'"
 ```
 *   *Expected Result:* Returns success code and saves a Chest workout inside the database.
 
 #### 3. Execute `getWorkoutsForRange`
 ```bash
-adb shell cmd app_function execute-app-function \
+adb shell "cmd app_function execute-app-function \
   --package com.ayogeshwaran.workoutlogger \
-  --function getWorkoutsForRange \
-  --parameters '{"startTimeMillis":0,"endTimeMillis":1900000000000}'
+  --function com.ayogeshwaran.workoutlogger.appfunctions.WorkoutAppFunctions#getWorkoutsForRange \
+  --parameters '{\"startTimeMillis\":0,\"endTimeMillis\":1900000000000}'"
 ```
 *   *Expected Result:* Returns a JSON array listing all logged workouts.
 
 #### 4. Execute `suggestWorkout` (LEAST_RECENT mode)
 ```bash
-adb shell cmd app_function execute-app-function \
+adb shell "cmd app_function execute-app-function \
   --package com.ayogeshwaran.workoutlogger \
-  --function suggestWorkout \
-  --parameters '{"preferenceType":"LEAST_RECENT"}'
+  --function com.ayogeshwaran.workoutlogger.appfunctions.WorkoutAppFunctions#suggestWorkout \
+  --parameters '{\"preferenceType\":\"LEAST_RECENT\"}'"
 ```
 *   *Expected Result:* Returns the neglected workout type and rationale.
+
+#### 5. Execute `getCustomWorkoutTypes`
+```bash
+adb shell "cmd app_function execute-app-function \
+  --package com.ayogeshwaran.workoutlogger \
+  --function com.ayogeshwaran.workoutlogger.appfunctions.WorkoutAppFunctions#getCustomWorkoutTypes \
+  --parameters '{}'"
+```
+*   *Expected Result:* Returns a list of custom workout type names.
 
 ---
 
