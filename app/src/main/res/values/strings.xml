@@ -20,6 +20,8 @@
     <string name="about_send_feedback_short">Feedback</string>
     <string name="about_rate_play_store_short">Rate App</string>
     <string name="about_open_source_desc">View licenses of third-party libraries</string>
+    <string name="about_privacy_policy_title">Privacy Policy</string>
+    <string name="about_privacy_policy_desc">View raw GitHub Privacy Policy</string>
 
     <!-- Home Screen -->
     <string name="about_desc">About</string>

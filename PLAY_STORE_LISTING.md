@@ -4,13 +4,13 @@
 
 ## App Name (30 chars max)
 
-Workout Logger (Tiny 3MB)
+Workout Logger (< 3MB)
 
 ---
 
 ## Short Description (80 chars max)
 
-Tiny 3MB workout logger. 100% offline. No accounts, no ads, no tracking. Simple.
+Tiny 3MB workout logger. Offline, open-source, no ads, no tracking. Simple.
 
 ---
 
@@ -74,7 +74,7 @@ Features — the short list:
 • **Swipe to delete**, with undo
 • **Toggle between Monthly Calendar view** and rolling 7-day Weekly view
 • **Grouped history feed** sorting workouts chronologically by date
-• **Works 100% offline** — no internet connection required to log or view
+• **100% Open-Source & Offline** — code is fully auditable on GitHub; zero internet access required
 • **Worry-free device switching** — securely backed up to your Google account (encrypted, zero quota cost) to restore your history automatically on your next phone
 • **Android 16 AppFunctions integration** — let your secure on-device assistant (like Gemini) log workouts, query history, or suggest today's workouts locally and privately
 • **Material You theming** — adapts to your wallpaper colors

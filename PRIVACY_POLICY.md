@@ -7,12 +7,13 @@
 Workout Logger ("the App") is a free Android application developed by Ayogeshwaran. This privacy
 policy explains how the App handles your information.
 
-## Data Collection
+## Data Collection & Open Source Transparency
 
-**Workout Logger does not collect, store, or transmit any personal data to external servers.**
+**Workout Logger is 100% open-source and does not collect, store, or transmit any personal data to external servers.**
 
-All workout data you enter (workout type, date, and time) is stored **exclusively on your device**
-using a local database. No data ever leaves your device.
+Because the App is fully open-source under the GPLv3 license, the entire codebase is public and auditable. You can inspect the source code on GitHub to verify that there are no tracking SDKs, advertising libraries, or hidden network permissions.
+
+All workout data you enter (workout type, date, and time) is stored **exclusively on your device** using a local database. No data ever leaves your device.
 
 ## Data We Do NOT Collect
 
