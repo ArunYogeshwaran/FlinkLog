@@ -60,3 +60,14 @@ This workspace contains project-specific rules, design patterns, and lessons lea
     *   Database: SQLite via Android Room (configured for Google Auto Backup with WAL/SHM file handling).
     *   AppFunctions: Keep `WorkoutAppFunctions` in sync with any changes made to `WorkoutRepository`.
 *   **Compilation & Linting:** Always run `./gradlew compileDebugKotlin lintDebug` to verify changes before making any commit.
+
+---
+
+## 📝 Git Commit Guidelines
+*   **Commit Message Format:** All commits must follow the **Conventional Commits** specification (the standard format used in European Union/European Commission open source repositories).
+*   **Structure:** `<type>(<scope>): <subject>`
+    *   `type`: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `build`, `ci`.
+    *   `scope` (optional): The package or module affected (e.g. `(ui)`, `(db)`, `(appfunctions)`).
+    *   `subject`: A concise, imperative mood summary (e.g., `feat: add templates`, not `Added templates`).
+*   **Length Constraints:** Keep commit messages short and concise. The subject line must be under 50 characters, and no line of the commit message should exceed 72 characters.
+
