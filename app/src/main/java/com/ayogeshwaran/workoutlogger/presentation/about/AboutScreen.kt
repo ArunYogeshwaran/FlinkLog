@@ -46,6 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.ayogeshwaran.workoutlogger.R
+import com.ayogeshwaran.workoutlogger.presentation.components.FlinkLogBrandLogo
 import com.google.android.gms.oss.licenses.v2.OssLicensesMenuActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -141,12 +142,10 @@ private fun AppHeaderSection(versionName: String) {
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "🏋️",
-            style = MaterialTheme.typography.displayMedium,
-            textAlign = TextAlign.Center
+        FlinkLogBrandLogo(
+            modifier = Modifier.size(96.dp)
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.headlineMedium,

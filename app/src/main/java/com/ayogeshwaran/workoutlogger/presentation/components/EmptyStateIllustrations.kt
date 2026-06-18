@@ -223,3 +223,165 @@ fun EmptyHistoryIllustration(modifier: Modifier = Modifier) {
         }
     }
 }
+
+@Composable
+fun FlinkLogBrandLogo(modifier: Modifier = Modifier) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val secondaryColor = MaterialTheme.colorScheme.secondary
+    val primaryContainer = MaterialTheme.colorScheme.primaryContainer
+    
+    Box(
+        modifier = modifier.aspectRatio(1f),
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val width = size.width
+            val height = size.height
+            
+            // Soft background circular glow
+            drawCircle(
+                color = primaryColor.copy(alpha = 0.04f),
+                radius = width * 0.48f,
+                center = Offset(width * 0.5f, height * 0.5f)
+            )
+
+            // Modern container squircle base
+            val cardRect = RoundRect(
+                left = width * 0.08f,
+                top = height * 0.08f,
+                right = width * 0.92f,
+                bottom = height * 0.92f,
+                cornerRadius = CornerRadius(24.dp.toPx())
+            )
+            val cardPath = Path().apply {
+                addRoundRect(cardRect)
+            }
+            drawPath(
+                path = cardPath,
+                color = primaryContainer.copy(alpha = 0.20f)
+            )
+            drawPath(
+                path = cardPath,
+                color = primaryColor.copy(alpha = 0.12f),
+                style = Stroke(width = 2.5f.dp.toPx())
+            )
+
+            // --- TOP PORTION: The Dumbbell (Y: 0.15f to 0.51f) ---
+            val dumbbellY = height * 0.33f
+            val barThickness = height * 0.05f
+
+            // Dumbbell Bar (Horizontal)
+            drawRoundRect(
+                brush = Brush.linearGradient(
+                    colors = listOf(primaryColor, primaryColor.copy(alpha = 0.7f)),
+                    start = Offset(width * 0.24f, dumbbellY),
+                    end = Offset(width * 0.76f, dumbbellY)
+                ),
+                topLeft = Offset(width * 0.24f, dumbbellY - barThickness / 2),
+                size = Size(width * 0.52f, barThickness),
+                cornerRadius = CornerRadius(4.dp.toPx())
+            )
+
+            // Inner Plates (Left/Right)
+            val innerPlateHeight = height * 0.24f
+            drawRoundRect(
+                color = primaryColor.copy(alpha = 0.85f),
+                topLeft = Offset(width * 0.37f, dumbbellY - innerPlateHeight / 2),
+                size = Size(width * 0.05f, innerPlateHeight),
+                cornerRadius = CornerRadius(4.dp.toPx())
+            )
+            drawRoundRect(
+                color = primaryColor.copy(alpha = 0.85f),
+                topLeft = Offset(width * 0.58f, dumbbellY - innerPlateHeight / 2),
+                size = Size(width * 0.05f, innerPlateHeight),
+                cornerRadius = CornerRadius(4.dp.toPx())
+            )
+
+            // Outer Plates (Left/Right)
+            val outerPlateHeight = height * 0.36f
+            drawRoundRect(
+                color = primaryColor,
+                topLeft = Offset(width * 0.29f, dumbbellY - outerPlateHeight / 2),
+                size = Size(width * 0.06f, outerPlateHeight),
+                cornerRadius = CornerRadius(6.dp.toPx())
+            )
+            drawRoundRect(
+                color = primaryColor,
+                topLeft = Offset(width * 0.65f, dumbbellY - outerPlateHeight / 2),
+                size = Size(width * 0.06f, outerPlateHeight),
+                cornerRadius = CornerRadius(6.dp.toPx())
+            )
+
+            // Bar collars / outer caps
+            drawCircle(
+                color = primaryColor.copy(alpha = 0.9f),
+                radius = 4.dp.toPx(),
+                center = Offset(width * 0.22f, dumbbellY)
+            )
+            drawCircle(
+                color = primaryColor.copy(alpha = 0.9f),
+                radius = 4.dp.toPx(),
+                center = Offset(width * 0.78f, dumbbellY)
+            )
+
+            // --- SEPARATOR (Y: 0.56f) ---
+            drawLine(
+                color = primaryColor.copy(alpha = 0.15f),
+                start = Offset(width * 0.20f, height * 0.56f),
+                end = Offset(width * 0.80f, height * 0.56f),
+                strokeWidth = 1.5f.dp.toPx()
+            )
+
+            // --- BOTTOM PORTION: Log Entries (Y: 0.61f to 0.83f) ---
+            
+            // Log Entry 1 (Y: 0.68f)
+            val row1Y = height * 0.68f
+            val check1Path = Path().apply {
+                moveTo(width * 0.26f, row1Y - height * 0.03f)
+                lineTo(width * 0.31f, row1Y + height * 0.03f)
+                lineTo(width * 0.38f, row1Y - height * 0.07f)
+            }
+            drawPath(
+                path = check1Path,
+                color = secondaryColor,
+                style = Stroke(
+                    width = 3.dp.toPx(),
+                    cap = StrokeCap.Round,
+                    join = androidx.compose.ui.graphics.StrokeJoin.Round
+                )
+            )
+            // Log Entry 1 placeholder line
+            drawRoundRect(
+                color = primaryColor.copy(alpha = 0.20f),
+                topLeft = Offset(width * 0.44f, row1Y - height * 0.02f),
+                size = Size(width * 0.30f, height * 0.04f),
+                cornerRadius = CornerRadius(3.dp.toPx())
+            )
+
+            // Log Entry 2 (Y: 0.80f)
+            val row2Y = height * 0.80f
+            val check2Path = Path().apply {
+                moveTo(width * 0.26f, row2Y - height * 0.03f)
+                lineTo(width * 0.31f, row2Y + height * 0.03f)
+                lineTo(width * 0.38f, row2Y - height * 0.07f)
+            }
+            drawPath(
+                path = check2Path,
+                color = secondaryColor,
+                style = Stroke(
+                    width = 3.dp.toPx(),
+                    cap = StrokeCap.Round,
+                    join = androidx.compose.ui.graphics.StrokeJoin.Round
+                )
+            )
+            // Log Entry 2 placeholder line
+            drawRoundRect(
+                color = primaryColor.copy(alpha = 0.20f),
+                topLeft = Offset(width * 0.44f, row2Y - height * 0.02f),
+                size = Size(width * 0.22f, height * 0.04f),
+                cornerRadius = CornerRadius(3.dp.toPx())
+            )
+        }
+    }
+}
+
