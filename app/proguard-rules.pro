@@ -5,16 +5,21 @@
 # For more details, see
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
-
 # Preserve the line number information for
 # debugging stack traces.
 -keepattributes SourceFile,LineNumberTable
 
 # Hide the original source file name.
 -renamesourcefileattribute SourceFile
+
+# --- Android 16 AppFunctions Keep Rules ---
+# Keep any class containing methods annotated with @AppFunction
+-keep class * {
+    @androidx.appfunctions.service.AppFunction <methods>;
+}
+
+# Keep classes annotated with @AppFunctionSerializable and all their fields
+-keep @androidx.appfunctions.AppFunctionSerializable class * {
+    *;
+}
+
