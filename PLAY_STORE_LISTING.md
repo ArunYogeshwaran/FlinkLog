@@ -4,7 +4,7 @@
 
 ## App Name (30 chars max)
 
-FlinkLog: Tiny Workout (<3MB)
+FlinkLog: Tiny Workout Logger (<3MB)
 
 ---
 
@@ -24,7 +24,7 @@ FlinkLog is different. At **under 3MB**, it is one of the smallest and fastest f
 
 —
 
-I built this app for myself.
+I built this app for all the simple human-beings out there.
 I wanted to log my workout and move on with my day.
 No sign-ups. No subscriptions. No analytics. No cloud. No nonsense.
 Then I thought — maybe others want this too.

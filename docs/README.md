@@ -16,6 +16,7 @@ Instead of keeping a single massive requirements or test suite document (which i
 | Feature File | Target Capability | Verification Focus |
 | :--- | :--- | :--- |
 | [ARCHITECTURE.md](../docs/ARCHITECTURE.md) | MVVM Architecture, packages, and data flows | Gradle test suites execution and compiler verify |
+| [ROADMAP.md](../docs/ROADMAP.md) | Future features, UX improvements, analytics and portability tasks | Target milestones & APK footprint verification guidelines |
 | [1. Logging & Feed](../docs/features/logging.md) | Selecting exercises, notes entry, "Copy to All", swipe onboarding | Logging validation, undo actions, note edits, gestures |
 | [2. History Calendar](../docs/features/history.md) | Month grid navigation, active days dot, weekly layout toggles | Calendar active states, scroll loads, and layout resizing |
 | [3. Custom Exercises](../docs/features/custom_exercises.md) | Dynamic addition (+) and deletion (x) of categories | Persisting category lifecycle, duplicates & empty string handling |

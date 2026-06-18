@@ -1,6 +1,8 @@
 # IDE
 .idea/
 *.iml
+.DS_Store
+*.DS_Store
 
 # Build
 build/
@@ -8,3 +10,7 @@ build/
 
 # Local configuration
 local.properties
+keystore.properties
+*.jks
+
+app/key.jks

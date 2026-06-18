@@ -4,7 +4,7 @@ All notable changes to the FlinkLog project are documented in this file. The for
 
 ---
 
-## [1.0.0] - 2026-06-18
+## [2026.6.1] - 2026-06-18
 
 ### Added
 *   **Unique Branding & Name:** Renamed the app from the generic "Workout Logger" to **FlinkLog** (inspired by the German word *flink*, meaning quick, nimble, or agile).

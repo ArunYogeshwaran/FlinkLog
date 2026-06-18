@@ -80,3 +80,57 @@ Before staging or committing any code changes, always verify compilation and lin
 ./gradlew compileDebugKotlin lintDebug
 ```
 All commits must pass both compilation and Android Lint checks without errors.
+
+---
+
+## 🚀 6. Pre-Release Verification & Build Protocol
+
+Before every release, AI agents and developers **MUST** run the following checklist to verify code health, ensure CalVer alignment, configure release signing, and compile the production artifact:
+
+### Step 1: Configure Release Signing Keystore
+To sign the production build, a local keystore file and configuration are required:
+1.  **Keystore File:** Place your release keystore file (e.g., `key.jks`) inside the `app/` directory (`app/key.jks`).
+2.  **Keystore Configuration:** Create a file named `keystore.properties` in the root directory of the project.
+3.  **Properties Format:** Populate the properties as follows:
+    ```ini
+    storeFile=key.jks
+    storePassword=<your-keystore-password>
+    keyAlias=<your-key-alias>
+    keyPassword=<your-key-password>
+    ```
+4.  **Security Precaution:** Ensure both `keystore.properties` and `*.jks` are added to `.gitignore` so they are never committed to Git.
+*Note: If no `keystore.properties` is found, the build will fall back to compiling an unsigned release bundle.*
+
+### Step 2: Verify & Sync Versioning
+*   Verify that `versionName` in `app/build.gradle.kts` matches the calendar version format (`YYYY.M.Release` e.g., `2026.6.1`).
+*   Ensure the integer `versionCode` has been incremented compared to the last play store upload.
+*   Verify that the release header in `CHANGELOG.md` matches the new calendar version.
+
+### Step 3: Run Automated Quality Checks
+Execute the compilation, lint scans, and unit tests:
+```bash
+./gradlew compileDebugKotlin lintDebug testDebugUnitTest
+```
+Confirm that the build succeeds with no warnings or failing tests.
+
+### Step 4: Compile Production App Bundle
+Generate the signed release Google Play App Bundle:
+```bash
+./gradlew bundleRelease
+```
+The compiled, signed release bundle will automatically be copied and renamed in:
+`app/build/outputs/renamed-bundle/flinklog-<VERSION_NAME>.aab`
+
+### Step 5: Verify App Size Footprint
+Audit the size of the compiled, version-synced `.aab` file to ensure the package remains under the **3MB** target:
+```bash
+ls -lh app/build/outputs/renamed-bundle/flinklog-<VERSION_NAME>.aab
+```
+
+### Step 6: Tag the Commit
+After finalizing, commit changes, tag the release commit, and push tags:
+```bash
+git commit -am "release: bump version to CalVer <VERSION_NAME>"
+git tag -a <VERSION_NAME> -m "FlinkLog Release <VERSION_NAME>"
+git push origin main --tags
+```
