@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -67,13 +68,14 @@ fun HistoryScreen(
     var editingWorkout by remember { mutableStateOf<WorkoutEntry?>(null) }
 
     val context = LocalContext.current
+    val resources = LocalResources.current
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
                 is HistoryEvent.WorkoutDeleted -> {
                     snackbarHostState.showSnackbar(
-                        message = context.getString(R.string.workout_deleted_msg),
-                        actionLabel = context.getString(R.string.undo),
+                        message = resources.getString(R.string.workout_deleted_msg),
+                        actionLabel = resources.getString(R.string.undo),
                         duration = SnackbarDuration.Short
                     ).let { result ->
                         if (result == SnackbarResult.ActionPerformed) {

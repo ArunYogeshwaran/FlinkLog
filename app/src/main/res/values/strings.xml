@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">FlinkLog</string>
     <string name="developer_name">Humanware Labs</string>
     <string name="developer_email">h.arunbuilds+workoutlogger@gmail.com</string>
@@ -14,7 +14,7 @@
     <string name="about_open_source_title">Open Source Licenses</string>
     <string name="about_version">Version %1$s</string>
     <string name="about_philosophy_quote">&quot;Everyone deserves simple tools.&quot;</string>
-    <string name="about_philosophy_body">In an era where every app is bloated with features, subscriptions, and trackers — this app chooses to stay simple.\n\nNo accounts. No cloud. No ads. No tracking. 100% open-source &amp; offline.\nJust log your workout and move on with your day.\n\nTo ensure your history is safe, your data is securely backed up using Android\'s system backup (Google Drive) and will automatically restore when you switch to a new phone.</string>
+    <string name="about_philosophy_body">In an era where every app is bloated with features, subscriptions, and trackers — this app chooses to stay simple.\n\nNo accounts. No cloud. No ads. No tracking. 100%% open-source &amp; offline.\nJust log your workout and move on with your day.\n\nTo ensure your history is safe, your data is securely backed up using Android\'s system backup (Google Drive) and will automatically restore when you switch to a new phone.</string>
     <string name="about_built_by">Built by</string>
     <string name="about_developer_body">Built for humans with compassion</string>
     <string name="about_send_feedback_short">Feedback</string>
@@ -55,7 +55,7 @@
     <string name="prev_month_desc">Previous month</string>
     <string name="next_month_desc">Next month</string>
     <string name="weekly_view_title">Weekly View</string>
-    <string name="weekly_view_subtitle">%1$d workouts • %2$d days active</string>
+    <string name="weekly_view_subtitle" tools:ignore="PluralsCandidate">%1$d workouts • %2$d days active</string>
     <string name="empty_workouts_weekly_history">No workouts logged in this 7-day period.</string>
     <string name="monthly_view_title">Monthly View</string>
 

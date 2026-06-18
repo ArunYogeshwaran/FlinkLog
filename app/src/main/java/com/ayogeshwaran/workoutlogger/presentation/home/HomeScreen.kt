@@ -52,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -80,6 +81,7 @@ fun HomeScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     val context = LocalContext.current
+    val resources = LocalResources.current
     val scope = rememberCoroutineScope()
 
     val cardioTypes by viewModel.cardioTypes.collectAsStateWithLifecycle()
@@ -171,10 +173,10 @@ fun HomeScreen(
                 is HomeEvent.WorkoutsLogged -> {
                     val count = event.entries.size
                     val msg =
-                        context.resources.getQuantityString(R.plurals.workouts_logged, count, count)
+                        resources.getQuantityString(R.plurals.workouts_logged, count, count)
                     snackbarHostState.showSnackbar(
                         message = msg,
-                        actionLabel = context.getString(R.string.undo),
+                        actionLabel = resources.getString(R.string.undo),
                         duration = SnackbarDuration.Short
                     ).let { result ->
                         if (result == SnackbarResult.ActionPerformed) {
@@ -185,8 +187,8 @@ fun HomeScreen(
 
                 is HomeEvent.WorkoutDeleted -> {
                     snackbarHostState.showSnackbar(
-                        message = context.getString(R.string.workout_deleted_msg),
-                        actionLabel = context.getString(R.string.undo),
+                        message = resources.getString(R.string.workout_deleted_msg),
+                        actionLabel = resources.getString(R.string.undo),
                         duration = SnackbarDuration.Short
                     ).let { result ->
                         if (result == SnackbarResult.ActionPerformed) {
@@ -397,7 +399,7 @@ fun HomeScreen(
                         deletingCustomWorkoutType = null
                         scope.launch {
                             snackbarHostState.showSnackbar(
-                                message = context.getString(R.string.delete_custom_workout_success)
+                                message = resources.getString(R.string.delete_custom_workout_success)
                             )
                         }
                     }
@@ -428,7 +430,7 @@ fun HomeScreen(
                 customWorkoutCategory = null
                 scope.launch {
                     snackbarHostState.showSnackbar(
-                        message = context.getString(R.string.add_custom_workout_success)
+                        message = resources.getString(R.string.add_custom_workout_success)
                     )
                 }
             },
@@ -660,7 +662,7 @@ private fun AddCustomWorkoutDialog(
 ) {
     var name by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    val context = LocalContext.current
+    val resources = LocalResources.current
 
     androidx.compose.material3.AlertDialog(
         onDismissRequest = onDismiss,
@@ -691,7 +693,7 @@ private fun AddCustomWorkoutDialog(
             TextButton(
                 onClick = {
                     if (name.trim().isEmpty()) {
-                        errorMessage = context.getString(R.string.add_custom_workout_error_empty)
+                        errorMessage = resources.getString(R.string.add_custom_workout_error_empty)
                     } else {
                         viewModel.addCustomWorkoutType(
                             name = name,
@@ -701,8 +703,8 @@ private fun AddCustomWorkoutDialog(
                             },
                             onError = { errorType ->
                                 errorMessage = when (errorType) {
-                                    "empty" -> context.getString(R.string.add_custom_workout_error_empty)
-                                    "exists" -> context.getString(R.string.add_custom_workout_error_exists)
+                                    "empty" -> resources.getString(R.string.add_custom_workout_error_empty)
+                                    "exists" -> resources.getString(R.string.add_custom_workout_error_exists)
                                     else -> "Unknown error"
                                 }
                             }
