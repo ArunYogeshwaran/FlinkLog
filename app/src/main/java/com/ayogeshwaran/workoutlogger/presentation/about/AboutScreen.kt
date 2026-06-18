@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,13 +41,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.ayogeshwaran.workoutlogger.R
-import com.ayogeshwaran.workoutlogger.presentation.components.FlinkLogBrandLogo
 import com.google.android.gms.oss.licenses.v2.OssLicensesMenuActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -142,8 +143,10 @@ private fun AppHeaderSection(versionName: String) {
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        FlinkLogBrandLogo(
-            modifier = Modifier.size(96.dp)
+        Image(
+            painter = painterResource(R.mipmap.ic_launcher),
+            contentDescription = stringResource(R.string.app_name),
+            modifier = Modifier.size(80.dp)
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
@@ -186,8 +189,8 @@ private fun ActionsRow(
         ActionCard(
             icon = Icons.Default.Star,
             label = stringResource(R.string.about_rate_play_store_short),
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-            iconColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            iconColor = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = Modifier.weight(1f),
             onClick = { openPlayStore(context) }
         )
@@ -196,8 +199,8 @@ private fun ActionsRow(
         ActionCard(
             icon = Icons.Default.Email,
             label = stringResource(R.string.about_send_feedback_short),
-            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-            iconColor = MaterialTheme.colorScheme.onTertiaryContainer,
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            iconColor = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = Modifier.weight(1f),
             onClick = { sendFeedback(context, developerEmail, feedbackSubject) }
         )
