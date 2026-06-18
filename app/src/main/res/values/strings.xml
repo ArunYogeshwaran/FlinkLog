@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Workout Logger</string>
     <string name="developer_name">Humanware Labs</string>
-
+    <string name="developer_email">h.arunbuilds+workoutlogger@gmail.com</string>
+    <string name="feedback_subject">Feedback — Workout Logger</string>
 
     <!-- Navigation -->
     <string name="nav_today">Today</string>
@@ -13,10 +14,10 @@
     <string name="about_open_source_title">Open Source Licenses</string>
     <string name="about_version">Version %1$s</string>
     <string name="about_philosophy_quote">&quot;Everyone deserves simple tools.&quot;</string>
-    <string name="about_philosophy_body">In an era where every app is bloated with features, subscriptions, and trackers — this app chooses to stay simple.\n\nNo accounts. No cloud. No ads. No tracking.\nJust log your workout and move on with your day.\n\nTo ensure your history is safe, your data is securely backed up using Android\'s system backup (Google Drive) and will automatically restore when you switch to a new phone.</string>
+    <string name="about_philosophy_body">In an era where every app is bloated with features, subscriptions, and trackers — this app chooses to stay simple.\n\nNo accounts. No cloud. No ads. No tracking. 100% open-source &amp; offline.\nJust log your workout and move on with your day.\n\nTo ensure your history is safe, your data is securely backed up using Android\'s system backup (Google Drive) and will automatically restore when you switch to a new phone.</string>
     <string name="about_built_by">Built by</string>
     <string name="about_developer_body">Built for humans with compassion</string>
-    <string name="about_report_issue">Report Issue</string>
+    <string name="about_send_feedback_short">Feedback</string>
     <string name="about_rate_play_store_short">Rate App</string>
     <string name="about_open_source_desc">View licenses of third-party libraries</string>
     <string name="about_privacy_policy_title">Privacy Policy</string>

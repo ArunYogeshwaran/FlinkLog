@@ -63,9 +63,10 @@ updated" date.
 
 ## Contact & Support
 
-If you have questions or inquiries about this privacy policy, please reach out by opening an issue or discussion on the official GitHub repository:
+If you have questions or inquiries about this privacy policy, please reach out by opening an issue on the official GitHub repository or contacting the developer:
 
 *   **GitHub Repository**: [https://github.com/ArunYogeshwaran/Workout-Logger](https://github.com/ArunYogeshwaran/Workout-Logger)
+*   **Email**: h.arunbuilds+workoutlogger [at] gmail [dot] com
 
 ---
 
