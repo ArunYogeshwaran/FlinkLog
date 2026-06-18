@@ -1,56 +1,82 @@
-# Developer Guidelines — FlinkLog
+# Developer Guidelines
 
-All developers and coding agents must follow these standards to preserve localization (i18n) and
-formatting integrity.
-
----
-
-## 1. Localization Standards
-
-* **No Hardcoded UI Strings:** Raw string literals must never be passed to user-visible views.
-* **Compose UI:** Use `stringResource(R.string.id)` for static text and
-  `pluralStringResource(R.plurals.id, count)` for plurals.
-* **Event Handlers / Callbacks:** Resolve strings via Android `Context` in non-composable scopes:
-  ```kotlin
-  val msg = context.resources.getQuantityString(R.plurals.workouts_logged, count, count)
-  val action = context.getString(R.string.undo)
-  ```
-* **Domain Models:** Store stable IDs in the database/model. Resolve localized display names in the
-  presentation layer via `@param:StringRes` properties and Compose extension functions:
-  ```kotlin
-  @Composable
-  fun WorkoutEntry.localizedType(): String {
-      val preset = PresetWorkoutTypes.find { it.name.equals(workoutType, ignoreCase = true) }
-      return preset?.let { stringResource(it.nameRes) } ?: workoutType
-  }
-  ```
+All developers (human and AI agents) contributing to FlinkLog must follow these standards to preserve compilation, localization (i18n), and code quality integrity.
 
 ---
 
-## 2. Date & Time Formatting
+## 🏗️ 1. Core Architecture
 
-* **No Hardcoded Patterns:** Do not use hardcoded formatting templates (e.g., `"h:mm a"` or
-  `"EEEE, dd/MM"`).
-* **Time Formatting:** Respect system 12h/24h clocks using:
-  ```kotlin
-  val timeFormat = remember(context) { android.text.format.DateFormat.getTimeFormat(context) }
-  ```
-* **Date Formatting:** Respect system regional date formatting:
-  ```kotlin
-  val formattedDate = android.text.format.DateUtils.formatDateTime(context, millis, flags)
-  ```
-* **Calendar Weekdays:** Dynamically layout weekdays using the system locale's first day of week:
-  ```kotlin
-  val firstDayOfWeekSetting = cal.firstDayOfWeek
-  val offset = (firstDayOfMonth - firstDayOfWeekSetting + 7) % 7
-  ```
+FlinkLog is designed as an offline-first, lightweight (<3MB footprint), privacy-first Android application. It implements clean architecture with MVVM:
+*   **Presentation Layer:** Jetpack Compose using Material You dynamic color themes. Lightweight graphics (e.g. empty states, brand logo) are drawn programmatically using Compose `Canvas` to minimize package size.
+*   **Domain Layer:** Decoupled interfaces, use cases, and models representing workouts and history.
+*   **Data Layer:** Room SQLite storage (configured with robust system Auto Backup guidelines covering DB, WAL, and SHM files).
+*   **AppFunctions Layer:** Exposed capabilities for on-device assistant integration.
 
 ---
 
-## 3. Automated Verification
+## 💡 2. AI Coding Agent Rules & Common Pitfalls
 
-* Android Lint will fail the build on any hardcoded XML layout text.
-* Run verification tasks locally before committing code:
-  ```bash
-  ./gradlew compileDebugKotlin lintDebug
-  ```
+### 2.1 Adaptive Launcher Icons
+*   **Issue:** Loading adaptive XML icons (`R.mipmap.ic_launcher`) via Compose `painterResource()` will trigger an immediate runtime crash (`IllegalArgumentException`).
+*   **Rule:** Always wrap launcher/adaptive icons in an `AndroidView`/`ImageView` wrapper:
+    ```kotlin
+    AndroidView(
+        factory = { ctx ->
+            ImageView(ctx).apply {
+                setImageResource(R.mipmap.ic_launcher)
+            }
+        },
+        modifier = Modifier.size(80.dp)
+    )
+    ```
+
+### 2.2 XML String Formatting (Percent Escaping)
+*   **Issue:** A raw `%` inside `strings.xml` (e.g. `100% open-source`) is interpreted as a formatter tag, which triggers compilation warnings (`PluralsCandidate`) and can crash `String.format` calls at runtime.
+*   **Rule:** Always escape raw `%` inside `strings.xml` as `%%` (e.g., `100%% open-source`).
+
+### 2.3 Compose Resource Lookups (Lint Compatibility)
+*   **Issue:** Inside composables or async collectors (like `LaunchedEffect`), retrieving resources via `context.getString(...)` on context resolved via `LocalContext.current` triggers `LocalContextGetResourceValueCall` lint errors.
+*   **Rule:** Standardize lookups:
+    *   In Composables: Use `stringResource(...)`.
+    *   In callbacks, coroutines, or flow collectors: Reference the configuration-aware `LocalResources.current` instead:
+        ```kotlin
+        val resources = LocalResources.current
+        LaunchedEffect(Unit) {
+            viewModel.events.collect { event ->
+                val msg = resources.getString(R.string.workout_deleted_msg)
+            }
+        }
+        ```
+
+---
+
+## 🌎 3. Localization & Formatting Standards
+
+*   **No Hardcoded UI Strings:** All user-visible strings must exist in `strings.xml`. Use `stringResource(R.string.id)` or `pluralStringResource(R.plurals.id, count)` in Composable scopes.
+*   **Date & Time Layouts:** Never hardcode time/date formats. Query system regional formatting settings:
+    ```kotlin
+    // Time format
+    val timeFormat = android.text.format.DateFormat.getTimeFormat(context)
+    // Date format
+    val formattedDate = android.text.format.DateUtils.formatDateTime(context, millis, flags)
+    ```
+
+---
+
+## 🛡️ 4. Obfuscation & AppFunctions Reflection Keep Rules
+
+Android 16 AppFunctions rely heavily on reflection during compilation. R8 optimization will strip these bindings in release builds. Ensure `app/proguard-rules.pro` contains the required keep rules:
+```proguard
+-keep class com.ayogeshwaran.workoutlogger.appfunctions.** { *; }
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
+```
+
+---
+
+## 🧪 5. Verification Commands
+
+Before staging or committing any code changes, always verify compilation and lint metrics locally:
+```bash
+./gradlew compileDebugKotlin lintDebug
+```
+All commits must pass both compilation and Android Lint checks without errors.
