@@ -21,6 +21,12 @@ Any new feature implementation **MUST** respect the following guidelines:
 *   **[ ] A2: Structured Sets/Reps Inputs**
     *   *Description:* Add a structured input for sets, reps, and weights (e.g., `3 sets x 10 reps @ 60kg`) inside the logging sheet, supplementing the existing free-form notes.
     *   *Implementation Tip:* Leverage simple regex or structured DB columns in `WorkoutEntry`.
+*   **[ ] A3: Swipe-to-Delete Confirmation Step**
+    *   *Description:* Require a confirmation step (e.g., a simple dialog or confirmation banner) before deleting a workout when a user swipes left, reducing accidental deletions.
+    *   *Implementation Tip:* Wrap the SwipeDismiss-triggered action in a standard Material 3 AlertDialog.
+*   **[ ] A4: Weekly View DatePicker Navigation**
+    *   *Description:* Enable tapping the date header in the Weekly View to launch a DatePicker. Choosing a date sets the 7-day rolling window immediately, eliminating the need to tap arrow navigation buttons repeatedly to go far back in the past.
+    *   *Implementation Tip:* Use Material 3 `rememberDatePickerState()` and update the Home/History viewmodel range offset logic dynamically.
 
 ### Track B: Insights & Canvas Analytics
 *   **[ ] B1: Canvas-Drawn Progression Charts**
