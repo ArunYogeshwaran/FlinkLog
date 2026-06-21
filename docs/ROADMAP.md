@@ -27,6 +27,9 @@ Any new feature implementation **MUST** respect the following guidelines:
 *   **[ ] A4: Weekly View DatePicker Navigation**
     *   *Description:* Enable tapping the date header in the Weekly View to launch a DatePicker. Choosing a date sets the 7-day rolling window immediately, eliminating the need to tap arrow navigation buttons repeatedly to go far back in the past.
     *   *Implementation Tip:* Use Material 3 `rememberDatePickerState()` and update the Home/History viewmodel range offset logic dynamically.
+*   **[ ] A5: Daily Workout Reminders (Notifications)**
+    *   *Description:* Allow users to define a daily reminder time in settings and receive a local push notification reminding them to log their active exercises.
+    *   *Implementation Tip:* Utilize Android's `WorkManager` with a `PeriodicWorkRequest` scheduling local notifications via `NotificationManager` at the designated daily time offset.
 
 ### Track B: Insights & Canvas Analytics
 *   **[ ] B1: Canvas-Drawn Progression Charts**
@@ -39,6 +42,9 @@ Any new feature implementation **MUST** respect the following guidelines:
 *   **[ ] C1: CSV / JSON Backup Export & Import**
     *   *Description:* Since there are no cloud accounts, provide a button to manually export the database as a CSV or JSON file to the user's Local Storage, and allow restoring from it.
     *   *Implementation Tip:* Use Android Document Provider (`Intent.ACTION_CREATE_DOCUMENT`) for storage framework compliance.
+*   **[ ] C2: Trash Bin & Retention Lifecycle**
+    *   *Description:* Add a "Trash" collection state for deleted workouts. Workouts marked as deleted will go to the Trash folder and automatically purge after a user-configurable number of retention days. Users can restore any items from the Trash back to their active history.
+    *   *Implementation Tip:* Add an `isDeleted` Boolean field and a `deletedAt` Long timestamp to `WorkoutEntry`, query them under a custom DAO view, and configure an automatic cleanup job or database trigger.
 
 ### Track D: System AI & AppFunctions Extensions
 *   **[ ] D1: Expose Statistics to Google Assistant**
