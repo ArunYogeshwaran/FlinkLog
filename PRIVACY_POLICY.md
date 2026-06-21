@@ -4,7 +4,7 @@
 
 ## Overview
 
-FlinkLog ("the App") is a free Android application developed by Ayogeshwaran. This privacy
+FlinkLog ("the App") is a free Android application developed by Arun Yogeshwaran. This privacy
 policy explains how the App handles your information.
 
 ## Data Collection & Open Source Transparency
