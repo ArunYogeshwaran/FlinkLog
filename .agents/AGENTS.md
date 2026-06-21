@@ -71,3 +71,12 @@ This workspace contains project-specific rules, design patterns, and lessons lea
     *   `subject`: A concise, imperative mood summary (e.g., `feat: add templates`, not `Added templates`).
 *   **Length Constraints:** Keep commit messages short and concise. The subject line must be under 50 characters, and no line of the commit message should exceed 72 characters.
 
+---
+
+## 🛑 Rule & Memory Maintenance
+*   **Mandatory Update:** Whenever you introduce a new feature, database schema change, AppFunction API, library dependency, or resolve a complex compilation/lint issue, you **must** update:
+    *   The corresponding feature file under docs/features/ and/or docs/README/ with updated specifications and verification test cases.
+    *   DEVELOPMENT.md with developer instructions.
+    *   .agents/AGENTS.md with agent guidelines.
+    This must be done before completing the task to ensure product specifications remain the single source of truth.
+
