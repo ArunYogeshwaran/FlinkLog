@@ -48,6 +48,11 @@ This workspace contains project-specific rules, design patterns, and lessons lea
 
 ---
 
+## ⚖️ Compliance & Rating Rules
+*   **IARC Re-rating:** Any change that introduces new content profiles (e.g., violence, UGC, social features, in-app purchases) requires re-doing the IARC questionnaire. When making such changes, you **must** flag a warning in your PR description or commit message. See `docs/COMPLIANCE.md` for the full list of triggers and the exact warning template to use.
+
+---
+
 ## 🔒 Security & Privacy Rules
 *   **Personal Info Scrubbing:** Never write raw personal email addresses in code, strings, or Markdown files. If a contact email must be shown in documentation (e.g. `PRIVACY_POLICY.md`), use an obfuscated layout like: `h.arunbuilds+workoutlogger [at] gmail [dot] com`.
 *   **Git Author Email:** All commits must use the GitHub no-reply address: `ArunYogeshwaran@users.noreply.github.com`.
