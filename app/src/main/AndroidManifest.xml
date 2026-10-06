@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:name=".WorkoutLoggerApplication"
@@ -15,6 +16,16 @@
         <property
             android:name="android.app.appfunctions.app_metadata"
             android:resource="@xml/app_metadata" />
+
+        <service
+            android:name="androidx.appfunctions.service.PlatformAppFunctionService"
+            android:exported="true"
+            android:permission="android.permission.BIND_APP_FUNCTION_SERVICE"
+            tools:targetApi="36">
+            <intent-filter>
+                <action android:name="android.app.appfunctions.AppFunctionService" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".MainActivity"
