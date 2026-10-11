@@ -10,12 +10,13 @@ preserve compilation, localization (i18n), and code quality integrity.
 FlinkLog is designed as an offline-first, lightweight (<3.5MB footprint), privacy-first Android
 application. It implements clean architecture with MVVM:
 
-* **Presentation Layer:** Jetpack Compose using Material You dynamic color themes. Lightweight
-  graphics (e.g. empty states, brand logo) are drawn programmatically using Compose `Canvas` to
-  minimize package size.
+* **Presentation Layer:** Jetpack Compose using Material You dynamic color themes. Features an
+  infinite, lazy-loaded **Agenda Timeline** using AndroidX Paging 3 (`LazyPagingItems`) alongside a
+  traditional monthly calendar. Lightweight graphics (e.g. empty states, brand logo) are drawn
+  programmatically using Compose `Canvas` to minimize package size.
 * **Domain Layer:** Decoupled interfaces, use cases, and models representing workouts and history.
 * **Data Layer:** Room SQLite storage (configured with robust system Auto Backup guidelines covering
-  DB, WAL, and SHM files).
+  DB, WAL, and SHM files), utilizing Room's `PagingSource` for memory-efficient paginated queries.
 * **AppFunctions Layer:** Exposed capabilities for on-device assistant integration.
 
 ---
@@ -114,7 +115,17 @@ these bindings in release builds. Ensure `app/proguard-rules.pro` contains the r
 
 ---
 
-## 🧪 6. Verification Commands
+## 🧪 6. Verification Commands & Git Hooks
+
+### 6.1 Pre-Commit Hook (Automatic Compile Verification)
+
+FlinkLog includes an automated pre-commit hook in `.githooks/pre-commit` that runs `./gradlew --no-daemon compileDebugKotlin` before any commit is finalized. To enable tracked repository hooks locally, run:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+### 6.2 Manual Verification
 
 Before staging or committing any code changes, always verify compilation and lint metrics locally:
 

@@ -1,0 +1,14 @@
+#!/bin/sh
+# FlinkLog pre-commit hook: Verify compilation before committing
+
+echo "Running pre-commit compile check (compileDebugKotlin)..."
+./gradlew --no-daemon compileDebugKotlin
+
+STATUS=$?
+if [ $STATUS -ne 0 ]; then
+    echo "❌ Pre-commit compile check failed! Aborting commit."
+    exit 1
+fi
+
+echo "✅ Compile check passed."
+exit 0
