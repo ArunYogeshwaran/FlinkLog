@@ -54,7 +54,8 @@
     <string name="empty_workouts_history">No workouts on this day.</string>
     <string name="prev_month_desc">Previous month</string>
     <string name="next_month_desc">Next month</string>
-    <string name="weekly_view_title">Weekly View</string>
+    <string name="weekly_view_title">Weekly</string>
+    <string name="timeline_view_title">Timeline</string>
     <string name="weekly_view_subtitle" tools:ignore="PluralsCandidate">%1$d workouts • %2$d days active</string>
     <string name="empty_workouts_weekly_history">No workouts logged in this 7-day period.</string>
     <string name="select_week_end_date">Select Week End Date</string>

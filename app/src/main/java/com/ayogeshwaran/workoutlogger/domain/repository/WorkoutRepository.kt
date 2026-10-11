@@ -24,5 +24,7 @@ interface WorkoutRepository {
     suspend fun deleteCustomWorkoutType(name: String, category: WorkoutCategory)
 
     fun getRecentNotesForWorkoutType(workoutType: String): Flow<List<String>>
+
+    fun getPagedWorkouts(): Flow<androidx.paging.PagingData<WorkoutEntry>>
 }
 

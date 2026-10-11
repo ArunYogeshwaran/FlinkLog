@@ -25,12 +25,12 @@ explicitly requested.
 | [ARCHITECTURE.md](../docs/ARCHITECTURE.md)                         | MVVM Architecture, packages, and data flows                       | Gradle test suites execution and compiler verify                  |
 | [ROADMAP.md](../docs/ROADMAP.md)                                   | Future features, UX improvements, analytics and portability tasks | Target milestones & APK footprint verification guidelines         |
 | [1. Logging & Feed](../docs/features/logging.md)                   | Selecting exercises, notes entry, "Copy to All", swipe onboarding | Logging validation, undo actions, note edits, gestures            |
-| [2. History Calendar](../docs/features/history.md)                 | Month grid navigation, active days dot, weekly layout toggles     | Calendar active states, scroll loads, and layout resizing         |
+| [2. History Calendar & Agenda Timeline](../docs/features/history.md) | Month grid navigation, active days dot, lazy-loaded Agenda timeline | Calendar active states, Paging 3 timeline feed, reverse layout    |
 | [3. Custom Exercises](../docs/features/custom_exercises.md)        | Dynamic addition (+) and deletion (x) of categories               | Persisting category lifecycle, duplicates & empty string handling |
 | [4. Google Auto Backup](../docs/features/auto_backup.md)           | SQLite DB, WAL/SHM streams configuration                          | End-to-end data restore on device transitions                     |
 | [5. On-Device AI (AppFunctions)](../docs/features/appfunctions.md) | Local assistant hooks, log/query APIs, routines recommendations   | ADB commands execution, on-device unit tests                      |
 | [6. Notes Suggestions](../docs/features/notes_suggestions.md)      | Contextual notes suggestions using historical inputs              | Suggestion chips rendering, isolation, and auto-fill              |
-| [7. Workout Sharing](../docs/features/sharing.md)                  | Formatted workout sharing via Android Intents                     | Text composition formatting and dynamic UI share button toggle    |
+| [7. Workout Sharing](../docs/features/sharing.md)                  | Single-day and multi-date bulk sharing via Android Intents        | Text composition formatting, date grouping, and multi-select UI   |
 
 ---
 

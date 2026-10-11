@@ -9,6 +9,7 @@ import com.ayogeshwaran.workoutlogger.domain.model.WorkoutType
 import com.ayogeshwaran.workoutlogger.domain.repository.WorkoutRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import androidx.paging.map
 
 class WorkoutRepositoryImpl(
     private val dao: WorkoutDao
@@ -66,6 +67,18 @@ class WorkoutRepositoryImpl(
 
     override fun getRecentNotesForWorkoutType(workoutType: String): Flow<List<String>> {
         return dao.getRecentNotesForWorkoutType(workoutType)
+    }
+
+    override fun getPagedWorkouts(): Flow<androidx.paging.PagingData<WorkoutEntry>> {
+        return androidx.paging.Pager(
+            config = androidx.paging.PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { dao.getPagedWorkouts() }
+        ).flow.map { pagingData ->
+            pagingData.map { it.toDomain() }
+        }
     }
 
     private fun WorkoutEntry.toEntity(): WorkoutEntryEntity {

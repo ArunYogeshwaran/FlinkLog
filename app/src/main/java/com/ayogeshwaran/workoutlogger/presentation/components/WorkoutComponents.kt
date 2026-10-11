@@ -6,6 +6,9 @@ import android.content.Intent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.material3.Checkbox
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,7 +55,11 @@ fun SwipeToDeleteWorkoutCard(
     workout: WorkoutEntry,
     onDelete: () -> Unit,
     onEditNotes: (WorkoutEntry) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    selectionMode: Boolean = false,
+    isSelected: Boolean = false,
+    onToggleSelection: () -> Unit = {},
+    onLongPress: () -> Unit = {}
 ) {
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = { value ->
@@ -99,21 +106,44 @@ fun SwipeToDeleteWorkoutCard(
         },
         enableDismissFromStartToEnd = false
     ) {
-        WorkoutCard(workout = workout, onEditNotes = onEditNotes)
+        WorkoutCard(
+            workout = workout, 
+            onEditNotes = onEditNotes,
+            selectionMode = selectionMode,
+            isSelected = isSelected,
+            onToggleSelection = onToggleSelection,
+            onLongPress = onLongPress
+        )
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WorkoutCard(
     workout: WorkoutEntry,
     onEditNotes: (WorkoutEntry) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    selectionMode: Boolean = false,
+    isSelected: Boolean = false,
+    onToggleSelection: () -> Unit = {},
+    onLongPress: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val timeFormat = remember(context) { android.text.format.DateFormat.getTimeFormat(context) }
 
+    val cardModifier = if (selectionMode) {
+        modifier.fillMaxWidth().combinedClickable(
+            onClick = onToggleSelection,
+            onLongClick = onLongPress
+        )
+    } else {
+        modifier.fillMaxWidth().combinedClickable(
+            onClick = {},
+            onLongClick = onLongPress
+        )
+    }
     ElevatedCard(
-        modifier = modifier.fillMaxWidth()
+        modifier = cardModifier
     ) {
         Row(
             modifier = Modifier
@@ -122,6 +152,13 @@ fun WorkoutCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            if (selectionMode) {
+                Checkbox(
+                    checked = isSelected,
+                    onCheckedChange = { onToggleSelection() },
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+            }
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = workout.localizedType(),
@@ -214,16 +251,38 @@ fun shareWorkouts(context: Context, dateString: String, workouts: List<WorkoutEn
     val playStoreLink = "https://play.google.com/store/apps/details?id=$packageName"
 
     val stringBuilder = java.lang.StringBuilder()
-    stringBuilder.append("📅 $dateString\n")
-
-    workouts.forEach { workout ->
-        val displayName = workout.localizedType(context.resources)
-        val emoji = workout.getEmoji()
-        if (workout.notes.isNotBlank()) {
-            val cleanNotes = workout.notes.trim().replace("\n", ", ")
-            stringBuilder.append("• $emoji $displayName ($cleanNotes)\n")
-        } else {
-            stringBuilder.append("• $emoji $displayName\n")
+    
+    if (workouts.isEmpty()) {
+        stringBuilder.append("📅 $dateString\n")
+    } else {
+        val groupedWorkouts = workouts.groupBy { it.date }.toSortedMap(reverseOrder())
+        
+        var isFirstDate = true
+        groupedWorkouts.forEach { (dateMillis, dailyWorkouts) ->
+            if (!isFirstDate) {
+                stringBuilder.append("\n")
+            }
+            isFirstDate = false
+            
+            val formattedDate = android.text.format.DateUtils.formatDateTime(
+                context,
+                dateMillis,
+                android.text.format.DateUtils.FORMAT_SHOW_DATE or
+                        android.text.format.DateUtils.FORMAT_SHOW_WEEKDAY or
+                        android.text.format.DateUtils.FORMAT_SHOW_YEAR
+            )
+            stringBuilder.append("📅 $formattedDate\n")
+            
+            dailyWorkouts.forEach { workout ->
+                val displayName = workout.localizedType(context.resources)
+                val emoji = workout.getEmoji()
+                if (workout.notes.isNotBlank()) {
+                    val cleanNotes = workout.notes.trim().replace("\n", ", ")
+                    stringBuilder.append("• $emoji $displayName ($cleanNotes)\n")
+                } else {
+                    stringBuilder.append("• $emoji $displayName\n")
+                }
+            }
         }
     }
 
@@ -240,4 +299,3 @@ fun shareWorkouts(context: Context, dateString: String, workouts: List<WorkoutEn
         // No sharing activity available
     }
 }
-

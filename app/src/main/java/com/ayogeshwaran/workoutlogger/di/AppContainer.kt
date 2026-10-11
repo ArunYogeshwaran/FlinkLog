@@ -28,5 +28,6 @@ class AppContainer(context: Context) {
     val getCustomWorkoutTypesUseCase = GetCustomWorkoutTypesUseCase(repository)
     val deleteCustomWorkoutTypeUseCase = DeleteCustomWorkoutTypeUseCase(repository)
     val getRecentNotesUseCase = GetRecentNotesUseCase(repository)
+    val getPagedWorkoutsUseCase = com.ayogeshwaran.workoutlogger.domain.usecase.GetPagedWorkoutsUseCase(repository)
 }
 

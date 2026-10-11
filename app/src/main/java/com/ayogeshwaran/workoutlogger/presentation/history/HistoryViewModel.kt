@@ -21,9 +21,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import androidx.paging.cachedIn
 
 enum class HistoryViewMode {
-    WEEKLY, MONTHLY
+    TIMELINE, MONTHLY
 }
 
 data class HistoryUiState(
@@ -42,7 +43,8 @@ class HistoryViewModel(
     private val getWorkoutsForDateUseCase: GetWorkoutsForDateUseCase,
     getDatesWithWorkoutsUseCase: GetDatesWithWorkoutsUseCase,
     private val deleteWorkoutUseCase: DeleteWorkoutUseCase,
-    private val addWorkoutUseCase: AddWorkoutUseCase
+    private val addWorkoutUseCase: AddWorkoutUseCase,
+    getPagedWorkoutsUseCase: com.ayogeshwaran.workoutlogger.domain.usecase.GetPagedWorkoutsUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HistoryUiState())
@@ -58,14 +60,12 @@ class HistoryViewModel(
     val workoutsForSelectedDate: StateFlow<List<WorkoutEntry>> = _uiState
         .flatMapLatest { state ->
             val endOfDay = state.selectedDate + 24 * 60 * 60 * 1000L
-            val startOfDay = if (state.viewMode == HistoryViewMode.WEEKLY) {
-                state.selectedDate - 6 * 24 * 60 * 60 * 1000L
-            } else {
-                state.selectedDate
-            }
+            val startOfDay = state.selectedDate
             getWorkoutsForDateUseCase(startOfDay, endOfDay)
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val pagedWorkouts = getPagedWorkoutsUseCase().cachedIn(viewModelScope)
 
     fun setViewMode(viewMode: HistoryViewMode) {
         _uiState.value = _uiState.value.copy(viewMode = viewMode)
@@ -138,7 +138,8 @@ class HistoryViewModel(
         private val getWorkoutsForDateUseCase: GetWorkoutsForDateUseCase,
         private val getDatesWithWorkoutsUseCase: GetDatesWithWorkoutsUseCase,
         private val deleteWorkoutUseCase: DeleteWorkoutUseCase,
-        private val addWorkoutUseCase: AddWorkoutUseCase
+        private val addWorkoutUseCase: AddWorkoutUseCase,
+        private val getPagedWorkoutsUseCase: com.ayogeshwaran.workoutlogger.domain.usecase.GetPagedWorkoutsUseCase
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -146,7 +147,8 @@ class HistoryViewModel(
                 getWorkoutsForDateUseCase,
                 getDatesWithWorkoutsUseCase,
                 deleteWorkoutUseCase,
-                addWorkoutUseCase
+                addWorkoutUseCase,
+                getPagedWorkoutsUseCase
             ) as T
         }
     }

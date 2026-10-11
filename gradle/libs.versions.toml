@@ -1,4 +1,5 @@
 [versions]
+paging = "3.3.2"
 agp = "9.1.0"
 kotlin = "2.3.10"
 ksp = "2.3.2"
@@ -19,6 +20,8 @@ playServicesOssLicenses = "17.5.1"
 ossLicensesPlugin = "0.11.0"
 
 [libraries]
+paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 androidx-appfunctions = { group = "androidx.appfunctions", name = "appfunctions", version.ref = "appfunctions" }
 androidx-appfunctions-service = { group = "androidx.appfunctions", name = "appfunctions-service", version.ref = "appfunctions" }
 androidx-appfunctions-compiler = { group = "androidx.appfunctions", name = "appfunctions-compiler", version.ref = "appfunctions" }
@@ -52,6 +55,7 @@ navigation-compose = { group = "androidx.navigation", name = "navigation-compose
 # Room
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
 [plugins]

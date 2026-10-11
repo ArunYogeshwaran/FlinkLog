@@ -37,7 +37,8 @@ class MainActivity : ComponentActivity() {
                         getWorkoutsForDateUseCase = container.getWorkoutsForDateUseCase,
                         getDatesWithWorkoutsUseCase = container.getDatesWithWorkoutsUseCase,
                         deleteWorkoutUseCase = container.deleteWorkoutUseCase,
-                        addWorkoutUseCase = container.addWorkoutUseCase
+                        addWorkoutUseCase = container.addWorkoutUseCase,
+                        getPagedWorkoutsUseCase = container.getPagedWorkoutsUseCase
                     )
                 )
 

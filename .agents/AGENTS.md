@@ -98,6 +98,23 @@ prevent regressions.
     3. Register the migration object in the Room database builder using `.addMigrations()`.
     4. Never rely solely on destructive fallbacks for schema modifications in release updates.
 
+### 9. Compose `reverseLayout` Sibling Ordering in LazyColumn
+
+* **Problem:** When using `LazyColumn(reverseLayout = true)` for bottom-anchored feeds (e.g. chat or
+  agenda timelines where the latest entries anchor at the bottom), emitting multiple sibling
+  composables (such as a date header `Text` and a workout card) directly inside an `items` block causes
+  Compose to stack the siblings bottom-to-top. This visually places the date header *below* the card or
+  inverts their intended visual order.
+* **Rule:** Always wrap sibling composables emitted within an inverted `LazyColumn` item inside a
+  single `Column { ... }` container so that child components strictly render top-to-bottom.
+
+### 10. Feed Date Grouping vs Creation Timestamps
+
+* **Problem:** Grouping feed items by checking raw `workout.timestamp` values can split workouts from
+  the same calendar day across different headers if workouts were logged late at night or backdated.
+* **Rule:** Always group workouts by comparing their normalized midnight calendar epoch `workout.date`
+  (`workout.date != prevWorkout.date`) rather than creation `timestamp`.
+
 ---
 
 ## ⚖️ Compliance & Rating Rules

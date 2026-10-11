@@ -31,8 +31,17 @@ Any new feature implementation **MUST** respect the following guidelines:
     * *Description:* Created a sleek, 100% user-focused "What's New" release notes draft in
       PLAY_STORE_LISTING.md, completely free of any technical jargon.
 
-### Track A: UI & Quick-Logging Enhancements
+### Track A: UI & History Feed Enhancements
 
+* **[x] A0: Agenda Timeline View (Continuous Chronological Feed)**
+    * *Description:* Replaced the legacy 7-day Weekly view with an infinite, vertically-scrolling
+      chronological timeline stream anchored at "Today" using `reverseLayout = true` and AndroidX
+      Paging 3 (`LazyPagingItems`). Workouts are grouped under date headers based on normalized day
+      epochs.
+* **[x] A0.1: Multi-Select Bulk Workout Sharing**
+    * *Description:* Added long-press card gesture detection in the timeline to activate multi-select
+      mode with visual checkboxes, contextual TopAppBar counter, and grouped date export formatting
+      with clean line separators.
 * **[ ] A1: Routine Templates (Quick-Log)**
     * *Description:* Allow users to define group templates (e.g., "Leg Day", "Push Day") and log
       them simultaneously with one tap instead of selecting individual exercises.
@@ -48,13 +57,7 @@ Any new feature implementation **MUST** respect the following guidelines:
       before deleting a workout when a user swipes left, reducing accidental deletions.
     * *Implementation Tip:* Wrap the SwipeDismiss-triggered action in a standard Material 3
       AlertDialog.
-* **[ ] A4: Weekly View DatePicker Navigation**
-    * *Description:* Enable tapping the date header in the Weekly View to launch a DatePicker.
-      Choosing a date sets the 7-day rolling window immediately, eliminating the need to tap arrow
-      navigation buttons repeatedly to go far back in the past.
-    * *Implementation Tip:* Use Material 3 `rememberDatePickerState()` and update the Home/History
-      viewmodel range offset logic dynamically.
-* **[ ] A5: Daily Workout Reminders (Notifications)**
+* **[ ] A4: Daily Workout Reminders (Notifications)**
     * *Description:* Allow users to define a daily reminder time in settings and receive a local
       push notification reminding them to log their active exercises.
     * *Implementation Tip:* Utilize Android's `WorkManager` with a `PeriodicWorkRequest` scheduling

@@ -38,5 +38,8 @@ interface WorkoutDao {
 
     @Query("SELECT DISTINCT notes FROM workout_entries WHERE workoutType = :workoutType AND notes != '' ORDER BY timestamp DESC LIMIT 4")
     fun getRecentNotesForWorkoutType(workoutType: String): Flow<List<String>>
+
+    @Query("SELECT * FROM workout_entries ORDER BY date DESC, timestamp DESC")
+    fun getPagedWorkouts(): androidx.paging.PagingSource<Int, WorkoutEntryEntity>
 }
 
