@@ -19,7 +19,7 @@ Tiny, lightweight workout log. Simple, fast, offline, no ads, no tracking.
 FlinkLog is a privacy-first, ultra-lightweight workout logger. No sign-ups, no subscriptions, and no tracking.
 
 ◉ Log in one tap: Select workout type, hit "Log Workout," and move on.
-◉ Quick History: View your logging history anytime via the monthly calendar or weekly strip.
+◉ Quick History: View your logging history anytime via the monthly calendar or continuous timeline.
 
 Features:
 • Under 3.5MB download size — fast, lightweight, and efficient
@@ -38,10 +38,10 @@ What it does NOT do:
 
 ## What's New (500 chars max)
 
-• Smart Notes Auto-Suggestions: Save time by auto-filling descriptions with your past workout notes. Tap the drop-down arrow icon in the note box to see recent logs for each exercise type.
-• Weekly View Picker: Tap the underlined date range header to pick a date range directly, or shift by one full week using the arrow controls.
-• Secure Cloud Backups: Restores your workouts automatically from Google Drive when you reinstall or switch devices.
-• App Stability: Performance tuning and navigation fixes for a smoother calendar and tracking flow.
+• Continuous Agenda Timeline: Browse your complete workout journey in a seamless, smooth-scrolling timeline feed.
+• Bulk Workout Sharing: Long-press any workout card to select multiple workouts across different days and share them grouped by date with workout partners or trainers.
+• Polished Navigation: Seamlessly toggle between your month overview calendar and continuous chronological timeline.
+• Stability & Performance: Streamlined database loading for faster app start and responsive scrolling.
 
 ---
 

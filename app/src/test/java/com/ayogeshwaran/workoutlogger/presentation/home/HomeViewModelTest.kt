@@ -12,6 +12,7 @@ import com.ayogeshwaran.workoutlogger.domain.usecase.DeleteWorkoutUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.GetCustomWorkoutTypesUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.GetRecentNotesUseCase
 import com.ayogeshwaran.workoutlogger.domain.usecase.GetWorkoutsForDateUseCase
+import androidx.paging.PagingData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -102,6 +103,10 @@ class FakeWorkoutRepository : WorkoutRepository {
                 .distinct()
                 .take(4)
         }
+    }
+
+    override fun getPagedWorkouts(): Flow<PagingData<WorkoutEntry>> {
+        return workouts.map { PagingData.from(it) }
     }
 }
 

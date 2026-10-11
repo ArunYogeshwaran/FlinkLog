@@ -4,6 +4,21 @@ All notable changes to the FlinkLog project are documented in this file. The for
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2026.10.1] - 2026-10-11
+
+### Added
+
+* **Agenda Timeline View:** Replaced the legacy fixed 7-day weekly view with an infinite, vertically-scrolling continuous timeline feed. Features smooth AndroidX Paging 3 lazy loading and a reverse chat-style layout anchored at the current date.
+* **Multi-Select Bulk Sharing:** Long-press any workout card in the timeline to activate selection mode with checkboxes. Selected workouts across multiple days can be shared together, cleanly grouped under individual date headers with line breaks.
+* **Pre-Commit Compilation Hook:** Added an automated pre-commit hook script (`.githooks/pre-commit`) to guarantee compilation integrity before any commit.
+
+### Changed
+
+* **History Navigation:** Streamlined the History screen segmented toggle between the continuous Timeline view and the traditional Monthly calendar overview.
+* **Documentation & Architecture:** Updated feature specifications, roadmap tracking, and developer guides to reflect Paging 3 and timeline data flows.
+
+---
+
 ## [2026.7.1] - 2026-07-09
 
 ### Added

@@ -32,8 +32,8 @@ android {
         applicationId = "com.ayogeshwaran.workoutlogger"
         minSdk = 24
         targetSdk = 37
-        versionCode = 4
-        versionName = "2026.7.1"
+        versionCode = 5
+        versionName = "2026.10.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
